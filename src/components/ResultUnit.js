@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
 import Region from './units/Region.js';
 import Admunit from './units/Admunit.js';
@@ -9,8 +9,14 @@ import Section from './units/Section.js';
 
 export default props => {
     const { unit } = useParams();
+    const history = useHistory();
 
     useEffect(() => {window.scrollTo(0, 0);}, []);
+
+    const returnToMain = () => {
+        history.push('/');
+        return null;
+    };
 
     return(
         <div>
@@ -23,7 +29,7 @@ export default props => {
                 ? <District/>
                 : unit.length === 9
                 ? <Section/>
-                : null
+                : returnToMain()
             }
         </div>
     )

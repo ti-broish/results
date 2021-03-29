@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
-import { ElectionContext } from '../App';
+import { ElectionContext } from '../Election';
 
 import styled from 'styled-components';
 

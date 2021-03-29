@@ -4,8 +4,7 @@ const { merge } = require('webpack-merge');
 const baseConfig = require('./base.config.js');
 
 module.exports = env => {
-
-    return merge(baseConfig, {
+    return merge(baseConfig(env), {
         mode: 'development',
         devServer: {
             publicPath: '/',

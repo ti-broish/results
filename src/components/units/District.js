@@ -8,7 +8,7 @@ import LoadingScreen from '../layout/LoadingScreen';
 import ResultsTable from '../components/ResultsTable';
 import ResultsLine from '../components/ResultsLine';
 
-import { ElectionContext } from '../App';
+import { ElectionContext } from '../Election';
 import SubdivisionTable, { SubdivisionTableDiv } from '../components/SubdivisionTable';
 import Crumbs from '../components/Crumbs';
 

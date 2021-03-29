@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { formatCount, formatPercentage } from '../Util';
 
 import styled from 'styled-components';
-import { ElectionContext } from '../App';
+import { ElectionContext } from '../Election';
 
 const BulgariaMapStyle = styled.div`
     path {

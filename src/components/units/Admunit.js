@@ -9,7 +9,7 @@ import ResultsTable from '../components/ResultsTable';
 import ResultsLine from '../components/ResultsLine';
 import Crumbs from '../components/Crumbs';
 
-import { ElectionContext } from '../App';
+import { ElectionContext } from '../Election';
 
 import SubdivisionTable from '../components/SubdivisionTable';
 

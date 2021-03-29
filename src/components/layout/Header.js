@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import Logo from './Logo';
 
-import { Wrapper } from '../Results';
+import { Wrapper } from '../App';
 
 import styled from 'styled-components';
 
@@ -45,13 +45,14 @@ const LogoImage = styled.img`
 `;
 
 export default props => {
+    const publicURL = process.env.PUBLIC_URL? process.env.PUBLIC_URL : '';
     return (
         <div>
             <HeaderCompensator/>
             <HeaderDiv>
                 <Wrapper style={{margin: '0 auto'}}>
                     <Link to='/'>
-                        <LogoImage src='/brand/logo_horizontal_white.png?v=2'/>
+                        <LogoImage src={`${publicURL}/brand/logo_horizontal_white.png?v=2`}/>
                     </Link>
                     <h2>{props.title}</h2>
                 </Wrapper>

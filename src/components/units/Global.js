@@ -6,7 +6,7 @@ import BulgariaMap from '../components/BulgariaMap';
 import ResultsTable from '../components/ResultsTable';
 import SubdivisionTable from '../components/SubdivisionTable';
 
-import { ElectionContext } from '../App';
+import { ElectionContext } from '../Election';
 
 export default props => {
     const { globalData } = useContext(ElectionContext);
