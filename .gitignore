@@ -106,3 +106,4 @@ bundles
 dist
 
 static/results
+static/json

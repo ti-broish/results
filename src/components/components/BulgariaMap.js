@@ -406,7 +406,7 @@ export default props => {
             {
                 Object.keys(regionPaths).map(key => {
                     const clickHandler = () => {
-                        history.push(`/results/${election}/${key}`);
+                        history.push(`/${key}`);
                     };
 
                     return (

@@ -48,9 +48,10 @@ module.exports = {
         new CleanWebpackPlugin(),
         new LoadablePlugin(),
         new CopyWebpackPlugin({ patterns: [ { from: './static/' } ]}),
-        new HtmlWebpackPlugin({ title: 
-            'Резултати от избори',
+        new HtmlWebpackPlugin({ 
+            title: 'Резултати от избори',
             template: 'src/index.ejs',
+            //publicPath: '/results/parl2017'
         }),
     ],
 };

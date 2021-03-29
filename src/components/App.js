@@ -44,7 +44,7 @@ const GlobalCSS = styled.div`
 export default props => {
     const [globalData, setGlobalData] = useState(null);
 
-    const dataURL = process.env.DATA_URL? process.env.DATA_URL : '/results/parliament2017';
+    const dataURL = process.env.DATA_URL? process.env.DATA_URL : '/json';
 
     useEffect(() => {
         axios.get(`${dataURL}/total.json`).then(res => {
