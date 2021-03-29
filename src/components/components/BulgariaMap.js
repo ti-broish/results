@@ -362,12 +362,14 @@ export default props => {
     };
 
     return([
+        props.embed? null :
         <MapControls>
             <button className={mode === 'dominant'? 'selected' : ''} onClick={()=>setMode('dominant')}>Водеща партия</button>
             <button className={mode === 'single-party'? 'selected' : ''} onClick={()=>setMode('single-party')}>Отделна партия</button>
             <button className={mode === 'turnout'? 'selected' : ''} onClick={()=>setMode('turnout')}>Активност</button>
             <button className={mode === 'voters'? 'selected' : ''} onClick={()=>setMode('voters')}>Избиратели</button>
         </MapControls>,
+        props.embed? null :
         mode === 'single-party'?
         <MapControlsSingleParty>
         {
@@ -387,7 +389,7 @@ export default props => {
             id='bulgaria-map'
             style={{width: '100%'}}
             width="261.27612mm"
-            height="169.67859mm"
+            height={props.embed? 'auto' : "169.67859mm"}
             version="1.0"
             viewBox="0 0 26127.612 16967.859"
             pagecolor="#ffffff"

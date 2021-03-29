@@ -29,9 +29,9 @@ export default props => {
                     </p>
                     <h2>1. Карта на изборните райони</h2>
                     <iframe
-                        width="800"
-                        height="450"
-                        //style={{border: 0}}
+                        width="600"
+                        height="490"
+                        style={{border: 'none', margin: '0 auto', display: 'block'}}
                         loading="lazy"
                         allowFullScreen
                         src={`${publicURL}/embed/test-embed`}>
