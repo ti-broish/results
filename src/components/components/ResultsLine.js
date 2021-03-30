@@ -22,12 +22,18 @@ const ResultLineSegment = styled.div`
     display: inline-block;
     background-color: #777;
     height: 50px;
+    transition: width 1s ease;
+    width: 0;
 
     &.thin { height: 20px; }
     &:hover { box-shadow: 0px 0px 3px #000; }
-`;    
+`;
 
-export default props => {
+import handleViewport from 'react-in-viewport';
+
+export default handleViewport(props => {
+    const { inViewport, forwardedRef } = props;
+    console.log(inViewport);
 
     let displayParties = [];
 
@@ -75,14 +81,14 @@ export default props => {
     }
 
     return(
-        <div className='results-line'>
+        <div className='results-line' ref={forwardedRef}>
             {
                 !firstParty? null : 
                     <ResultLineSegment 
                         className={props.thin? 'thin' : ''}
                         style={{
                             backgroundColor: firstParty.color,
-                            width: `${firstParty.validVotes / props.totalValid * 100}%`
+                            width: inViewport? `${firstParty.validVotes / props.totalValid * 100}%` : 'calc(100% / 8)'
                         }}
                         data-tip={generateTooltip(firstParty.color, firstParty.name, firstParty.validVotes / props.totalValid, firstParty.validVotes, firstParty.invalidVotes)}
                     />  
@@ -96,7 +102,7 @@ export default props => {
                             className={props.thin? 'thin' : ''}
                             style={{
                                 backgroundColor: party.color,
-                                width: `${percentage * 100}%`
+                                width: inViewport? `${percentage * 100}%` : 'calc(100% / 8)'
                             }}
                             data-tip={generateTooltip(party.color, party.name, percentage, party.validVotes, party.invalidVotes)}
                         />
@@ -105,7 +111,7 @@ export default props => {
             }
             <ResultLineSegment 
                 className={props.thin? 'thin' : ''}
-                style={{width: `${(props.totalValid - displayPartiesTotal) / props.totalValid * 100}%`}}
+                style={{width: inViewport? `${(props.totalValid - displayPartiesTotal) / props.totalValid * 100}%` : 'calc(100% / 8)'}}
                 data-tip={generateTooltip('#ddd', 'Други', (props.totalValid - displayPartiesTotal) / props.totalValid, props.totalValid - displayPartiesTotal, props.totalInvalid - displayPartiesTotalInvalid)}
             />
             {!props.showLegend? null :
@@ -122,4 +128,4 @@ export default props => {
             }
         </div>
     )
-}
+});

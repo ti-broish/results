@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 
 import Helmet from 'react-helmet';
 
@@ -8,19 +8,26 @@ import SubdivisionTable from '../components/SubdivisionTable';
 
 import { ElectionContext } from '../Election';
 
+import { Zoom } from 'react-reveal';
+
 export default props => {
     const { globalData } = useContext(ElectionContext);
+
+    useEffect(() => {window.scrollTo(0, 0)}, []);
 
     return(
         <div>
             <Helmet>
                 <title>{globalData.name}</title>
             </Helmet>
-            <BulgariaMap 
-                regions={globalData.regions} 
-                parties={globalData.parties}
-                results={globalData.results} 
-            />
+            <Zoom clear>
+                <BulgariaMap 
+                    regions={globalData.regions} 
+                    parties={globalData.parties}
+                    results={globalData.results} 
+                />
+            </Zoom>
+            <br/><br/>
             <ResultsTable 
                 results={globalData.results} 
                 parties={globalData.parties} 

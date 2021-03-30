@@ -14,10 +14,14 @@ const ResultsTableDiv = styled.table`
         box-sizing: border-box;
     }
 
+    tr {
+        transition: opacity 2s ease;
+    }
+
     .vote-percent-bar {
         height: 10px;
         background-color: #eee;
-        transition: width 0.5s ease;
+        transition: width 2s ease;
         width: 0;
     }
 
@@ -48,6 +52,9 @@ const ResultsTableDiv = styled.table`
         }
     }
 `;
+
+import ResultsTableRow from './ResultsTableRow';
+import { Fade } from 'react-reveal';
 
 export default props => {
 
@@ -86,31 +93,8 @@ export default props => {
                                 </td>
                                 {thresholdPlaced = true}
                             </tr> : null,
-                            <tr>
-                                <td>{party.number}</td>
-                                <td>
-                                    <span  style={{color: party.color}}>
-                                        {party.name}
-                                    </span>
-                                    <span style={{fontSize: '18px', marginLeft: '10px'}}>
-                                        {formatCount(party.validVotes)}
-                                    </span>
-                                    
-                                    <span style={{float: 'right'}}>
-                                        {formatPercentage(percentage)}%
-                                    </span>
-                                    
-                                    <br/>
-
-                                    <div>
-                                        <div className='vote-percent-bar' style={{
-                                            backgroundColor: party.color,
-                                            width: `${barPercent * 100}%`,
-                                            fontSize: '28px'
-                                        }}/>
-                                    </div>
-                                </td>
-                            </tr>
+                                <ResultsTableRow party={party} percentage={percentage} barPercent={barPercent}/>
+                            
                         ])
                         
                     })
@@ -131,4 +115,4 @@ export default props => {
             </tbody>
         </ResultsTableDiv>
     )
-}
+};
