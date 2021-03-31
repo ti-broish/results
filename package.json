@@ -23,7 +23,7 @@
     "copy-webpack-plugin": "^8.0.0",
     "css-loader": "^5.1.1",
     "ejs-loader": "^0.5.0",
-    "html-webpack-plugin": "^5.2.0",
+    "html-webpack-plugin": "^5.3.1",
     "node-xlsx": "^0.16.1",
     "normalize.css": "^8.0.1",
     "react": "^17.0.1",
