@@ -13,6 +13,7 @@ const EmbedPage = styled.div`
 `;
 
 import { Wrapper } from '../App';
+import EmbedCodeDisplay from './EmbedCodeDisplay';
 
 export default props => {
     const publicURL = process.env.PUBLIC_URL? process.env.PUBLIC_URL : '';
@@ -27,7 +28,7 @@ export default props => {
                         Тук ще видите различни варианти да вградите ТиБроиш
                         във Вашия сайт!
                     </p>
-                    <h2>1. Карта на изборните райони</h2>
+                    <h2>1. Мини-резултати</h2>
                     <iframe
                         width="600"
                         height="490"
@@ -36,6 +37,7 @@ export default props => {
                         allowFullScreen
                         src={`${publicURL}/embed/test-embed`}>
                     </iframe>
+                    <EmbedCodeDisplay code={`<iframe width="600" height="490" style="border: none;" loading="lazy" allowfullscreen src="https://tibroish.bg${publicURL}/embed/test-embed"/></iframe>`}/>
                 </EmbedPage>
             </Wrapper>
             <Footer/>
