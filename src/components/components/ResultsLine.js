@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
 import { formatCount, formatPercentage } from '../Util';
 
@@ -33,7 +33,9 @@ import handleViewport from 'react-in-viewport';
 
 export default handleViewport(props => {
     const { inViewport, forwardedRef } = props;
-    console.log(inViewport);
+    const alreadyLoaded = useRef(false);
+    if(inViewport) alreadyLoaded.current = true;
+    const shouldLoad = inViewport || alreadyLoaded.current;
 
     let displayParties = [];
 
@@ -49,7 +51,13 @@ export default handleViewport(props => {
     let displayPartiesTotal = 0;
     let displayPartiesTotalInvalid = 0;
     
-    displayParties = displayParties.sort((a, b) => b.validVotes - a.validVotes).slice(0, 7);
+    let firstParty = props.firstParty? props.firstParty : null;
+
+    displayParties = displayParties.sort((a, b) => {
+        if(firstParty && firstParty === a.number) return b.validVotes - 1000000000000;
+        else if(firstParty && firstParty === b.number) return 1000000000000 - a.validVotes;
+        else return b.validVotes - a.validVotes
+    }).slice(0, 7);
     displayParties.forEach(party => {displayPartiesTotal += party.validVotes; displayPartiesTotalInvalid += party.invalidVotes});
 
     const generateTooltip = (color, partyName, percentage, validVotes, invalidVotes) => {
@@ -75,43 +83,28 @@ export default handleViewport(props => {
         `);
     };
 
-    let firstParty = null;
-    if(props.firstParty) {
-        firstParty = displayParties.find(party => party.number === props.firstParty);
-    }
-
     return(
         <div className='results-line' ref={forwardedRef}>
             {
-                !firstParty? null : 
-                    <ResultLineSegment 
-                        className={props.thin? 'thin' : ''}
-                        style={{
-                            backgroundColor: firstParty.color,
-                            width: inViewport? `${firstParty.validVotes / props.totalValid * 100}%` : 'calc(100% / 8)'
-                        }}
-                        data-tip={generateTooltip(firstParty.color, firstParty.name, firstParty.validVotes / props.totalValid, firstParty.validVotes, firstParty.invalidVotes)}
-                    />  
-            }
-            {
-                displayParties.map(party => {
+                displayParties.map((party, i) => {
                     const percentage = party.validVotes / props.totalValid;
-                    if(firstParty && firstParty.number === party.number) return null;
-                    else return(
+                    return(
                         <ResultLineSegment 
+                            key={i}
                             className={props.thin? 'thin' : ''}
                             style={{
                                 backgroundColor: party.color,
-                                width: inViewport? `${percentage * 100}%` : 'calc(100% / 8)'
+                                width: shouldLoad? `${percentage * 100}%` : 'calc(100% / 8)'
                             }}
                             data-tip={generateTooltip(party.color, party.name, percentage, party.validVotes, party.invalidVotes)}
                         />
-                    )  
+                    );  
                 })
             }
             <ResultLineSegment 
+                key={7}
                 className={props.thin? 'thin' : ''}
-                style={{width: inViewport? `${(props.totalValid - displayPartiesTotal) / props.totalValid * 100}%` : 'calc(100% / 8)'}}
+                style={{width: shouldLoad? `${(props.totalValid - displayPartiesTotal) / props.totalValid * 100}%` : 'calc(100% / 8)'}}
                 data-tip={generateTooltip('#ddd', 'Други', (props.totalValid - displayPartiesTotal) / props.totalValid, props.totalValid - displayPartiesTotal, props.totalInvalid - displayPartiesTotalInvalid)}
             />
             {!props.showLegend? null :

@@ -1,13 +1,13 @@
 import React, { useState, useContext, useEffect } from 'react';
 
-import { Link, useParams } from 'react-router-dom';
-import ResultsLine from './ResultsLine.js';
-import SimpleLine from './SimpleLine';
+import { useParams } from 'react-router-dom';
 import ReactTooltip from 'react-tooltip';
+import SubdivisionTableRow from './SubdivisionTableRow';
 
 import styled from 'styled-components';
 
 import { formatCount, formatPercentage } from '../Util';
+import SubdivisionTableRowsWithGroupings from './SubdivisionTableRowsWithGroupings.js';
 
 export const SubdivisionTableDiv = styled.table`
     width: 100%;
@@ -160,108 +160,6 @@ export default props => {
         return subdivisions;
     };
 
-    const renderRow = subdivision => {
-        return(
-            <tr>
-                <td>
-                    <Link to={`/${unit?unit:''}${subdivision.number}`}>
-                        {props.showNumbers? subdivision.number : null} {subdivision.name}
-                    </Link>
-                </td>
-                <td>
-                {
-                    mode === 'distribution'?
-                        <ResultsLine
-                            results={subdivision.results} 
-                            parties={props.parties}
-                            totalValid={subdivision.totalValid} 
-                            totalInvalid={subdivision.totalInvalid}
-                            firstParty={singleParty === ''? null : singleParty}
-                            thin
-                        /> :
-                        <SimpleLine
-                            percentage={subdivision.percentage}
-                            tooltipTitle={subdivision.name}
-                            tooltipField={subdivision.tooltipField}
-                            tooltipValue={subdivision.tooltipValue}
-                            thin
-                        />
-                }
-                </td>
-            </tr>
-        );
-    };
-
-    const renderWithGroupings = () => {
-        const subdivisionsWithoutGroup = [];
-
-        props.subdivisions.forEach(subdivision => {
-            let contained = false;
-            props.groupings.forEach(grouping => {
-                if(grouping.units.includes(subdivision.number)) {
-                    contained = true;
-                }
-            });
-
-            if(!contained) {
-                subdivisionsWithoutGroup.push(subdivision.number);
-            }
-        });
-
-        return([
-            props.groupings.map(grouping => [
-                <tr><td colSpan={2} style={{textAlign: 'left'}}><b>{grouping.name}</b></td></tr>,
-                grouping.units.map(unitKey => {
-                    const subdivision = props.subdivisions.find(sn => sn.number.toString() === unitKey.toString());
-                    return(
-                        <tr>
-                            <td>
-                                <Link to={`/${unit?unit:''}${subdivision.number}`}>
-                                    {props.showNumbers? subdivision.number : null} {subdivision.name}
-                                </Link>
-                            </td>
-                            <td>
-                                <ResultsLine
-                                    results={subdivision.results} 
-                                    parties={props.parties}
-                                    totalValid={subdivision.totalValid} 
-                                    totalInvalid={subdivision.totalInvalid}
-                                    firstParty={singleParty === ''? null : singleParty}
-                                    thin
-                                />
-                            </td>
-                        </tr>
-                    );
-                })
-            ]),
-            subdivisionsWithoutGroup.length === 0? null : [
-                <tr><td><b>Неизяснен адрес</b></td><td></td></tr>,
-                subdivisionsWithoutGroup.map(unitKey => {
-                    const subdivision = props.subdivisions.find(sn => sn.number.toString() === unitKey.toString());
-                    return(
-                        <tr>
-                            <td>
-                                <Link to={`/${unit?unit:''}${subdivision.number}`}>
-                                    {props.showNumbers? subdivision.number : null} {subdivision.name}
-                                </Link>
-                            </td>
-                            <td>
-                                <ResultsLine
-                                    results={subdivision.results} 
-                                    parties={props.parties}
-                                    totalValid={subdivision.totalValid} 
-                                    totalInvalid={subdivision.totalInvalid}
-                                    firstParty={singleParty === ''? null : singleParty}
-                                    thin
-                                />
-                            </td>
-                        </tr>
-                    ); 
-                })
-            ]
-        ])
-    };
-
     return(
         <div>
             <SubdivisionTableControls>
@@ -286,8 +184,22 @@ export default props => {
             <tbody>
             {
                 props.groupings && mode === 'distribution' && singleParty === ''
-                    ? renderWithGroupings()
-                    : sorted(props.subdivisions).map(subdivision => renderRow(subdivision))
+                    ? <SubdivisionTableRowsWithGroupings
+                        subdivisions={props.subdivisions}
+                        groupings={props.groupings}
+                        unit={unit}
+                        singleParty={singleParty}
+                        parties={props.parties}
+                    /> 
+                    : sorted(props.subdivisions).map(subdivision => 
+                        <SubdivisionTableRow 
+                            subdivision={subdivision}
+                            unit={unit}
+                            parties={props.parties}
+                            singleParty={singleParty}
+                            mode={mode}
+                        />
+                    )
             }
             </tbody>
             </SubdivisionTableDiv>

@@ -8,8 +8,6 @@ import SubdivisionTable from '../components/SubdivisionTable';
 
 import { ElectionContext } from '../Election';
 
-import { Zoom } from 'react-reveal';
-
 export default props => {
     const { globalData } = useContext(ElectionContext);
 
@@ -20,13 +18,11 @@ export default props => {
             <Helmet>
                 <title>{globalData.name}</title>
             </Helmet>
-            <Zoom clear>
-                <BulgariaMap 
-                    regions={globalData.regions} 
-                    parties={globalData.parties}
-                    results={globalData.results} 
-                />
-            </Zoom>
+            <BulgariaMap 
+                regions={globalData.regions} 
+                parties={globalData.parties}
+                results={globalData.results} 
+            />
             <br/><br/>
             <ResultsTable 
                 results={globalData.results} 

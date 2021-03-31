@@ -1,17 +1,23 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
+import handleViewport from 'react-in-viewport';
 import styled from 'styled-components';
 
 const SimpleLineStyle = styled.div`
     display: inline-block;
     background-color: #019D8C;
     height: 50px;
+    transition: width 1s ease;
 
     &.thin { height: 20px; }
     &:hover { box-shadow: 0px 0px 3px #000; }
 `;
 
-export default props => {
+export default handleViewport(props => {
+    const { inViewport, forwardedRef } = props;
+    const alreadyLoaded = useRef(false);
+    if(inViewport) alreadyLoaded.current = true;
+    const shouldLoad = inViewport || alreadyLoaded.current;
 
     const generateTooltip = (color) => {
         return (`
@@ -33,12 +39,12 @@ export default props => {
     };
 
     return(
-        <div>
+        <div ref={forwardedRef}>
             <SimpleLineStyle 
                 className={props.thin? 'thin' : ''}
-                style={{width: `${props.percentage * 100}%`}}
+                style={{width: shouldLoad? `${props.percentage * 100}%` : 0}}
                 data-tip={generateTooltip()}
             />
         </div>
     )
-};
+});
