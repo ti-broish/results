@@ -110,25 +110,21 @@ export default props => {
                                 </td>
                                 {thresholdPlaced = true}
                             </tr> : null,
-                                <ResultsTableRow party={party} percentage={percentage} barPercent={barPercent}/>
+                            <ResultsTableRow party={party} percentage={percentage} barPercent={barPercent}/>
                             
                         ])
                         
                     })
                 }
-                <tr>
-                    <td></td>
-                    <td>
-                        Други
-                        <span style={{fontSize: '18px', marginLeft: '10px'}}>
-                            {formatCount(props.totalValid - displayPartiesTotal)}
-                        </span>
-                        
-                        <span style={{float: 'right'}}>
-                            {formatPercentage((props.totalValid - displayPartiesTotal)/props.totalValid)}%
-                        </span>
-                    </td>
-                </tr>
+                <ResultsTableRow party={{
+                        number: '',
+                        name: 'Други',
+                        validVotes: props.totalValid - displayPartiesTotal,
+                        color: 'rgb(102, 102, 102)'
+                    }} 
+                    percentage={(props.totalValid - displayPartiesTotal) / props.totalValid} 
+                    barPercent={(props.totalValid - displayPartiesTotal) / displayParties[0].validVotes}
+                />
             </tbody>
         </ResultsTableDiv>
     )
