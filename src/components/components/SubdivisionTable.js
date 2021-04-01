@@ -31,6 +31,20 @@ export const SubdivisionTableDiv = styled.table`
     a {
         color: blue;
     }
+
+    ${props => props.embed?`
+        font-size: 15px;
+        td:nth-child(1) {
+            width: 160px;
+        }
+        td:nth-child(2) {
+            width: calc(100% - 160px);
+        }
+
+        td {
+            padding: 5px 5px;
+        }
+    ` : null}
 `;
 
 const SubdivisionTableControls = styled.div`
@@ -51,6 +65,13 @@ const SubdivisionTableControls = styled.div`
             border-radius: 10px;
         }
     }
+
+    ${props => props.embed?`
+        font-size: 12px;
+        button { 
+            padding: 5px;
+        }
+    ` : null}
 `;
 
 const SubdivisionControlsParty = styled.div`
@@ -74,6 +95,10 @@ const SubdivisionControlsParty = styled.div`
             border-radius: 10px;
         }
     }
+
+    ${props => props.embed?`
+        font-size: 12px;
+    ` : null}
 `;
 
 export default props => {
@@ -162,12 +187,14 @@ export default props => {
 
     return(
         <div>
-            <SubdivisionTableControls>
+            {props.modesHidden? null :
+            <SubdivisionTableControls embed={props.embed}>
                 <button className={mode === 'distribution'? 'selected' : ''}  onClick={()=>setMode('distribution')}>Разпределение</button>
                 <button className={mode === 'voters'? 'selected' : ''}  onClick={()=>setMode('voters')}>Избиратели</button>
                 <button className={mode === 'turnout'? 'selected' : ''}  onClick={()=>setMode('turnout')}>Активност</button>
-            </SubdivisionTableControls>
-            <SubdivisionControlsParty>
+            </SubdivisionTableControls>}
+            {props.modesHidden? null :
+            <SubdivisionControlsParty embed={props.embed}>
             { 
                 mode !== 'distribution'? null : [
                     'Подреди по партия: ',
@@ -179,8 +206,8 @@ export default props => {
                     )
                 ]
             }
-            </SubdivisionControlsParty>
-            <SubdivisionTableDiv>
+            </SubdivisionControlsParty>}
+            <SubdivisionTableDiv embed={props.embed}>
             <tbody>
             {
                 props.groupings && mode === 'distribution' && singleParty === ''
@@ -190,6 +217,7 @@ export default props => {
                         unit={unit}
                         singleParty={singleParty}
                         parties={props.parties}
+                        embed={props.embed}
                     /> 
                     : sorted(props.subdivisions).map(subdivision => 
                         <SubdivisionTableRow 
@@ -198,6 +226,7 @@ export default props => {
                             parties={props.parties}
                             singleParty={singleParty}
                             mode={mode}
+                            embed={props.embed}
                         />
                     )
             }

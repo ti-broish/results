@@ -15,7 +15,11 @@ export default handleViewport(props => {
     return(
         <tr ref={forwardedRef} style={{opacity: shouldLoad? 1 : 0, transition: 'opacity 1s ease'}}>
             <td>
-                <Link to={`/${props.unit?props.unit:''}${props.subdivision.number}`}>
+                <Link to={
+                    props.embed
+                    ? `/embed/mini-results/${props.unit?props.unit:''}${props.subdivision.number}`
+                    : `/${props.unit?props.unit:''}${props.subdivision.number}`
+                }>
                     {props.showNumbers? props.subdivision.number : null} {props.subdivision.name}
                 </Link>
             </td>
@@ -29,6 +33,7 @@ export default handleViewport(props => {
                         totalInvalid={props.subdivision.totalInvalid}
                         firstParty={props.singleParty === ''? null : props.singleParty}
                         thin
+                        embed={props.embed}
                     /> :
                     <SimpleLine
                         percentage={props.subdivision.percentage}
@@ -36,6 +41,7 @@ export default handleViewport(props => {
                         tooltipField={props.subdivision.tooltipField}
                         tooltipValue={props.subdivision.tooltipValue}
                         thin
+                        embed={props.embed}
                     />
             }
             </td>

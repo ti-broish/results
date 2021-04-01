@@ -18,7 +18,7 @@ export default handleViewport(props => {
                 <span style={{color: props.party.color}}>
                     {props.party.name}
                 </span>
-                <span style={{fontSize: '18px', marginLeft: '10px'}}>
+                <span className={'votes-count'}>
                     {formatCount(props.party.validVotes)}
                 </span>
                 

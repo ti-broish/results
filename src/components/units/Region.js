@@ -36,15 +36,16 @@ export default props => {
                 <Helmet>
                     <title>{data.name}</title>
                 </Helmet>
-                <Crumbs data={data}/>
-                <h1>{data.number}. {data.name}</h1>
+                <Crumbs data={data} embed={props.embed}/>
+                <h1 style={props.embed? {fontSize: '15px'} : {}}>{data.number}. {data.name}</h1>
                 <ResultsTable
                     results={data.results} 
                     parties={globalData.parties} 
                     totalValid={data.validVotes} 
                     totalInvalid={data.invalidVotes}
+                    embed={props.embed}
                 />
-                <h1>{Object.keys(data.admunits).length === 1? 'Райони' : 'Общини'}</h1>
+                <h1 style={props.embed? {fontSize: '15px'} : {}}>{Object.keys(data.admunits).length === 1? 'Райони' : 'Общини'}</h1>
                 {
                     Object.keys(data.admunits).length === 1?
                         <SubdivisionTable
@@ -61,6 +62,7 @@ export default props => {
                                     voters: district.voters,
                                 };
                             })}
+                            embed={props.embed}
                         /> :
                         <SubdivisionTable
                             parties={globalData.parties}
@@ -75,6 +77,7 @@ export default props => {
                                     voters: data.admunits[key].voters,
                                 };
                             })}
+                            embed={props.embed}
                         />
                 }
             </div>

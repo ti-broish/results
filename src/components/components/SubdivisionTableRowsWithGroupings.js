@@ -33,6 +33,7 @@ export default props => {
                         parties={props.parties}
                         singleParty={props.singleParty}
                         mode={props.mode}
+                        embed={props.embed}
                     />
                 );
             })
@@ -48,6 +49,7 @@ export default props => {
                         parties={props.parties}
                         singleParty={props.singleParty}
                         mode={props.mode}
+                        embed={props.embed}
                     />
                 ); 
             })

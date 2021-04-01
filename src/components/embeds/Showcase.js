@@ -29,15 +29,20 @@ export default props => {
                         във Вашия сайт!
                     </p>
                     <h2>1. Мини-резултати</h2>
+                    {/*
+                        Кустомизация:
+                        1. Изгледи (чекбоксове) – карта, резултати, райони
+                        2. Изглед по подразбиране - карта, резултати или райони
+                    */}
                     <iframe
                         width="600"
-                        height="490"
+                        height="500"
                         style={{border: 'none', margin: '0 auto', display: 'block'}}
                         loading="lazy"
                         allowFullScreen
-                        src={`${publicURL}/embed/test-embed`}>
+                        src={`${publicURL}/embed/mini-results`}>
                     </iframe>
-                    <EmbedCodeDisplay code={`<iframe width="600" height="490" style="border: none;" loading="lazy" allowfullscreen src="https://tibroish.bg${publicURL}/embed/test-embed"/></iframe>`}/>
+                    <EmbedCodeDisplay code={`<iframe width="600" height="500" style="border: none;" loading="lazy" allowfullscreen src="https://tibroish.bg${publicURL}/embed/mini-results"></iframe>`}/>
                 </EmbedPage>
             </Wrapper>
             <Footer/>

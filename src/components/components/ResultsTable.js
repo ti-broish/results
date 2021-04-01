@@ -51,10 +51,27 @@ const ResultsTableDiv = styled.table`
             border-top: none;
         }
     }
+
+    .votes-count {
+        font-size: 18px;
+        margin-left: 10px;
+    }
+
+    ${props => props.embed? `
+        font-size: 18px;
+        .votes-count {
+            font-size: 12px;
+        }
+        td {
+            padding: 5px 5px;
+        }
+        .threshold-row {
+            font-size: 8px;
+        }
+    ` : null}
 `;
 
 import ResultsTableRow from './ResultsTableRow';
-import { Fade } from 'react-reveal';
 
 export default props => {
 
@@ -77,7 +94,7 @@ export default props => {
     let thresholdPlaced = false;
 
     return(
-        <ResultsTableDiv>
+        <ResultsTableDiv embed={props.embed}>
             <tbody>
                 {
                     displayParties.map(party => {

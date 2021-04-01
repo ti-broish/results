@@ -57,7 +57,6 @@ export default props => {
                         type={"dark"}
                     />,
                     <Switch>
-                        <Route path={`/embed`} component={Embed}/>
                         <Route path={`/:unit`} component={ResultUnit}/>
                         <Route path={`/`} component={Global}/>
                         <Redirect to={`/`}/>

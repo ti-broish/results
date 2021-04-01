@@ -52,17 +52,18 @@ export default props => {
                 <Helmet>
                     <title>{data.name}</title>
                 </Helmet>
-                <Crumbs data={data}/>
-                <h1>Район {data.name}</h1>
+                <Crumbs data={data} embed={props.embed}/>
+                <h1 style={props.embed? {fontSize: '15px'} : {}}>Район {data.name}</h1>
 
                 <ResultsTable
                     results={data.results} 
                     parties={globalData.parties} 
                     totalValid={data.validVotes} 
                     totalInvalid={data.invalidVotes}
+                    embed={props.embed}
                 />
 
-                <h1>Секции</h1>
+                <h1 style={props.embed? {fontSize: '15px'} : {}}>Секции</h1>
                 <SubdivisionTable
                     parties={globalData.parties}
                     results={globalData.results}
@@ -82,6 +83,7 @@ export default props => {
                             voters: data.sections[key].voters,
                         };
                     })}
+                    embed={props.embed}
                 />
             </div>
     );

@@ -24,6 +24,13 @@ const SectionDetailsTable = styled.table`
         padding: 10px 0;
         font-size: 18px;
     }
+
+    ${props => props.embed? `
+        td { 
+            font-size: 12px;
+            padding: 5px;
+        }
+    ` : null}
 `;
 
 export default props => {
@@ -51,15 +58,16 @@ export default props => {
                 <Helmet>
                     <title>{data.name}</title>
                 </Helmet>
-                <Crumbs data={data}/>
-                <h1>Секция {data.number}</h1>
+                <Crumbs data={data} embed={props.embed}/>
+                <h1 style={props.embed? {fontSize: '15px'} : {}}>Секция {data.number}</h1>
                 <ResultsTable
                     results={data.results} 
                     parties={globalData.parties} 
                     totalValid={data.validVotes} 
                     totalInvalid={data.invalidVotes}
+                    embed={props.embed}
                 />
-                <SectionDetailsTable>
+                <SectionDetailsTable embed={props.embed}>
                     <tbody>
                         <tr>
                             <td>Пълен код на секция(код на район(2), община(2), адм. район(2), секция(3))</td>

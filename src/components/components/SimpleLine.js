@@ -10,6 +10,7 @@ const SimpleLineStyle = styled.div`
     transition: width 1s ease;
 
     &.thin { height: 20px; }
+    &.ultra-thin { height: 15px; }
     &:hover { box-shadow: 0px 0px 3px #000; }
 `;
 
@@ -41,7 +42,7 @@ export default handleViewport(props => {
     return(
         <div ref={forwardedRef}>
             <SimpleLineStyle 
-                className={props.thin? 'thin' : ''}
+                className={props.embed? 'ultra-thin' : props.thin? 'thin' : ''}
                 style={{width: shouldLoad? `${props.percentage * 100}%` : 0}}
                 data-tip={generateTooltip()}
             />

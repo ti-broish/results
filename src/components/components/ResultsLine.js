@@ -26,6 +26,7 @@ const ResultLineSegment = styled.div`
     width: 0;
 
     &.thin { height: 20px; }
+    &.ultra-thin { height: 15px; }
     &:hover { box-shadow: 0px 0px 3px #000; }
 `;
 
@@ -91,7 +92,7 @@ export default handleViewport(props => {
                     return(
                         <ResultLineSegment 
                             key={i}
-                            className={props.thin? 'thin' : ''}
+                            className={props.embed? 'ultra-thin' : props.thin? 'thin' : ''}
                             style={{
                                 backgroundColor: party.color,
                                 width: shouldLoad? `${percentage * 100}%` : 'calc(100% / 8)'
@@ -103,7 +104,7 @@ export default handleViewport(props => {
             }
             <ResultLineSegment 
                 key={7}
-                className={props.thin? 'thin' : ''}
+                className={props.embed? 'ultra-thin' : props.thin? 'thin' : ''}
                 style={{width: shouldLoad? `${(props.totalValid - displayPartiesTotal) / props.totalValid * 100}%` : 'calc(100% / 8)'}}
                 data-tip={generateTooltip('#ddd', 'Други', (props.totalValid - displayPartiesTotal) / props.totalValid, props.totalValid - displayPartiesTotal, props.totalInvalid - displayPartiesTotalInvalid)}
             />

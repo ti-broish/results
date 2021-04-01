@@ -36,8 +36,8 @@ export default props => {
                 <Helmet>
                     <title>{data.name}</title>
                 </Helmet>
-                <Crumbs data={data}/>
-                <h1>
+                <Crumbs data={data} embed={props.embed}/>
+                <h1 style={props.embed? {fontSize: '15px'} : {}}>
                     {!data.abroad? 'Община' : null}
                     {data.name}
                 </h1>
@@ -46,8 +46,9 @@ export default props => {
                     parties={globalData.parties} 
                     totalValid={data.validVotes} 
                     totalInvalid={data.invalidVotes}
+                    embed={props.embed}
                 />
-                <h1>Райони/секции</h1>
+                <h1 style={props.embed? {fontSize: '15px'} : {}}>Райони/секции</h1>
                 <SubdivisionTable
                     parties={globalData.parties}
                     results={globalData.results}
@@ -68,8 +69,6 @@ export default props => {
                         key === '00'
                         ? Object.keys(data.districts[key].sections).map(sectionKey => { 
                             const section = data.districts[key].sections[sectionKey];
-                            console.log(sectionKey);
-                            console.log(section);
                             return {
                                 number: key + sectionKey,
                                 name: `Секция ${sectionKey}`,
@@ -88,6 +87,7 @@ export default props => {
                             voters: data.districts[key].voters,
                         }]
                     ).reduce((arr, acc) => acc.concat(arr), [])}
+                    embed={props.embed}
                 />
             </div>
     );

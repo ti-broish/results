@@ -13,21 +13,26 @@ const CrumbLink = styled(Link)`
     font-size: 14px;
     text-decoration: none;
     font-weight: bold;
+
+    ${props => props.embed? `
+        font-size: 9px;
+    ` : null}
 `;
 
+const pointyArrowHeightEmbed = 24;
 const pointyArrowHeight = 30;
 
 const PointyArrowBase = styled.span`
     display: inline-block;
-    height: ${pointyArrowHeight}px;
+    height: ${props => props.embed? pointyArrowHeightEmbed : pointyArrowHeight}px;
     box-sizing: border-box;
     vertical-align: top;
 `;
 
 const PointyArrowBack = styled(PointyArrowBase)`
-    border-left: ${pointyArrowHeight / 2}px solid #0000;
-    border-top: ${pointyArrowHeight / 2}px solid #eee;
-    border-bottom: ${pointyArrowHeight / 2}px solid #eee;
+    border-left: ${props => (props.embed? pointyArrowHeightEmbed : pointyArrowHeight) / 2}px solid #0000;
+    border-top: ${props => (props.embed? pointyArrowHeightEmbed : pointyArrowHeight) / 2}px solid #eee;
+    border-bottom: ${props => (props.embed? pointyArrowHeightEmbed : pointyArrowHeight) / 2}px solid #eee;
     margin-left: -11px;
 `;
 
@@ -37,50 +42,51 @@ const PointyArrowMiddle = styled(PointyArrowBase)`
 `;
 
 const PointyArrow = styled(PointyArrowBase)`
-    border-left: ${pointyArrowHeight / 2}px solid #eee;
-    border-top: ${pointyArrowHeight / 2}px solid #0000;
-    border-bottom: ${pointyArrowHeight / 2}px solid #0000;
+    border-left: ${props => (props.embed? pointyArrowHeightEmbed : pointyArrowHeight) / 2}px solid #eee;
+    border-top: ${props => (props.embed? pointyArrowHeightEmbed : pointyArrowHeight) / 2}px solid #0000;
+    border-bottom: ${props => (props.embed? pointyArrowHeightEmbed : pointyArrowHeight) / 2}px solid #0000;
 `;
 
 export default props => {
     const { unit } = useParams();
     const { election, globalData } = useContext(ElectionContext);
 
-    const backUrl = props.data.crumbs?
-        `/${props.data.crumbs[props.data.crumbs.length-1].unit}` :
-        `/`;
+    const backUrl = 
+        props.embed?   
+            (props.data.crumbs? `/embed/mini-results/${props.data.crumbs[props.data.crumbs.length-1].unit}` : `/embed/mini-results`) :
+            (props.data.crumbs? `/${props.data.crumbs[props.data.crumbs.length-1].unit}` : `/`);
 
     return(
         <div>
-            <CrumbLink to={backUrl}>
-                <PointyArrowMiddle style={{backgroundColor: '#0000'}}>
+            <CrumbLink to={backUrl} embed={props.embed}>
+                <PointyArrowMiddle style={{backgroundColor: '#0000'}} embed={props.embed}>
                     <FontAwesomeIcon icon={faArrowLeft}/> Назад
                 </PointyArrowMiddle>
             </CrumbLink>
-            <CrumbLink to={`/`}>
-                <PointyArrowMiddle>
+            <CrumbLink to={props.embed? `/embed/mini-results` : `/`} embed={props.embed}>
+                <PointyArrowMiddle embed={props.embed}>
                     {globalData.name}
                 </PointyArrowMiddle>
-                <PointyArrow/>
+                <PointyArrow embed={props.embed}/>
             </CrumbLink>
             {
                 !props.data.crumbs? null :
                 props.data.crumbs.map(crumb =>
-                    <CrumbLink to={`/${crumb.unit}`}>
-                        <PointyArrowBack/>
-                        <PointyArrowMiddle>
+                    <CrumbLink to={props.embed? `/embed/mini-results/${crumb.unit}` : `/${crumb.unit}`} embed={props.embed}>
+                        <PointyArrowBack embed={props.embed}/>
+                        <PointyArrowMiddle embed={props.embed}>
                             {crumb.name}
                         </PointyArrowMiddle>
-                        <PointyArrow/>
+                        <PointyArrow embed={props.embed}/>
                     </CrumbLink>
                 )
             }
-            <CrumbLink to={`/${unit}`}>
-                <PointyArrowBack/>
-                <PointyArrowMiddle>
+            <CrumbLink to={props.embed? `/embed/mini-results/${unit}` : `/${unit}`} embed={props.embed}>
+                <PointyArrowBack embed={props.embed}/>
+                <PointyArrowMiddle embed={props.embed}>
                     {props.data.name}
                 </PointyArrowMiddle>
-                <PointyArrow/>
+                <PointyArrow embed={props.embed}/>
             </CrumbLink>
         </div>
     )

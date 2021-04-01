@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react';
 
 import { useHistory } from 'react-router-dom';
 
@@ -6,6 +6,8 @@ import { formatCount, formatPercentage } from '../Util';
 
 import styled from 'styled-components';
 import { ElectionContext } from '../Election';
+
+import ReactTooltip from 'react-tooltip';
 
 const BulgariaMapStyle = styled.div`
     path {
@@ -38,6 +40,14 @@ const MapControls = styled.div`
             border-radius: 10px;
         }
     }
+
+    ${props => props.embed? `
+        font-size: 10px;
+        font-weight: bold;
+        height: 32px;
+    ` : `
+    
+    `}
 `;
 
 const MapControlsSingleParty = styled.div`
@@ -62,6 +72,13 @@ const MapControlsSingleParty = styled.div`
             border-radius: 10px;
         }
     }
+
+    ${props => props.embed? `
+        font-size: 10px;
+        font-weight: bold;
+    ` : `
+    
+    `}
 `;
 
 import handleViewport from 'react-in-viewport';
@@ -113,6 +130,8 @@ export default handleViewport(props => {
     const [singlePartyMode, setSinglePartyMode] = useState('percentage');
 
     const { election } = useContext(ElectionContext);
+
+    useEffect(() => { ReactTooltip.rebuild(); }, []);
 
     const generateDisplayParties = (results, count) => {
         let displayParties = [];
@@ -369,16 +388,16 @@ export default handleViewport(props => {
     };
 
     return([
-        props.embed? null :
-        <MapControls>
+        props.mapModesHidden? null :
+        <MapControls embed={props.embed}>
             <button className={mode === 'dominant'? 'selected' : ''} onClick={()=>setMode('dominant')}>Водеща партия</button>
             <button className={mode === 'single-party'? 'selected' : ''} onClick={()=>setMode('single-party')}>Отделна партия</button>
             <button className={mode === 'turnout'? 'selected' : ''} onClick={()=>setMode('turnout')}>Активност</button>
             <button className={mode === 'voters'? 'selected' : ''} onClick={()=>setMode('voters')}>Избиратели</button>
         </MapControls>,
-        props.embed? null :
+        props.mapModesHidden? null :
         mode === 'single-party'?
-        <MapControlsSingleParty>
+        <MapControlsSingleParty embed={props.embed}>
         {
             displayParties.map(party =>
                 <button className={singleParty === party.number? 'selected' : ''} onClick={()=>setSingleParty(party.number)}>
@@ -416,7 +435,10 @@ export default handleViewport(props => {
             {
                 Object.keys(regionPaths).map(key => {
                     const clickHandler = () => {
-                        history.push(`/${key}`);
+                        if(props.embed)
+                            history.push(`/embed/mini-results/${key}`)
+                        else
+                            history.push(`/${key}`);
                     };
 
                     return (
