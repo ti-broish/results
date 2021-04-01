@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import { useLocation } from 'react-router-dom';
+
 import BulgariaMap from '../components/BulgariaMap';
 import ResultsTable from '../components/ResultsTable';
 import SubdivisionTable from '../components/SubdivisionTable';
@@ -24,13 +26,22 @@ const EmbedButton = styled.button`
     }
 `;
 
+const useQuery = () => {
+    return new URLSearchParams(useLocation().search);
+}
+
 export default props => {
     const [embedMode, setEmbedMode] = useState('map');
     const [mapModesOpen, setMapModesOpen] = useState(false);
     const [subdivisionModesOpen, setSubdivisionModesOpen] = useState(false);
 
+    const query = useQuery();
+    const mapOnly = query.get("mapOnly")? true : false;
+    const resultsOnly = query.get("resultsOnly")? true : false;
+
     return(
         <div>
+            {mapOnly || resultsOnly? null :
             <div style={{position: 'fixed', left: 0, top: 0, padding: '5px'}}>
                 <EmbedButton className={embedMode === 'map'? 'active' : ''}  onClick={() => setEmbedMode('map')}>
                     <FontAwesomeIcon icon={faMap}/>
@@ -41,28 +52,30 @@ export default props => {
                 <EmbedButton className={embedMode === 'regions'? 'active' : ''} onClick={() => setEmbedMode('regions')}>
                     <FontAwesomeIcon icon={faCity}/>
                 </EmbedButton>
-            </div>
-            
-            {embedMode !== 'map'? null :
-            <div style={{position: 'fixed', top: 0, right: 0, padding: '5px'}}>
-                <EmbedButton className={mapModesOpen? 'active' : ''} onClick={() => setMapModesOpen(!mapModesOpen)}>
-                    <FontAwesomeIcon icon={faLayerGroup}/>
-                </EmbedButton>
             </div>}
-            {embedMode !== 'regions'? null :
-            <div style={{position: 'fixed', top: 0, right: 0, padding: '5px'}}>
-                <EmbedButton className={subdivisionModesOpen? 'active' : ''} onClick={() => setSubdivisionModesOpen(!subdivisionModesOpen)}>
-                    <FontAwesomeIcon icon={faLayerGroup}/>
-                </EmbedButton>
-            </div>}
-            
+
+            {resultsOnly? null : 
+            <div>
+                {embedMode !== 'map'? null :
+                <div style={{position: 'fixed', top: 0, right: 0, padding: '5px'}}>
+                    <EmbedButton className={mapModesOpen? 'active' : ''} onClick={() => setMapModesOpen(!mapModesOpen)}>
+                        <FontAwesomeIcon icon={faLayerGroup}/>
+                    </EmbedButton>
+                </div>}
+                {embedMode !== 'regions'? null :
+                <div style={{position: 'fixed', top: 0, right: 0, padding: '5px'}}>
+                    <EmbedButton className={subdivisionModesOpen? 'active' : ''} onClick={() => setSubdivisionModesOpen(!subdivisionModesOpen)}>
+                        <FontAwesomeIcon icon={faLayerGroup}/>
+                    </EmbedButton>
+                </div>}
+            </div>}    
             <div style={{height: (embedMode === 'map' && mapModesOpen)? '43px' : '75px', textAlign: 'center'}}>
                 <div style={{padding: '5px', fontWeight: 'bold'}}>
                     {props.globalData.name}
                 </div>
             </div>
             {
-                embedMode === 'map'
+                !resultsOnly && (mapOnly || embedMode === 'map')
                 ?
                     <BulgariaMap 
                         regions={props.globalData.regions} 
@@ -71,7 +84,7 @@ export default props => {
                         mapModesHidden={!mapModesOpen}
                         embed
                     /> 
-                :  embedMode === 'bars'
+                :  resultsOnly || embedMode === 'bars'
                 ?   <ResultsTable 
                         results={props.globalData.results} 
                         parties={props.globalData.parties} 

@@ -6,6 +6,7 @@ import Region from '../units/Region.js';
 import Admunit from '../units/Admunit.js';
 import District from '../units/District.js';
 import Section from '../units/Section.js';
+import Source from './Source';
 
 export default props => {
     const { unit } = useParams();
@@ -31,6 +32,7 @@ export default props => {
                 ? <Section embed/>
                 : returnToMain()
             }
+            <Source/>
         </div>
     )
 };
