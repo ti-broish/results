@@ -24,9 +24,10 @@ const SourceStyle = styled.div`
 `;
 
 export default props => {
+    const publicURL = process.env.PUBLIC_URL? process.env.PUBLIC_URL : '';
     return(
         <SourceStyle>
-            <p>Източник: <a href="https://tibroish.bg"><img style={{height: '25px', verticalAlign: 'middle'}} src='/brand/source_logo.png'/></a></p>
+            <p>Източник: <a href="https://tibroish.bg"><img style={{height: '25px', verticalAlign: 'middle'}} src={`${publicURL}/brand/source_logo.png`}/></a></p>
         </SourceStyle>
     );
 };
