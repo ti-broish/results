@@ -3,11 +3,19 @@ import React, { useState, useContext, useRef, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 
 import { formatCount, formatPercentage } from '../Util';
-
-import styled from 'styled-components';
 import { ElectionContext } from '../Election';
 
+import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip';
+
+const StyledTooltip = styled(ReactTooltip)`
+    background-color: white !important;
+    opacity: 1 !important;
+    color: black !important;
+    border: none;
+    padding: 0;
+    margin: 0;
+`;
 
 const BulgariaMapStyle = styled.div`
     path {
@@ -130,8 +138,6 @@ export default handleViewport(props => {
     const [singlePartyMode, setSinglePartyMode] = useState('percentage');
 
     const { election } = useContext(ElectionContext);
-
-    useEffect(() => { ReactTooltip.rebuild(); }, []);
 
     const generateDisplayParties = (results, count) => {
         let displayParties = [];
@@ -411,6 +417,18 @@ export default handleViewport(props => {
             </div>
         </MapControlsSingleParty> : null,
         <BulgariaMapStyle>
+        <StyledTooltip 
+            multiline={true} 
+            html={true}
+            border={true}
+            borderColor={'#aaa'}
+            arrowColor={'white'}
+            effect={'solid'}
+            place={'top'}
+            backgroundColor={'#fff'}
+            type={"dark"}
+            id={'bulgariaMapTooltip'}
+        />
         <svg
             id='bulgaria-map'
             style={{width: '100%', opacity: shouldLoad? 1 : 0, transition: 'opacity 1s ease'}}
@@ -447,6 +465,7 @@ export default handleViewport(props => {
                             style={{fill: shouldLoad? regionPaths[key].color : '#888', transition: 'fill 1.5s ease'}}
                             d={regionPaths[key].path}
                             data-tip={generateToolTipContent(key)}
+                            data-for={'bulgariaMapTooltip'}
                         />
                     )
                 })

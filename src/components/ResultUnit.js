@@ -14,6 +14,8 @@ export default props => {
     useEffect(() => {window.scrollTo(0, 0);}, []);
 
     const returnToMain = () => {
+        console.log('returning to main');
+        console.log(unit);
         history.push('/');
         return null;
     };

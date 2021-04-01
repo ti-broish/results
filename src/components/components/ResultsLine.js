@@ -98,6 +98,7 @@ export default handleViewport(props => {
                                 width: shouldLoad? `${percentage * 100}%` : 'calc(100% / 8)'
                             }}
                             data-tip={generateTooltip(party.color, party.name, percentage, party.validVotes, party.invalidVotes)}
+                            data-for={`subdivisionTableTooltip`}
                         />
                     );  
                 })
@@ -107,6 +108,7 @@ export default handleViewport(props => {
                 className={props.embed? 'ultra-thin' : props.thin? 'thin' : ''}
                 style={{width: shouldLoad? `${(props.totalValid - displayPartiesTotal) / props.totalValid * 100}%` : 'calc(100% / 8)'}}
                 data-tip={generateTooltip('#ddd', 'Други', (props.totalValid - displayPartiesTotal) / props.totalValid, props.totalValid - displayPartiesTotal, props.totalInvalid - displayPartiesTotalInvalid)}
+                data-for={`subdivisionTableTooltip`}
             />
             {!props.showLegend? null :
                 <div className='legend'>

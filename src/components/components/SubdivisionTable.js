@@ -101,6 +101,15 @@ const SubdivisionControlsParty = styled.div`
     ` : null}
 `;
 
+const StyledTooltip = styled(ReactTooltip)`
+    background-color: white !important;
+    opacity: 1 !important;
+    color: black !important;
+    border: none;
+    padding: 0;
+    margin: 0;
+`;
+
 export default props => {
     const [mode, setMode] = useState('distribution');
     const [singleParty, setSingleParty] = useState('');
@@ -187,6 +196,18 @@ export default props => {
 
     return(
         <div>
+            <StyledTooltip 
+                multiline={true} 
+                html={true}
+                border={true}
+                borderColor={'#aaa'}
+                arrowColor={'white'}
+                effect={'solid'}
+                place={'top'}
+                backgroundColor={'#fff'}
+                type={"dark"}
+                id={`subdivisionTableTooltip`}
+            />
             {props.modesHidden? null :
             <SubdivisionTableControls embed={props.embed}>
                 <button className={mode === 'distribution'? 'selected' : ''}  onClick={()=>setMode('distribution')}>Разпределение</button>

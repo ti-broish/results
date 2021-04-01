@@ -46,12 +46,6 @@ export default props => {
         }).catch(err => { if(!data) history.push('/') });
     }, []);
 
-    //let displayParties = [];
-
-    //if(data) {
-    //    displayParties = globalData.parties.sort((a, b) => b.validVotes - a.validVotes).slice(0, 7);
-    //}
-
     return (
         !data? <LoadingScreen/> :
             <div id='section-data'>

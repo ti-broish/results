@@ -45,6 +45,7 @@ export default handleViewport(props => {
                 className={props.embed? 'ultra-thin' : props.thin? 'thin' : ''}
                 style={{width: shouldLoad? `${props.percentage * 100}%` : 0}}
                 data-tip={generateTooltip()}
+                data-for={`subdivisionTableTooltip`}
             />
         </div>
     )

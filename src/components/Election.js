@@ -14,19 +14,6 @@ import { Wrapper } from './App';
 
 export const ElectionContext = React.createContext();
 
-import styled from 'styled-components';
-import ReactTooltip from 'react-tooltip';
-import Embed from './Embed';
-
-const StyledTooltip = styled(ReactTooltip)`
-    background-color: white !important;
-    opacity: 1 !important;
-    color: black !important;
-    border: none;
-    padding: 0;
-    margin: 0;
-`;
-
 export default props => {
     const [globalData, setGlobalData] = useState(null);
 
@@ -43,25 +30,12 @@ export default props => {
             <Header title={!globalData? null : globalData.name}/>
             <Wrapper>
             {
-                !globalData? <LoadingScreen/> : [
-                    <StyledTooltip 
-                        multiline={true} 
-                        html={true}
-                        border={true}
-                        borderColor={'#aaa'}
-                        arrowColor={'white'}
-                        effect={'solid'}
-                        place={'top'}
-                        scrollHide={false}
-                        backgroundColor={'#fff'}
-                        type={"dark"}
-                    />,
+                !globalData? <LoadingScreen/> :
                     <Switch>
                         <Route path={`/:unit`} component={ResultUnit}/>
                         <Route path={`/`} component={Global}/>
                         <Redirect to={`/`}/>
                     </Switch>
-                ]
             }
             </Wrapper>
             <Footer/>

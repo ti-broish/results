@@ -17,9 +17,8 @@ export default handleViewport(props => {
                 <Link to={
                     props.embed
                     ? `/embed/mini-results/${props.unit?props.unit:''}${props.subdivision.number}`
-                    : `/${props.unit?props.unit:''}${props.subdivision.number}
-                `}>
-                    
+                    : `/${props.unit?props.unit:''}${props.subdivision.number}`
+                }>    
                     {props.showNumbers? props.subdivision.number : null} {props.subdivision.name}
                 </Link>
             </td>
