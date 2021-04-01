@@ -53,6 +53,10 @@ export default props => {
         { num: '32', name: 'Извън Страната'},
     ];
 
+    const dropdownClicked = e => {
+        setSelectedRegion(e.target.value);
+    };
+
     const publicURL = process.env.PUBLIC_URL? process.env.PUBLIC_URL : '';
     return(
         <div>
@@ -96,10 +100,10 @@ export default props => {
                     </iframe>
                     <EmbedCodeDisplay code={`<iframe width="600" height="500" style="border: none;" loading="lazy" allowfullscreen src="https://tibroish.bg${publicURL}/embed/mini-results?resultsOnly=true"></iframe>`}/>
                     <h2>4. Резултати за район</h2>
-                    <select>
+                    <select onClick={dropdownClicked}>
                     {
                         regions.map(region =>
-                            <option selected={region.num === selectedRegion} onClick={() => setSelectedRegion(region.num)}>
+                            <option selected={region.num === selectedRegion} value={region.num}>
                                 {region.name}
                             </option>    
                         )
