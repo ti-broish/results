@@ -74,21 +74,29 @@ const ResultsTableDiv = styled.table`
 import ResultsTableRow from './ResultsTableRow';
 
 export default props => {
+    let partiesObj = {};
+    props.parties.forEach(party => { partiesObj[party.id] = { displayName: party.displayName, color: party.color}});
 
-    let displayParties = [];
-
-    for(var i = 0; i < props.results.length; i += 3) {
-        displayParties.push({
-            number: props.results[i],
-            validVotes: props.results[i+1],
-            invalidVotes: props.results[i+2],
-            ...props.parties[props.results[i]]
-        });
+    for(var i = 0; i < props.results.length; i += 2) {
+        partiesObj[props.results[i]].validVotes = props.results[i+1];
     }
+
+    const keyToParty = key => { return {...partiesObj[key], number: key}};
+    let displayParties = Object.keys(partiesObj).map(keyToParty).filter(party => parseInt(party.number) !== 0);
+    const nikogo = keyToParty(0);
 
     let displayPartiesTotal = 0;
     
-    displayParties = displayParties.sort((a, b) => b.validVotes - a.validVotes).slice(0, 7);
+    displayParties = displayParties.sort((a, b) => {
+        if(!isNaN(a.validVotes) && !isNaN(b.validVotes)) {
+            return b.validVotes - a.validVotes;
+        } else if(isNaN(a.validVotes) && !isNaN(b.validVotes)) {
+            return 100000;
+        } else if(!isNaN(a.validVotes) && isNaN(b.validVotes)) {
+            return -10000;
+        } else return parseInt(a.number, 10) - parseInt(b.number, 10);
+    }).slice(0, 6);
+    displayParties.push(nikogo);
     displayParties.forEach(party => displayPartiesTotal += party.validVotes);
     
     let thresholdPlaced = false;
@@ -118,7 +126,7 @@ export default props => {
                 }
                 <ResultsTableRow party={{
                         number: '',
-                        name: 'Други',
+                        displayName: 'Други',
                         validVotes: props.totalValid - displayPartiesTotal,
                         color: 'rgb(102, 102, 102)'
                     }} 

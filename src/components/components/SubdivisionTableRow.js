@@ -17,8 +17,8 @@ export default handleViewport(props => {
             <td>
                 <Link to={
                     props.embed
-                    ? `/embed/mini-results/${props.unit?props.unit:''}${props.subdivision.number}`
-                    : `/${props.unit?props.unit:''}${props.subdivision.number}`
+                    ? `/embed/mini-results/${props.subdivision.segment}`
+                    : `/${props.subdivision.segment}`
                 }>
                     {props.showNumbers? props.subdivision.number : null} {props.subdivision.name}
                 </Link>

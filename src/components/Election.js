@@ -8,32 +8,31 @@ import Footer from './layout/Footer';
 import LoadingScreen from './layout/LoadingScreen';
 
 import ResultUnit from './ResultUnit.js';
-import Global from './units/Global.js';
 
 import { Wrapper } from './App';
 
 export const ElectionContext = React.createContext();
 
 export default props => {
-    const [globalData, setGlobalData] = useState(null);
+    const [meta, setMeta] = useState(null);
 
     const dataURL = process.env.DATA_URL? process.env.DATA_URL : '/json';
 
     useEffect(() => {
-        axios.get(`${dataURL}/total.json`).then(res => {
-            setGlobalData(res.data);
+        axios.get(`${dataURL}/meta.json`).then(res => {
+            console.log(res.data);
+            setMeta(res.data);
         });
     }, []);
 
     return(
-        <ElectionContext.Provider value={{ globalData, dataURL }}>
-            <Header title={!globalData? null : globalData.name}/>
+        <ElectionContext.Provider value={{ meta, parties: !meta? null : meta.parties, dataURL }}>
+            <Header title={!meta? null : meta.name}/>
             <Wrapper>
             {
-                !globalData? <LoadingScreen/> :
+                !meta? <LoadingScreen/> :
                     <Switch>
-                        <Route path={`/:unit`} component={ResultUnit}/>
-                        <Route path={`/`} component={Global}/>
+                        <Route path={[`/:unit`, `/`]} component={ResultUnit}/>
                         <Redirect to={`/`}/>
                     </Switch>
             }

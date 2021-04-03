@@ -193,6 +193,15 @@ export default props => {
 
         return subdivisions;
     };
+    
+    const topLevelNode = props.subdivisions[0];
+    console.log(topLevelNode);
+    const midLevelNode = topLevelNode.nodes? topLevelNode.nodes[0] : null;
+    const lowLevelNode = midLevelNode? midLevelNode.nodes? midLevelNode.nodes[0] : null : null;
+
+    console.log(topLevelNode.nodesType);
+    console.log(midLevelNode.nodesType);
+    console.log(lowLevelNode.nodesType);
 
     return(
         <div>

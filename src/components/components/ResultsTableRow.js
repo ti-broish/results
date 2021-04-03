@@ -13,24 +13,24 @@ export default handleViewport(props => {
 
     return (
         <tr ref={forwardedRef} style={{opacity: shouldLoad? 1 : 0}}>
-            <td>{props.party.number}</td>
+            <td>{!props.party.number? null : props.party.number}</td>
             <td>
-                <span style={{color: props.party.color}}>
-                    {props.party.name}
+                <span style={{color: `#${props.party.color}`}}>
+                    {props.party.displayName}
                 </span>
                 <span className={'votes-count'}>
-                    {formatCount(props.party.validVotes)}
+                    {!props.party.validVotes? null : formatCount(props.party.validVotes)}
                 </span>
                 
                 <span style={{float: 'right'}}>
-                    {formatPercentage(props.percentage)}%
+                    {!props.percentage? 'Няма данни' : `${formatPercentage(props.percentage)}%`}
                 </span>
                 
                 <br/>
 
                 <div>
                     <div className='vote-percent-bar' style={{
-                        backgroundColor: props.party.color,
+                        backgroundColor: `#${props.party.color}`,
                         transition: 'width 2s ease',
                         width: shouldLoad? `${props.barPercent * 100}%` : 0,
                         fontSize: '28px'

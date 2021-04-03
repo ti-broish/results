@@ -25,6 +25,11 @@ const ResultLineSegment = styled.div`
     transition: width 1s ease;
     width: 0;
 
+    text-align: center;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+
     &.thin { height: 20px; }
     &.ultra-thin { height: 15px; }
     &:hover { box-shadow: 0px 0px 3px #000; }
@@ -40,12 +45,14 @@ export default handleViewport(props => {
 
     let displayParties = [];
 
-    for(var i = 0; i < props.results.length; i += 3) {
+    const results = props.results? props.results : [];
+
+    for(var i = 0; i < results.length; i += 3) {
         displayParties.push({
-            number: props.results[i],
-            validVotes: props.results[i+1],
-            invalidVotes: props.results[i+2],
-            ...props.parties[props.results[i]]
+            number: results[i],
+            validVotes: results[i+1],
+            invalidVotes: results[i+2],
+            ...props.parties[results[i]]
         });
     }
 
@@ -84,32 +91,45 @@ export default handleViewport(props => {
         `);
     };
 
+    console.log(displayParties);
+
     return(
         <div className='results-line' ref={forwardedRef}>
             {
-                displayParties.map((party, i) => {
-                    const percentage = party.validVotes / props.totalValid;
-                    return(
+                results.length === 0?
+                    <ResultLineSegment 
+                        key={7}
+                        className={props.embed? 'ultra-thin' : props.thin? 'thin' : ''}
+                        style={{width: '100%'}}
+                        data-tip={generateTooltip('#ddd', 'Няма данни', (props.totalValid - displayPartiesTotal) / props.totalValid, props.totalValid - displayPartiesTotal, props.totalInvalid - displayPartiesTotalInvalid)}
+                        data-for={`subdivisionTableTooltip`}
+                    >
+                        Няма данни
+                    </ResultLineSegment> : [
+                        displayParties.map((party, i) => {
+                            const percentage = party.validVotes / props.totalValid;
+                            return(
+                                <ResultLineSegment 
+                                    key={i}
+                                    className={props.embed? 'ultra-thin' : props.thin? 'thin' : ''}
+                                    style={{
+                                        backgroundColor: party.color,
+                                        width: shouldLoad? `${percentage * 100}%` : 'calc(100% / 8)'
+                                    }}
+                                    data-tip={generateTooltip(party.color, party.name, percentage, party.validVotes, party.invalidVotes)}
+                                    data-for={`subdivisionTableTooltip`}
+                                />
+                            );  
+                        }),
                         <ResultLineSegment 
-                            key={i}
+                            key={7}
                             className={props.embed? 'ultra-thin' : props.thin? 'thin' : ''}
-                            style={{
-                                backgroundColor: party.color,
-                                width: shouldLoad? `${percentage * 100}%` : 'calc(100% / 8)'
-                            }}
-                            data-tip={generateTooltip(party.color, party.name, percentage, party.validVotes, party.invalidVotes)}
+                            style={{width: shouldLoad? `${(props.totalValid - displayPartiesTotal) / props.totalValid * 100}%` : 'calc(100% / 8)'}}
+                            data-tip={generateTooltip('#ddd', 'Други', (props.totalValid - displayPartiesTotal) / props.totalValid, props.totalValid - displayPartiesTotal, props.totalInvalid - displayPartiesTotalInvalid)}
                             data-for={`subdivisionTableTooltip`}
                         />
-                    );  
-                })
-            }
-            <ResultLineSegment 
-                key={7}
-                className={props.embed? 'ultra-thin' : props.thin? 'thin' : ''}
-                style={{width: shouldLoad? `${(props.totalValid - displayPartiesTotal) / props.totalValid * 100}%` : 'calc(100% / 8)'}}
-                data-tip={generateTooltip('#ddd', 'Други', (props.totalValid - displayPartiesTotal) / props.totalValid, props.totalValid - displayPartiesTotal, props.totalInvalid - displayPartiesTotalInvalid)}
-                data-for={`subdivisionTableTooltip`}
-            />
+                    ]
+            }        
             {!props.showLegend? null :
                 <div className='legend'>
                 {
