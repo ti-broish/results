@@ -53,6 +53,10 @@ const MapControls = styled.div`
     ` : `
     
     `}
+
+    ${props => props.homepage? `
+        font-size: 26px;
+    ` : ``}
 `;
 
 const MapControlsSingleParty = styled.div`
@@ -84,6 +88,10 @@ const MapControlsSingleParty = styled.div`
     ` : `
     
     `}
+
+    ${props => props.homepage? `
+        font-size: 26px;
+    ` : ``}
 `;
 
 import regionPaths from './regionPaths';
@@ -140,9 +148,11 @@ export default handleViewport(props => {
 
     const { displayParties, displayPartiesTotal } = generateDisplayParties(props.parties, props.results, 6, null, null, '0');
 
+    const publicURL = process.env.PUBLIC_URL? process.env.PUBLIC_URL : '/';
+
     return([
         props.mapModesHidden? null :
-        <MapControls embed={props.embed}>
+        <MapControls embed={props.embed} homepage={props.homepage}>
             <button className={mode === 'dominant'? 'selected' : ''} onClick={()=>setMode('dominant')}>Водеща партия</button>
             <button className={mode === 'single-party'? 'selected' : ''} onClick={()=>setMode('single-party')}>Отделна партия</button>
             <button className={mode === 'turnout'? 'selected' : ''} onClick={()=>setMode('turnout')}>Активност</button>
@@ -150,7 +160,7 @@ export default handleViewport(props => {
         </MapControls>,
         props.mapModesHidden? null :
         mode === 'single-party'?
-        <MapControlsSingleParty embed={props.embed}>
+        <MapControlsSingleParty embed={props.embed} homepage={props.homepage}>
         {
             displayParties.map(party =>
                 <button className={singleParty === party.number? 'selected' : ''} onClick={()=>setSingleParty(party.number)}>
@@ -200,7 +210,9 @@ export default handleViewport(props => {
             {
                 Object.keys(regionPaths).map(key => {
                     const clickHandler = () => {
-                        if(props.embed)
+                        if(props.linkToMainSite)
+                            history.push(`https://tibroish.bg${publicURL}/${key}`)
+                        else if(props.embed)
                             history.push(`/embed/mini-results/${key}`)
                         else
                             history.push(`/${key}`);

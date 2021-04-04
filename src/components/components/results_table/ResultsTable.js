@@ -73,7 +73,7 @@ import ResultsTableRow from './ResultsTableRow';
 import { generateDisplayParties } from '../bulgaria_map/generateRegionData';
 
 export default props => {
-    const { displayParties, displayPartiesTotal } = generateDisplayParties(props.parties, props.results, 7, null, '0');
+    const { displayParties, displayPartiesTotal } = generateDisplayParties(props.parties, props.results, 11, null, '0');
     
     let thresholdPlaced = false;
 

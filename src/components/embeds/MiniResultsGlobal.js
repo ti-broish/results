@@ -46,6 +46,8 @@ export default props => {
     const query = useQuery();
     const mapOnly = query.get("mapOnly")? true : false;
     const resultsOnly = query.get("resultsOnly")? true : false;
+    const linkToMainSite = query.get("linkToMainSite")? true : false;
+    const homepage = query.get("homepage")? true : false;
 
     const [data, setData] = useState(null);
 
@@ -101,6 +103,8 @@ export default props => {
                         parties={parties}
                         results={data.results} 
                         mapModesHidden={!mapModesOpen}
+                        linkToMainSite={linkToMainSite}
+                        homepage={homepage}
                         embed
                     />
                 :  resultsOnly || embedMode === 'bars'
@@ -124,7 +128,7 @@ export default props => {
                 : null
             }             
             <div style={{height: '30px', display: 'block'}}/>   
-            <Source/>
+            {homepage? null : <Source/>}
         </div>
     );
 };
