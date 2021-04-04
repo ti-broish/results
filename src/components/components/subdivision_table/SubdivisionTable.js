@@ -232,6 +232,7 @@ export default props => {
                 id={`subdivisionTableTooltip`}
             />
             <div>
+                {props.modesHidden? null : [
                 <SubdivisionTableControls embed={props.embed} style={{marginBottom: '10px'}}>
                 {maxDepth > 1? [
                     'Покажи: ',
@@ -249,8 +250,7 @@ export default props => {
                     <button className={depthMode === 'showBottomNodes'? 'selected' : ''} onClick={()=>setDepthMode('showBottomNodes')}>
                         {mapNodeType(getBottomNodeType())}
                     </button> : null}
-                </SubdivisionTableControls>
-                {props.modesHidden? null :
+                </SubdivisionTableControls>,
                 <SubdivisionTableControls embed={props.embed}>
                     <button className={mode === 'distribution'? 'selected' : ''}  onClick={()=>setMode('distribution')}>
                         Разпределение
@@ -267,7 +267,7 @@ export default props => {
                     }}>
                         Активност
                     </button>
-                </SubdivisionTableControls>}
+                </SubdivisionTableControls>,
                 <SubdivisionControlsParty embed={props.embed}>
                 { 
                     mode !== 'distribution'? null : [
@@ -286,6 +286,7 @@ export default props => {
                     ]
                 }
                 </SubdivisionControlsParty>
+                ]}
             </div>
             <SubdivisionTableDiv embed={props.embed}>
             <tbody>

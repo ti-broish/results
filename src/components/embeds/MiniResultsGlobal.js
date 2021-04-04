@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 import BulgariaMap from '../components/bulgaria_map/BulgariaMap';
 import ResultsTable from '../components/results_table/ResultsTable';
@@ -26,11 +27,18 @@ const EmbedButton = styled.button`
     }
 `;
 
+import { aggregateData } from '../units/Aggregation';
+import { populateWithFakeResults } from '../units/Aggregation';
+
 const useQuery = () => {
     return new URLSearchParams(useLocation().search);
 }
 
+import { ElectionContext } from '../Election';
+import LoadingScreen from '../layout/LoadingScreen';
+
 export default props => {
+    const { meta, parties, dataURL } = useContext(ElectionContext);
     const [embedMode, setEmbedMode] = useState('map');
     const [mapModesOpen, setMapModesOpen] = useState(false);
     const [subdivisionModesOpen, setSubdivisionModesOpen] = useState(false);
@@ -39,7 +47,18 @@ export default props => {
     const mapOnly = query.get("mapOnly")? true : false;
     const resultsOnly = query.get("resultsOnly")? true : false;
 
+    const [data, setData] = useState(null);
+
+    useEffect(() => {
+        setData(null);
+        axios.get(`${dataURL}/index.json`).then(res => {
+            res.data = populateWithFakeResults(res.data, parties);
+            setData(res.data);
+        }).catch(err => { console.log(err); if(!data) history.push('/'); });
+    }, []);
+
     return(
+        !data? <LoadingScreen/> :
         <div>
             {mapOnly || resultsOnly? null :
             <div style={{position: 'fixed', left: 0, top: 0, padding: '5px'}}>
@@ -71,43 +90,34 @@ export default props => {
             </div>}    
             <div style={{height: (embedMode === 'map' && mapModesOpen)? '43px' : '75px', textAlign: 'center'}}>
                 <div style={{padding: '5px', fontWeight: 'bold'}}>
-                    {props.globalData.name}
+                    {meta.name}
                 </div>
             </div>
             {
                 !resultsOnly && (mapOnly || embedMode === 'map')
                 ?
                     <BulgariaMap 
-                        regions={props.globalData.regions} 
-                        parties={props.globalData.parties}
-                        results={props.globalData.results}
+                        regions={data.nodes} 
+                        parties={parties}
+                        results={data.results} 
                         mapModesHidden={!mapModesOpen}
                         embed
-                    /> 
+                    />
                 :  resultsOnly || embedMode === 'bars'
                 ?   <ResultsTable 
-                        results={props.globalData.results} 
-                        parties={props.globalData.parties} 
-                        totalValid={props.globalData.validVotes} 
-                        totalInvalid={props.globalData.invalidVotes}
-                        showThreshold={props.globalData.electionType === 'national-parliament'}
+                        results={data.results} 
+                        parties={parties} 
+                        totalValid={data.stats.validVotes} 
+                        totalInvalid={data.stats.invalidVotes}
+                        showThreshold={data.type === 'election'}
                         embed
                     />
                 : embedMode === 'regions'
                 ?   <SubdivisionTable
-                        parties={props.globalData.parties}
-                        results={props.globalData.results}
+                        parties={parties}
+                        results={data.results}
                         showNumbers
-                        subdivisions={Object.keys(props.globalData.regions).map(key => {
-                            return {
-                                number: key,
-                                name: props.globalData.regions[key].name,
-                                results: props.globalData.regions[key].results,
-                                totalValid: props.globalData.regions[key].validVotes,
-                                totalInvalid: props.globalData.regions[key].invalidVotes,
-                                voters: props.globalData.regions[key].voters,
-                            };
-                        })}
+                        subdivisions={data.nodes.map(aggregateData)}
                         modesHidden={!subdivisionModesOpen}
                         embed
                     />

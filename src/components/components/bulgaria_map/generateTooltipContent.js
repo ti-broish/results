@@ -25,7 +25,7 @@ export const generateTooltipDominant = (region, tooltipData) => {
                         <td style="padding-right: 20px;">${party.displayName}</td>
                         ${
                             party.validVotes? `
-                                <td style="text-align: right;">${formatCount(party.validVotes)}</td>
+                                <td style="text-align: right; padding-right: 20px;">${formatCount(party.validVotes)}</td>
                                 <td style=\"text-align: right;\">${formatPercentage(party.validVotes / region.stats.validVotes)}%</td>
                             ` : `
                                 <td colspan="2">Няма данни</td>
@@ -37,7 +37,7 @@ export const generateTooltipDominant = (region, tooltipData) => {
                     <td>Други</td>
                     ${
                         region.stats.validVotes? `
-                            <td style="text-align: right;">${formatCount(region.stats.validVotes - displayPartiesTotal)}</td>
+                            <td style="text-align: right; padding-right: 20px;">${formatCount(region.stats.validVotes - displayPartiesTotal)}</td>
                             <td style="text-align: right;">${formatPercentage((region.stats.validVotes - displayPartiesTotal) / region.stats.validVotes)}%</td>
                         ` : `
                             <td colspan="2">Няма данни</td>
