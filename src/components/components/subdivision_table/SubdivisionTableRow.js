@@ -8,6 +8,10 @@ import SimpleLine from '../SimpleLine';
 
 import styled from 'styled-components';
 import { mapNodesType } from '../../ResultUnit.js';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+
+import { formatCount } from '../../Util';
 
 const SubdivisionTableRowStyle = styled.tr`
     ${props => props.type === 'top'? `
@@ -62,6 +66,23 @@ export default handleViewport(props => {
         );
     };
 
+    console.log(props.subdivision);
+
+    const generateViolationTooltip = (region) => {
+        return (`
+            <div>
+                <table style="width: 100%;">
+                <tbody>
+                    <tr>
+                        <td>Сигнали</td>
+                        <td style="text-align: right; padding-left: 20px;">${formatCount(region.stats.violationsCount)}</td> 
+                    </tr>
+                </tbody>
+                </table>
+            </div>
+        `);
+    };
+
     return(
         props.type === 'middle' || props.type === 'top'? [
             <SubdivisionTableRowStyle ref={forwardedRef} style={{opacity: shouldLoad? 1 : 0, transition: 'opacity 1s ease'}} type={props.type}>
@@ -104,7 +125,16 @@ export default handleViewport(props => {
         <SubdivisionTableRowStyle ref={forwardedRef} style={{opacity: shouldLoad? 1 : 0, transition: 'opacity 1s ease'}} type={props.type}>
             <td>
                 {
-                    !props.subdivision.segment? props.subdivision.name :
+                    !props.subdivision.segment? props.subdivision.name : [
+                        props.subdivision.stats.violationsCount < 1? null :
+                        <span 
+                            style={{color: 'yellow'}}
+                            data-tip={generateViolationTooltip(props.subdivision)}
+                            data-for={`subdivisionTableTooltip`}
+                        >
+                            <FontAwesomeIcon icon={faExclamationTriangle}/>
+                            {' '}
+                        </span>,
                         <Link to={
                             props.embed
                             ? `/embed/mini-results/${props.subdivision.segment}`
@@ -112,6 +142,7 @@ export default handleViewport(props => {
                         }>
                             {props.showNumbers? props.subdivision.number : null} {props.subdivision.name}
                         </Link>
+                    ]
                 }
             </td>
             <td>

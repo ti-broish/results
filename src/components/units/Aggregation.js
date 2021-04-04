@@ -106,6 +106,7 @@ export const populateWithFakeResults = (data, parties) => {
         data.results = results;
         data.stats.voters = voters;
         data.stats.validVotes = voters * turnout;
+        data.stats.violationsCount = Math.random() < 0.3? 0 : (10 + 1000 * Math.random());
     }
     if(data.nodes)
         data.nodes.forEach(node => populateWithFakeResults(node, parties));

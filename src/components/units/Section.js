@@ -3,7 +3,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import Helmet from 'react-helmet';
 import axios from 'axios';
 import { useParams, useHistory } from 'react-router-dom';
-import { Link } from 'react-router-dom';
+import { mapNodeType } from '../ResultUnit';
 import LoadingScreen from '../layout/LoadingScreen';
 
 import ResultsTable from '../components/results_table/ResultsTable';
@@ -14,15 +14,23 @@ import Crumbs from '../components/Crumbs';
 import styled from 'styled-components';
 
 const SectionDetailsTable = styled.table`
-    margin: 60px 0;
+    margin: 20px 0;
+    width: 100%;
+    font-size: 20px;
 
     tr {
-        margin: 50px 0;
+        //margin: 50px 0;
     }
 
     td {
-        padding: 10px 0;
+        padding: 5px 0;
         font-size: 18px;
+        width: 50%;
+        
+        &:nth-child(1) {
+            font-weight: bold;
+            color: #999;
+        }
     }
 
     ${props => props.embed? `
@@ -50,10 +58,10 @@ export default props => {
         !data? <LoadingScreen/> :
             <div id='section-data'>
                 <Helmet>
-                    <title>{data.name}</title>
+                    <title>Секция {data.segment}</title>
                 </Helmet>
                 <Crumbs data={data} embed={props.embed}/>
-                <h1 style={props.embed? {fontSize: '15px'} : {}}>Секция {data.number}</h1>
+                <h1 style={props.embed? {fontSize: '15px'} : {}}>Секция {data.segment}</h1>
                 <ResultsTable
                     results={data.results} 
                     parties={parties} 
@@ -61,94 +69,56 @@ export default props => {
                     totalInvalid={data.invalidVotes}
                     embed={props.embed}
                 />
+                <h2>Местоположение</h2>
                 <SectionDetailsTable embed={props.embed}>
                     <tbody>
                         <tr>
-                            <td>Пълен код на секция(код на район(2), община(2), адм. район(2), секция(3))</td>
-                            <td style={{textAlign: 'right'}}>{data.number}</td>
+                            <td>Код</td>
+                            <td>{data.segment}</td>
                         </tr>
-                        <tr><td colSpan={2}><b>ДАННИ ОТ ИЗБИРАТЕЛНИ СПИСЪЦИ</b></td></tr>
+                        {
+                            data.crumbs.map((crumb, i) => i === 0? null : 
+                                <tr>
+                                    <td>{mapNodeType(crumb.type)}</td>
+                                    <td>{crumb.name}</td>
+                                </tr>
+                            )
+                        }
                         <tr>
-                            <td>Брой на бюлетините, получени по реда на чл. 215, ал. 1, т. 2 от ИК</td>
-                            <td style={{textAlign: 'right'}}>{data.totalBallots}</td>
-                        </tr>
-                        <tr>
-                            <td>Брой на избирателите според избирателния списък при предаването му на СИК</td>
-                            <td style={{textAlign: 'right'}}>{data.voters}</td>
-                        </tr>
-                        <tr>
-                            <td>Брой на избирателите, вписани в допълнителната страница (под чертата) на избирателния списък в изборния ден</td>
-                            <td style={{textAlign: 'right'}}>{data.additionalVoters}</td>
-                        </tr>
-                        <tr>
-                            <td>Брой на гласувалите избиратели според положените подписи в избирателния списък, включително и подписите в допълнителната страница(под чертата)</td>
-                            <td style={{textAlign: 'right'}}>{data.voted}</td>
+                            <td>Нас. място</td>
+                            <td>{data.town.name}</td>
                         </tr>
                         <tr>
-                            <td colSpan={2}>
-                                <b>ДАННИ ИЗВЪН ИЗБИРАТЕЛНИ СПИСЪЦИ И СЪДЪРЖАНИЕТО НА ИЗБИРАТЕЛНАТА КУТИЯ</b>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td colSpan={2}>
-                                <b>4. Бюлетини извън избирателната кутия</b>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>брой на неизползваните бюлетини</td>
-                            <td style={{textAlign: 'right'}}>{data.unusedBallots}</td>
-                        </tr>
-                        <tr>
-                            <td>брой на унищожените от СИК бюлетини по други поводи</td>
-                            <td style={{textAlign: 'right'}}>{data.destroyedBallots}</td>
-                        </tr>
-                        <tr>
-                            <td>брой на недействителните бюлетини по чл. 265, ал. 5 от ИК (когато номерът на бюлетината не съответства на номер в кочана)</td>
-                            <td style={{textAlign: 'right'}}>{data.invalidVotes265}</td>
-                        </tr>
-                        <tr>
-                            <td>брой на недействителните бюлетини по чл. 227 от ИК</td>
-                            <td style={{textAlign: 'right'}}>{data.invalidVotes227}</td>
-                        </tr>
-                        <tr>
-                            <td>брой на недействителните бюлетини по чл. 228 от ИК</td>
-                            <td style={{textAlign: 'right'}}>{data.invalidVotes228}</td>
-                        </tr>
-                        <tr>
-                            <td>брой на сгрешените бюлетини по чл. 267, ал. 2 от ИК</td>
-                            <td style={{textAlign: 'right'}}>{data.wrongVotes267}</td>
-                        </tr>
-                        <tr>
-                            <td colSpan={2}>
-                                <b>СЛЕД КАТО ОТВОРИ ИЗБИРАТЕЛНАТА КУТИЯ, СИК УСТАНОВИ</b>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Брой на намерените в избирателната кутия бюлетини</td>
-                            <td style={{textAlign: 'right'}}>{data.totalVotes}</td>
-                        </tr>
-                        <tr>
-                            <td>Брой намерени в избирателната кутия недействителни гласове (бюлетини)</td>
-                            <td style={{textAlign: 'right'}}>{data.invalidVotes}</td>
-                        </tr>
-                        <tr>
-                            <td>Общ брой намерени в избирателната кутия действителни гласове (бюлетини)</td>
-                            <td style={{textAlign: 'right'}}>{data.validVotes}</td>
-                        </tr>
-                        <tr>
-                            <td>брой на действителните гласове, подадени за кандидатските листи на партии, коалиции и инициативни комитети</td>
-                            <td style={{textAlign: 'right'}}>{data.validCandidateVotes}</td>
-                        </tr>
-                        <tr>
-                            <td>брой действителни гласове (отбелязвания) само в квадратчето „Не подкрепям никого“</td>
-                            <td style={{textAlign: 'right'}}>{data.validNAVotes}</td>
-                        </tr>
-                        <tr>
-                            <td>Празни бюлетини; бюлетини, в които е гласувано в повече от едно квадратче; бюлетини, в които не може да се установи еднозначно вотът на избирателя и други видове недействителни гласове</td>
-                            <td style={{textAlign: 'right'}}>{data.emptyVotes}</td>
+                            <td>Адрес</td>
+                            <td>{data.place}</td>
                         </tr>
                     </tbody>
                 </SectionDetailsTable>
+                <h2>Допълнителни данни</h2>
+                <SectionDetailsTable>
+                    <tbody>
+                        <tr>
+                            <td>Избиратели</td>
+                            <td>{data.stats.voters}</td>
+                        </tr>
+                        <tr>
+                            <td>Действителни гласове</td>
+                            <td>{data.stats.validVotes}</td>
+                        </tr>
+                        <tr>
+                            <td>Недействителни гласове</td>
+                            <td>{data.stats.invalidVotes}</td>
+                        </tr>
+                        <tr>
+                            <td>Сигнали</td>
+                            <td>{data.stats.violations}</td>
+                        </tr>
+                    </tbody>
+                </SectionDetailsTable>
+                <h2>Видеонаблюдение</h2>
+                <p>
+                    Очаквайте съвсем скоро
+                </p>
             </div>
     );
 };
