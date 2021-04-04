@@ -35,7 +35,7 @@ const SectionDetailsTable = styled.table`
 
 export default props => {
     const history = useHistory();
-    const { dataURL, globalData } = useContext(ElectionContext);
+    const { dataURL, globalData, parties } = useContext(ElectionContext);
     const { unit } = useParams();
 
     const [data, setData] = useState(null);
@@ -56,7 +56,7 @@ export default props => {
                 <h1 style={props.embed? {fontSize: '15px'} : {}}>Секция {data.number}</h1>
                 <ResultsTable
                     results={data.results} 
-                    parties={globalData.parties} 
+                    parties={parties} 
                     totalValid={data.validVotes} 
                     totalInvalid={data.invalidVotes}
                     embed={props.embed}
