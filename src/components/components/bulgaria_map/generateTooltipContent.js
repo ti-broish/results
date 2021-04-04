@@ -163,3 +163,69 @@ export const generateTooltipVoters = (region, tooltipData) => {
         </div>  
     `);
 };
+
+export const generateTooltipCoverage = (region, tooltipData) => {
+    return(`
+        <div>
+            <h2 style="margin: 5px;">${region.name}</h2>
+            <hr style="border-color: #aaa; border-top: none;"/>
+            <table style="width: 100%;">
+            <tbody>
+                <tr>
+                    <td style="padding-right: 20px;">Общо секции</td>
+                    <td style="text-align: right;">${formatCount(tooltipData.sections)}</td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 20px;">Покрити секции</td>
+                    <td style="text-align: right;">
+                    ${formatCount(tooltipData.sectionsWithProtocols)}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 20px;">Покритие (%)</td>
+                    <td style="text-align: right;">
+                    ${
+                        tooltipData.sections?
+                            `${formatPercentage(tooltipData.sectionsWithProtocols / tooltipData.sections)}%` :
+                            `Няма данни`
+                    }
+                    </td>
+                </tr>
+            </tbody>
+            </table>
+        </div>  
+    `);
+};
+
+export const generateTooltipProcessed = (region, tooltipData) => {
+    return(`
+        <div>
+            <h2 style="margin: 5px;">${region.name}</h2>
+            <hr style="border-color: #aaa; border-top: none;"/>
+            <table style="width: 100%;">
+            <tbody>
+                <tr>
+                    <td style="padding-right: 20px;">Общо секции</td>
+                    <td style="text-align: right;">${formatCount(tooltipData.sections)}</td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 20px;">Секции с резултати</td>
+                    <td style="text-align: right;">
+                    ${formatCount(tooltipData.sectionsWithResults)}
+                    </td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 20px;">Обработени (%)</td>
+                    <td style="text-align: right;">
+                    ${
+                        tooltipData.sections?
+                            `${formatPercentage(tooltipData.sectionsWithResults / tooltipData.sections)}%` :
+                            `Няма данни`
+                    }
+                    </td>
+                </tr>
+            </tbody>
+            </table>
+        </div>  
+    `);
+};

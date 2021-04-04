@@ -149,7 +149,7 @@ export const generateRegionDataTurnout = (regions, parties) => {
 
         const percentage = (currentTurnout - lowestTurnout) / (highestTurnout - lowestTurnout);
         regionData[region.id] = {};
-        regionData[region.id].color = rgbGradient(255, 0, 0, 0, 255, 0, percentage);
+        regionData[region.id].color = rgbGradient(202, 253, 200, 0, 255, 0, percentage);
         regionData[region.id].tooltipData = { turnout: currentTurnout };
     }
 
@@ -174,10 +174,42 @@ export const generateRegionDataVoters = (regions, parties) => {
     for(const region of regions) {
         const percentage = (region.stats.voters - lowestCount) / (highestCount - lowestCount);
         regionData[region.id] = {};
-        regionData[region.id].color = rgbGradient(255, 0, 0, 0, 255, 0, percentage);
+        regionData[region.id].color = rgbGradient(202, 253, 200, 0, 255, 0, percentage);
         regionData[region.id].tooltipData = { 
             voters: region.stats.voters,
             votes: (region.stats.validVotes + region.stats.invalidVotes),
+        };
+    }
+
+    return regionData;
+};
+
+export const generateRegionDataCoverage = (regions) => {
+    const regionData = {};
+
+    for(const region of regions) {
+        const percentage = region.stats.sectionsWithProtocols / region.stats.sectionsCount;
+        regionData[region.id] = {};
+        regionData[region.id].color = rgbGradient(237, 237, 255, 10, 116, 253, percentage);
+        regionData[region.id].tooltipData = {
+            sections: region.stats.sectionsCount,
+            sectionsWithProtocols: region.stats.sectionsWithProtocols,
+        };
+    }
+
+    return regionData;
+};
+
+export const generateRegionDataProcessed = (regions) => {
+    const regionData = {};
+
+    for(const region of regions) {
+        const percentage = region.stats.sectionsWithResults / region.stats.sectionsCount;
+        regionData[region.id] = {};
+        regionData[region.id].color = rgbGradient(237, 237, 255, 10, 116, 253, percentage);
+        regionData[region.id].tooltipData = {
+            sections: region.stats.sectionsCount,
+            sectionsWithResults: region.stats.sectionsWithResults,
         };
     }
 

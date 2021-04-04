@@ -93,7 +93,9 @@ import {
     generateTooltipSingleParty, 
     generateTooltipTurnout, 
     generateTooltipVoters, 
-    generateNullTooltip
+    generateNullTooltip,
+    generateTooltipCoverage,
+    generateTooltipProcessed
 } from './generateTooltipContent';
 
 import { 
@@ -101,7 +103,9 @@ import {
     generateRegionDataDominant, 
     generateRegionDataSingleParty, 
     generateRegionDataTurnout, 
-    generateRegionDataVoters 
+    generateRegionDataVoters,
+    generateRegionDataCoverage,
+    generateRegionDataProcessed
 } from './generateRegionData';
 
 import handleViewport from 'react-in-viewport';
@@ -123,6 +127,8 @@ export default handleViewport(props => {
             case 'single-party': return generateRegionDataSingleParty(singleParty, singlePartyMode, props.regions, props.parties, props.results);
             case 'turnout': return generateRegionDataTurnout(props.regions, props.parties, props.results);
             case 'voters': return generateRegionDataVoters(props.regions, props.parties, props.results);
+            case 'coverage': return generateRegionDataCoverage(props.regions);
+            case 'sectionsWithResults': return generateRegionDataProcessed(props.regions, props.parties, props.results);
         }
     };
 
@@ -133,6 +139,8 @@ export default handleViewport(props => {
             case 'single-party': return generateTooltipSingleParty(singleParty, region, tooltipData);
             case 'turnout': return generateTooltipTurnout(region, tooltipData);
             case 'voters': return generateTooltipVoters(region, tooltipData);
+            case 'coverage': return generateTooltipCoverage(region, tooltipData);
+            case 'sectionsWithResults': return generateTooltipProcessed(region, tooltipData);
         }
     };
 
@@ -149,6 +157,8 @@ export default handleViewport(props => {
             <button className={mode === 'single-party'? 'selected' : ''} onClick={()=>setMode('single-party')}>Отделна партия</button>
             <button className={mode === 'turnout'? 'selected' : ''} onClick={()=>setMode('turnout')}>Активност</button>
             <button className={mode === 'voters'? 'selected' : ''} onClick={()=>setMode('voters')}>Избиратели</button>
+            <button className={mode === 'coverage'? 'selected' : ''} onClick={()=>setMode('coverage')}>Покритие</button>
+            <button className={mode === 'sectionsWithResults'? 'selected' : ''} onClick={()=>setMode('sectionsWithResults')}>%Обработени</button>
         </MapControls>,
         props.mapModesHidden? null :
         mode === 'single-party'?
