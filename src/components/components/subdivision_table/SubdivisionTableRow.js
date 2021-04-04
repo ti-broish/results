@@ -12,6 +12,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 
 import { formatCount } from '../../Util';
+import { rgbGradient } from '../bulgaria_map/generateRegionData.js';
 
 const SubdivisionTableRowStyle = styled.tr`
     ${props => props.type === 'top'? `
@@ -128,7 +129,7 @@ export default handleViewport(props => {
                     !props.subdivision.segment? props.subdivision.name : [
                         props.subdivision.stats.violationsCount < 1? null :
                         <span 
-                            style={{color: 'yellow'}}
+                            style={{color: rgbGradient(255, 255, 0, 255, 0, 0, props.subdivision.violationPercentage)}}
                             data-tip={generateViolationTooltip(props.subdivision)}
                             data-for={`subdivisionTableTooltip`}
                         >

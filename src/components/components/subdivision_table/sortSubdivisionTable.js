@@ -1,5 +1,28 @@
 import { formatCount, formatPercentage } from '../../Util';
 
+const sortSignals = subdivisions => {
+    let maxViolations = 0;
+    let minViolations = 100000000000;
+
+    subdivisions.forEach(subdivision => {
+        const violationsCount = subdivision.stats.violationsCount;
+        if(violationsCount) {
+            if(subdivision.stats.violationsCount > maxViolations) maxViolations = violationsCount;
+            else if(subdivision.stats.violationsCount < minViolations) minViolations = violationsCount;
+        }
+    });
+
+    subdivisions.forEach(subdivision => {
+        const violationsCount = subdivision.stats.violationsCount;
+        if(!violationsCount) subdivision.violationPercentage = 0;
+        else {
+            subdivision.violationPercentage = (violationsCount - minViolations) / (maxViolations - minViolations);
+        }
+    });
+
+    return subdivisions;
+};
+
 export const sortTableDistribution = (subdivisions, singleParty) => {
     if(singleParty === '') {
         subdivisions = subdivisions.sort((s1, s2) => s1.id - s2.id );
@@ -21,7 +44,7 @@ export const sortTableDistribution = (subdivisions, singleParty) => {
         });
     }
 
-    return subdivisions;
+    return sortSignals(subdivisions);
 };  
 
 export const sortTableVoters = (subdivisions) => {
@@ -42,7 +65,7 @@ export const sortTableVoters = (subdivisions) => {
 
     subdivisions.sort((s1, s2) => s2.percentage - s1.percentage);
 
-    return subdivisions;
+    return sortSignals(subdivisions);
 };
 
 export const sortTableTurnout = (subdivisions) => {
@@ -64,5 +87,5 @@ export const sortTableTurnout = (subdivisions) => {
     }
 
     subdivisions.sort((s1, s2) => s2.percentage - s1.percentage);
-    return subdivisions;
+    return sortSignals(subdivisions);
 };

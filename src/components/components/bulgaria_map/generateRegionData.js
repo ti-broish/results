@@ -1,6 +1,6 @@
 //takes current state and generates stats for every region
 
-const rgbGradient = (r1, g1, b1, r2, g2, b2, val) => {
+export const rgbGradient = (r1, g1, b1, r2, g2, b2, val) => {
     return `rgb(${((r2 - r1) * val) + r1},${((g2 - g1) * val) + g1},${((b2 - b1) * val) + b1})`;
 };
 
