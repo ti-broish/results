@@ -212,7 +212,7 @@ export default handleViewport(props => {
                     const clickHandler = () => {
                         if(props.linkToMainSite) {
                             const newHref = `https://tibroish.bg${publicURL}/${key}`;
-                            window.location.href = newHref;
+                            top.location.href = newHref;
                         }
                         else if(props.embed)
                             history.push(`/embed/mini-results/${key}`)
