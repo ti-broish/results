@@ -46,17 +46,13 @@ const MapControls = styled.div`
         }
     }
 
-    ${props => props.embed? `
+    ${props => props.embed && !props.homepage? `
         font-size: 10px;
         font-weight: bold;
         height: 32px;
     ` : `
     
     `}
-
-    ${props => props.homepage? `
-        font-size: 26px;
-    ` : ``}
 `;
 
 const MapControlsSingleParty = styled.div`
@@ -82,16 +78,12 @@ const MapControlsSingleParty = styled.div`
         }
     }
 
-    ${props => props.embed? `
+    ${props => props.embed && !props.homepage? `
         font-size: 10px;
         font-weight: bold;
     ` : `
     
     `}
-
-    ${props => props.homepage? `
-        font-size: 26px;
-    ` : ``}
 `;
 
 import regionPaths from './regionPaths';
