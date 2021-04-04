@@ -140,16 +140,13 @@ export default props => {
                 <title>{meta.name}</title>
             </Helmet>
             {data.type === 'election'? null : <Crumbs data={data} embed={props.embed}/>}
-            {
-                data.type !== 'election'? null :
-                    <ProgressBar
-                        percentage={data.stats.sectionsWithResults / data.stats.sectionsCount}
-                        color={'#5a5aff'}
-                        emptyColor={'rgb(189, 189, 249)'}
-                        title={'Обработени секции'}
-                        description={'Тази линия показва процентът от секции, за които имаме получени и обработени резултати'}
-                    />
-            }
+            <ProgressBar
+                percentage={data.stats.sectionsWithResults / data.stats.sectionsCount}
+                color={'#5a5aff'}
+                emptyColor={'rgb(189, 189, 249)'}
+                title={'Обработени секции'}
+                description={'Тази линия показва процента от секциите, които влизат в резултатите ни към момента'}
+            />
             <h1 style={props.embed? {fontSize: '15px'} : {}}>
                 {
                     data.type === 'election'

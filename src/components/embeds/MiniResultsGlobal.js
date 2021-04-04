@@ -36,6 +36,7 @@ const useQuery = () => {
 
 import { ElectionContext } from '../Election';
 import LoadingScreen from '../layout/LoadingScreen';
+import ProgressBar from '../components/ProgressBar';
 
 export default props => {
     const { meta, parties, dataURL } = useContext(ElectionContext);
@@ -97,7 +98,16 @@ export default props => {
             </div>
             {
                 !resultsOnly && (mapOnly || embedMode === 'map')
-                ?
+                ? [/*
+                    <ProgressBar
+                        percentage={data.stats.sectionsWithResults / data.stats.sectionsCount}
+                        color={'#5a5aff'}
+                        emptyColor={'rgb(189, 189, 249)'}
+                        title={'Обработени секции'}
+                        description={'Тази линия показва процентът от секции, за които имаме получени и обработени резултати'}
+                        embed
+                        homepage={homepage}
+                    />,*/
                     <BulgariaMap 
                         regions={data.nodes} 
                         parties={parties}
@@ -107,6 +117,7 @@ export default props => {
                         homepage={homepage}
                         embed
                     />
+                ]
                 :  resultsOnly || embedMode === 'bars'
                 ?   <ResultsTable 
                         results={data.results} 
