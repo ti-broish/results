@@ -107,10 +107,16 @@ export const generateTooltipTurnout = (region, tooltipData) => {
             <table style="width: 100%;">
             <tbody>
                 <tr>
-                    <td style="padding-right: 20px;">Активност</td>
-                    <td style="text-align: right;">
-                        ${formatPercentage(tooltipData.turnout)}%
-                    </td>
+                ${
+                    tooltipData.turnout? `
+                        <td style="padding-right: 20px;">Активност</td>
+                        <td style="text-align: right;">
+                            ${formatPercentage(tooltipData.turnout)}%
+                        </td>
+                    ` : `
+                        <td colspan="2">Няма данни</td>
+                    `
+                }
                 </tr>
             </tbody>
             </table>
