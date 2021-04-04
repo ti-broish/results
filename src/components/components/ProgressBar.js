@@ -32,10 +32,10 @@ const ProgressDescription = styled.p`
 export default props => {
     return (
         <div style={props.embed? {
-            position: 'fixed',
-            left: 0, right: 0,
-            top: '50px',
-            padding: '0 100px'
+            //position: 'fixed',
+            //left: 0, right: 0,
+            //top: '50px',
+            padding: '0 100px', paddingTop: '20px'
         } : {
             padding: '0 100px', paddingTop: '20px'
         }}>

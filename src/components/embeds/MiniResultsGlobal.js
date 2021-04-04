@@ -96,18 +96,18 @@ export default props => {
                     {meta.name}
                 </div>
             </div>
+                <ProgressBar
+                    percentage={data.stats.sectionsWithResults / data.stats.sectionsCount}
+                    color={'#5a5aff'}
+                    emptyColor={'rgb(189, 189, 249)'}
+                    title={'Обработени секции'}
+                    description={'Тази линия показва процентът от секции, за които имаме получени и обработени резултати'}
+                    embed
+                    homepage={homepage}
+                />
             {
                 !resultsOnly && (mapOnly || embedMode === 'map')
-                ? [/*
-                    <ProgressBar
-                        percentage={data.stats.sectionsWithResults / data.stats.sectionsCount}
-                        color={'#5a5aff'}
-                        emptyColor={'rgb(189, 189, 249)'}
-                        title={'Обработени секции'}
-                        description={'Тази линия показва процентът от секции, за които имаме получени и обработени резултати'}
-                        embed
-                        homepage={homepage}
-                    />,*/
+                ? [
                     <BulgariaMap 
                         regions={data.nodes} 
                         parties={parties}

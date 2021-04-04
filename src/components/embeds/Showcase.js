@@ -72,23 +72,23 @@ export default props => {
                     <h2>1. Пълни резултати</h2>
                     <iframe
                         width="600"
-                        height="500"
+                        height="560"
                         style={{border: 'none', margin: '0 auto', display: 'block'}}
                         loading="lazy"
                         allowFullScreen
                         src={`${publicURL}/embed/mini-results`}>
                     </iframe>
-                    <EmbedCodeDisplay code={`<iframe width="600" height="500" style="border: none;" loading="lazy" allowfullscreen src="https://tibroish.bg${publicURL}/embed/mini-results"></iframe>`}/>
+                    <EmbedCodeDisplay code={`<iframe width="600" height="560" style="border: none;" loading="lazy" allowfullscreen src="https://tibroish.bg${publicURL}/embed/mini-results"></iframe>`}/>
                     <h2>2. Само интерактивна карта</h2>
                     <iframe
                         width="600"
-                        height="500"
+                        height="560"
                         style={{border: 'none', margin: '0 auto', display: 'block'}}
                         loading="lazy"
                         allowFullScreen
                         src={`${publicURL}/embed/mini-results?mapOnly=true`}>
                     </iframe>
-                    <EmbedCodeDisplay code={`<iframe width="600" height="500" style="border: none;" loading="lazy" allowfullscreen src="https://tibroish.bg${publicURL}/embed/mini-results?mapOnly=true"></iframe>`}/>
+                    <EmbedCodeDisplay code={`<iframe width="600" height="560" style="border: none;" loading="lazy" allowfullscreen src="https://tibroish.bg${publicURL}/embed/mini-results?mapOnly=true"></iframe>`}/>
                     <h2>3. Само резултати</h2>
                     <iframe
                         width="600"

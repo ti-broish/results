@@ -146,6 +146,7 @@ export default props => {
                 emptyColor={'rgb(189, 189, 249)'}
                 title={'Обработени секции'}
                 description={'Тази линия показва процента от секциите, които влизат в резултатите ни към момента'}
+                embed={props.embed}
             />
             <h1 style={props.embed? {fontSize: '15px'} : {}}>
                 {
