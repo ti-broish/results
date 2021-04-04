@@ -13,8 +13,7 @@ import LoadingScreen from '../layout/LoadingScreen';
 import Crumbs from '../components/Crumbs';
 
 import { mapNodeType, mapNodesType } from '../ResultUnit';
-
-
+import ProgressBar from '../components/ProgressBar';
 
 export const aggregateData = data => {
     if(data.nodes) {
@@ -141,6 +140,16 @@ export default props => {
                 <title>{meta.name}</title>
             </Helmet>
             {data.type === 'election'? null : <Crumbs data={data} embed={props.embed}/>}
+            {
+                data.type !== 'election'? null :
+                    <ProgressBar
+                        percentage={data.stats.sectionsWithResults / data.stats.sectionsCount}
+                        color={'#5a5aff'}
+                        emptyColor={'rgb(189, 189, 249)'}
+                        title={'Обработени секции'}
+                        description={'Тази линия показва процентът от секции, за които имаме получени и обработени резултати'}
+                    />
+            }
             <h1 style={props.embed? {fontSize: '15px'} : {}}>
                 {
                     data.type === 'election'

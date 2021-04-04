@@ -66,7 +66,7 @@ export default handleViewport(props => {
         );
     };
 
-    console.log(props.subdivision);
+    //console.log(props.subdivision);
 
     const generateViolationTooltip = (region) => {
         return (`

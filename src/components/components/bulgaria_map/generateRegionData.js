@@ -12,7 +12,8 @@ export const generateDisplayParties = (parties, results, count, firstPartyId, la
     });
 
     for(var i = 0; i < results.length; i += 2) {
-        tempParties[results[i]].validVotes = results[i+1];
+        if(tempParties[results[i]])
+            tempParties[results[i]].validVotes = results[i+1];
     }
 
     let displayParties = Object.keys(tempParties).map(key => { return {...tempParties[key], number: key};});
