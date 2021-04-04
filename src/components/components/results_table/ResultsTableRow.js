@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 
-import { Fade } from 'react-reveal';
-import { formatCount, formatPercentage } from '../Util';
+import { formatCount, formatPercentage } from '../../Util';
 
 import handleViewport from 'react-in-viewport';
 
@@ -13,7 +12,7 @@ export default handleViewport(props => {
 
     return (
         <tr ref={forwardedRef} style={{opacity: shouldLoad? 1 : 0}}>
-            <td>{!props.party.number? null : props.party.number}</td>
+            <td>{props.party.number === '0'? null : props.party.number}</td>
             <td>
                 <span style={{color: `#${props.party.color}`}}>
                     {props.party.displayName}

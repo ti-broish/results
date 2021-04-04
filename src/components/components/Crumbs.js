@@ -1,10 +1,8 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useHistory } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-
-import { ElectionContext } from '../Election';
 
 import styled from 'styled-components';
 
@@ -13,6 +11,21 @@ const CrumbLink = styled(Link)`
     font-size: 14px;
     text-decoration: none;
     font-weight: bold;
+
+    ${props => props.embed? `
+        font-size: 9px;
+    ` : null}
+`;
+
+const CrumbButton = styled.button`
+    color: #666;
+    font-size: 14px;
+    text-decoration: none;
+    font-weight: bold;
+    border: none;
+    background: none;
+    cursor: pointer;
+    vertical-align: top;
 
     ${props => props.embed? `
         font-size: 9px;
@@ -49,31 +62,20 @@ const PointyArrow = styled(PointyArrowBase)`
 
 export default props => {
     const { unit } = useParams();
-    const { election, globalData } = useContext(ElectionContext);
-
-    const backUrl = 
-        props.embed?   
-            (props.data.crumbs? `/embed/mini-results/${props.data.crumbs[props.data.crumbs.length-1].unit}` : `/embed/mini-results`) :
-            (props.data.crumbs? `/${props.data.crumbs[props.data.crumbs.length-1].unit}` : `/`);
+    const history = useHistory();
 
     return(
         <div>
-            <CrumbLink to={backUrl} embed={props.embed}>
+            <CrumbButton onClick={history.goBack} embed={props.embed}>
                 <PointyArrowMiddle style={{backgroundColor: '#0000'}} embed={props.embed}>
                     <FontAwesomeIcon icon={faArrowLeft}/> Назад
                 </PointyArrowMiddle>
-            </CrumbLink>
-            <CrumbLink to={props.embed? `/embed/mini-results` : `/`} embed={props.embed}>
-                <PointyArrowMiddle embed={props.embed}>
-                    {globalData.name}
-                </PointyArrowMiddle>
-                <PointyArrow embed={props.embed}/>
-            </CrumbLink>
+            </CrumbButton>
             {
                 !props.data.crumbs? null :
-                props.data.crumbs.map(crumb =>
-                    <CrumbLink to={props.embed? `/embed/mini-results/${crumb.unit}` : `/${crumb.unit}`} embed={props.embed}>
-                        <PointyArrowBack embed={props.embed}/>
+                props.data.crumbs.map((crumb, i) =>
+                    <CrumbLink to={props.embed? `/embed/mini-results/${crumb.segment}` : `/${crumb.segment}`} embed={props.embed}>
+                        {i === 0? null : <PointyArrowBack embed={props.embed}/>}
                         <PointyArrowMiddle embed={props.embed}>
                             {crumb.name}
                         </PointyArrowMiddle>

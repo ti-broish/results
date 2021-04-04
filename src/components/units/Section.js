@@ -6,7 +6,7 @@ import { useParams, useHistory } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import LoadingScreen from '../layout/LoadingScreen';
 
-import ResultsTable from '../components/ResultsTable';
+import ResultsTable from '../components/results_table/ResultsTable';
 
 import { ElectionContext } from '../Election'; 
 import Crumbs from '../components/Crumbs';

@@ -2,9 +2,7 @@ import React, { useEffect } from 'react';
 
 import { useHistory, useParams } from 'react-router-dom';
 
-import Region from '../units/Region.js';
-import Admunit from '../units/Admunit.js';
-import District from '../units/District.js';
+import Aggregation from '../units/Aggregation';
 import Section from '../units/Section.js';
 import Source from './Source';
 
@@ -15,19 +13,15 @@ export default props => {
     useEffect(() => {window.scrollTo(0, 0);}, []);
 
     const returnToMain = () => {
-        history.push('/');
+        history.push('/embed/mini-results');
         return null;
     };
 
     return(
         <div>
             {
-                unit.length === 2
-                ? <Region embed/> 
-                : unit.length === 4
-                ? <Admunit embed/>
-                : unit.length === 6
-                ? <District embed/>
+                !unit || unit.length < 9
+                ? <Aggregation embed/> 
                 : unit.length === 9
                 ? <Section embed/>
                 : returnToMain()

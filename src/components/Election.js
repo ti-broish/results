@@ -20,7 +20,6 @@ export default props => {
 
     useEffect(() => {
         axios.get(`${dataURL}/meta.json`).then(res => {
-            console.log(res.data);
             setMeta(res.data);
         });
     }, []);

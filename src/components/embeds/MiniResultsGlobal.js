@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 
 import { useLocation } from 'react-router-dom';
 
-import BulgariaMap from '../components/BulgariaMap';
-import ResultsTable from '../components/ResultsTable';
-import SubdivisionTable from '../components/SubdivisionTable';
+import BulgariaMap from '../components/bulgaria_map/BulgariaMap';
+import ResultsTable from '../components/results_table/ResultsTable';
+import SubdivisionTable from '../components/subdivision_table/SubdivisionTable';
 import Source from './Source';
 
 import styled from 'styled-components';

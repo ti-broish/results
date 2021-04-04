@@ -1,61 +1,56 @@
-import React, { useState, useContext, useEffect } from 'react';
-
-import Helmet from 'react-helmet';
+import React, { useEffect } from 'react';
 
 import { useParams, useHistory } from 'react-router-dom';
-import axios from 'axios';
+import Aggregation from './units/Aggregation';
+import Section from './units/Section';
 
-import { ElectionContext } from './Election';
-import ResultsTable from './components/ResultsTable';
-import SubdivisionTable from './components/SubdivisionTable';
-import LoadingScreen from './layout/LoadingScreen';
+export const mapNodeType = nodesType => {
+    switch(nodesType) {
+        case 'election': return '';
+        case 'electionRegion': return 'Избирателен район';
+        case 'municipality': return 'Община';
+        case 'town': return 'Нас. място';
+        case 'address': return 'Адрес';
+        case 'section': return 'Секция';
+        case 'district': return 'Район';
+        case 'country': return 'Държава';
+        default: return 'Подразделение'; 
+    }
+};
+
+export const mapNodesType = nodesType => {
+    switch(nodesType) {
+        case 'electionRegions': return 'Избирателни райони';
+        case 'municipalities': return 'Общини';
+        case 'towns': return 'Населени места';
+        case 'addresses': return 'Адреси';
+        case 'sections': return 'Секции';
+        case 'districts': return 'Райони';
+        case 'countries': return 'Държави';
+        default: return 'Подразделения'; 
+    }
+};
 
 export default props => {
-    const { meta, parties, dataURL } = useContext(ElectionContext);
-    const [data, setData] = useState(null);
     const { unit } = useParams();
     const history = useHistory();
 
-    useEffect(() => { window.scrollTo(0, 0);  }, []);
-    useEffect(() => { refreshResults(); }, [unit]);
+    useEffect(() => {window.scrollTo(0, 0);}, []);
 
-    const refreshResults = () => {
-        setData(null);
-        axios.get(`${dataURL}/${unit? unit : 'index'}.json`).then(res => {
-            console.log(res.data);
-            setData(res.data);
-        }).catch(err => { if(!data) history.push('/') });
-    };
-
-    const formatNodesType = nodesType => {
-        switch(nodesType) {
-            case 'electionRegions': return 'Избирателни райони';
-            case 'municipalities': return 'Общини';
-            default: return 'Подразделения'; 
-        }
+    const returnToMain = () => {
+        history.push('/');
+        return null;
     };
 
     return(
-        !data? <LoadingScreen/> :
-        <div>  
-            <Helmet>
-                <title>{meta.name}</title>
-            </Helmet>
-            <ResultsTable 
-                results={data.results} 
-                parties={parties} 
-                totalValid={data.stats.validVotes} 
-                totalInvalid={data.stats.invalidVotes}
-                showThreshold={true}
-            />
-            <h1>{formatNodesType(data.nodesType)}</h1>
-            <SubdivisionTable
-                parties={parties}
-                results={data.results}
-                showNumbers
-                subdivisions={data.nodes}
-            />
+        <div>
+            {
+                !unit || unit.length < 9
+                ? <Aggregation/> 
+                : unit.length === 9
+                ? <Section/>
+                : returnToMain()
+            }
         </div>
-
-    );
+    )
 }

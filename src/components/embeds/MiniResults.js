@@ -13,22 +13,22 @@ import MiniResultsGlobal from './MiniResultsGlobal';
 import { Redirect, Route, Switch } from 'react-router-dom';
 
 export default props => {
-    const [globalData, setGlobalData] = useState(null);
+    const [meta, setMeta] = useState(null);
 
     const dataURL = process.env.DATA_URL? process.env.DATA_URL : '/json';
 
     useEffect(() => {
-        axios.get(`${dataURL}/total.json`).then(res => {
-            setGlobalData(res.data);
+        axios.get(`${dataURL}/meta.json`).then(res => {
+            setMeta(res.data);
         });
     }, []);
 
     return (
-        !globalData? <LoadingScreen/> : 
-            <ElectionContext.Provider value={{ globalData, dataURL }}>
+        !meta? <LoadingScreen/> : 
+            <ElectionContext.Provider value={{ meta, parties: meta.parties, dataURL }}>
                 <Switch>
                     <Route path={`/embed/mini-results/:unit`} component={MiniResultsUnit}/>
-                    <Route path={`/embed/mini-results`} render={()=><MiniResultsGlobal globalData={globalData}/>}/>
+                    <Route path={`/embed/mini-results`} render={()=><MiniResultsGlobal meta={meta}/>}/>
                     <Redirect to={`/embed/mini-results`}/>
                 </Switch>    
             </ElectionContext.Provider>
