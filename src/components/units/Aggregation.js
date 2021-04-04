@@ -17,7 +17,13 @@ import { mapNodeType, mapNodesType } from '../ResultUnit';
 
 
 export const aggregateData = data => {
-    if(!data.stats && data.nodes) {
+    if(data.nodes) {
+        for(const node of data.nodes) {
+            aggregateData(node);
+        }
+    }
+
+    if(!data.stats) {
         data.stats =  {
             invalidVotes: 0,
             sectionsCount: 0,
@@ -27,17 +33,17 @@ export const aggregateData = data => {
             violationsCount: 0,
             voters: 0,
         };
-        
-        for(const node of data.nodes) {
-            aggregateData(node);
 
-            data.stats.invalidVotes += node.stats.invalidVotes;
-            data.stats.sectionsCount += node.stats.sectionsCount;
-            data.stats.sectionsWithProtocols += node.stats.sectionsWithProtocols;
-            data.stats.sectionsWithResults += node.stats.sectionsWithResults;
-            data.stats.validVotes += node.stats.validVotes;
-            data.stats.violationsCount += node.stats.violationsCount;
-            data.stats.voters += node.stats.voters;
+        if(data.nodes) {
+            for(const node of data.nodes) {
+                data.stats.invalidVotes += node.stats.invalidVotes;
+                data.stats.sectionsCount += node.stats.sectionsCount;
+                data.stats.sectionsWithProtocols += node.stats.sectionsWithProtocols;
+                data.stats.sectionsWithResults += node.stats.sectionsWithResults;
+                data.stats.validVotes += node.stats.validVotes;
+                data.stats.violationsCount += node.stats.violationsCount;
+                data.stats.voters += node.stats.voters;
+            }
         }
     }
 
@@ -45,8 +51,6 @@ export const aggregateData = data => {
         const partyResults = {};
 
         for(const node of data.nodes) {
-            aggregateData(node);
-
             for(let i = 0; i < node.results.length; i += 2) {
                 if(!partyResults[node.results[i]]) partyResults[node.results[i]] = 0;
                 partyResults[node.results[i]] += node.results[i + 1];
