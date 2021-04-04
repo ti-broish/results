@@ -124,7 +124,7 @@ export default props => {
     const refreshResults = () => {
         setData(null);
         axios.get(`${dataURL}/${unit? unit : 'index'}.json`).then(res => {
-            res.data = populateWithFakeResults(res.data, parties);
+            //res.data = populateWithFakeResults(res.data, parties);
             setData(res.data);
         }).catch(err => { console.log(err); if(!data) history.push('/'); });
     };

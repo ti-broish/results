@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Това е разделът за визуализация на резултати, от публичният сайт на ТиБроиш.",
   "scripts": {
-    "build": "webpack --env PUBLIC_URL=/results/parl2017 DATA_URL=/json/parl2017 --config webpack/build.config.js",
+    "build": "webpack --env PUBLIC_URL=/results/parliament-2021-04-04 DATA_URL=/json/contracts --config webpack/build.config.js",
     "serve": "webpack serve --env DATA_URL=https://tibroish.bg/json/contracts --config webpack/serve.config.js"
   },
   "author": "",

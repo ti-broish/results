@@ -210,8 +210,10 @@ export default handleViewport(props => {
             {
                 Object.keys(regionPaths).map(key => {
                     const clickHandler = () => {
-                        if(props.linkToMainSite)
-                            history.push(`https://tibroish.bg${publicURL}/${key}`)
+                        if(props.linkToMainSite) {
+                            const newHref = `https://tibroish.bg${publicURL}/${key}`;
+                            window.location.href = newHref;
+                        }
                         else if(props.embed)
                             history.push(`/embed/mini-results/${key}`)
                         else

@@ -54,7 +54,7 @@ export default props => {
     useEffect(() => {
         setData(null);
         axios.get(`${dataURL}/index.json`).then(res => {
-            res.data = populateWithFakeResults(res.data, parties);
+            //res.data = populateWithFakeResults(res.data, parties);
             setData(res.data);
         }).catch(err => { console.log(err); if(!data) history.push('/'); });
     }, []);
