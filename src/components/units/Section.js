@@ -65,8 +65,8 @@ export default props => {
                 <ResultsTable
                     results={data.results} 
                     parties={parties} 
-                    totalValid={data.validVotes} 
-                    totalInvalid={data.invalidVotes}
+                    totalValid={data.stats.validVotes} 
+                    totalInvalid={data.stats.invalidVotes}
                     embed={props.embed}
                 />
                 <h2>Местоположение</h2>
