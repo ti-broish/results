@@ -132,7 +132,7 @@ export const generateTooltipVoters = (region, tooltipData) => {
             <table style="width: 100%;">
             <tbody>
                 <tr>
-                    <td style="padding-right: 20px;">Избиратели</td>
+                    <td style="padding-right: 20px;">Избиратели в предварителните списъци</td>
                     <td style="text-align: right;">${formatCount(tooltipData.voters)}</td>
                 </tr>
                 <tr>

@@ -45,7 +45,7 @@ export const sortTableDistribution = (subdivisions, singleParty) => {
     }
 
     return sortSignals(subdivisions);
-};  
+};
 
 export const sortTableVoters = (subdivisions) => {
     let highestCount = 0;
@@ -59,7 +59,7 @@ export const sortTableVoters = (subdivisions) => {
     for(const subdivision of subdivisions) {
         const currentCount = subdivision.stats.voters;
         subdivision.percentage = currentCount / highestCount;
-        subdivision.tooltipField = 'Избиратели';
+        subdivision.tooltipField = 'Избиратели в предварителните списъци';
         subdivision.tooltipValue = formatCount(subdivision.stats.voters);
     }
 
