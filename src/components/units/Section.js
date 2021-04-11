@@ -8,7 +8,7 @@ import LoadingScreen from '../layout/LoadingScreen';
 
 import ResultsTable from '../components/results_table/ResultsTable';
 
-import { ElectionContext } from '../Election'; 
+import { ElectionContext } from '../Election';
 import Crumbs from '../components/Crumbs';
 
 import styled from 'styled-components';
@@ -63,9 +63,9 @@ export default props => {
                 <Crumbs data={data} embed={props.embed}/>
                 <h1 style={props.embed? {fontSize: '15px'} : {}}>Секция {data.segment}</h1>
                 <ResultsTable
-                    results={data.results} 
-                    parties={parties} 
-                    totalValid={data.stats.validVotes} 
+                    results={data.results}
+                    parties={parties}
+                    totalValid={data.stats.validVotes}
                     totalInvalid={data.stats.invalidVotes}
                     embed={props.embed}
                 />
@@ -77,7 +77,7 @@ export default props => {
                             <td>{data.segment}</td>
                         </tr>
                         {
-                            data.crumbs.map((crumb, i) => i === 0? null : 
+                            data.crumbs.map((crumb, i) => i === 0? null :
                                 <tr>
                                     <td>{mapNodeType(crumb.type)}</td>
                                     <td>{crumb.name}</td>
@@ -98,7 +98,7 @@ export default props => {
                 <SectionDetailsTable>
                     <tbody>
                         <tr>
-                            <td>Избиратели</td>
+                            <td>Избиратели в предварителните списъци</td>
                             <td>{data.stats.voters}</td>
                         </tr>
                         <tr>

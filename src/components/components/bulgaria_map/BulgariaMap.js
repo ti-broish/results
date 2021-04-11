@@ -89,20 +89,20 @@ const MapControlsSingleParty = styled.div`
 import regionPaths from './regionPaths';
 
 import {
-    generateTooltipDominant, 
-    generateTooltipSingleParty, 
-    generateTooltipTurnout, 
-    generateTooltipVoters, 
+    generateTooltipDominant,
+    generateTooltipSingleParty,
+    generateTooltipTurnout,
+    generateTooltipVoters,
     generateNullTooltip,
     generateTooltipCoverage,
     generateTooltipProcessed
 } from './generateTooltipContent';
 
-import { 
-    generateDisplayParties, 
-    generateRegionDataDominant, 
-    generateRegionDataSingleParty, 
-    generateRegionDataTurnout, 
+import {
+    generateDisplayParties,
+    generateRegionDataDominant,
+    generateRegionDataSingleParty,
+    generateRegionDataTurnout,
     generateRegionDataVoters,
     generateRegionDataCoverage,
     generateRegionDataProcessed
@@ -156,7 +156,7 @@ export default handleViewport(props => {
             <button className={mode === 'dominant'? 'selected' : ''} onClick={()=>setMode('dominant')}>Водеща партия</button>
             <button className={mode === 'single-party'? 'selected' : ''} onClick={()=>setMode('single-party')}>Отделна партия</button>
             {/*<button className={mode === 'turnout'? 'selected' : ''} onClick={()=>setMode('turnout')}>Активност</button>*/}
-            <button className={mode === 'voters'? 'selected' : ''} onClick={()=>setMode('voters')}>Избиратели</button>
+            <button className={mode === 'voters'? 'selected' : ''} onClick={()=>setMode('voters')}>Избиратели в предварителните списъци</button>
             {/*<button className={mode === 'coverage'? 'selected' : ''} onClick={()=>setMode('coverage')}>Покритие</button>*/}
             <button className={mode === 'sectionsWithResults'? 'selected' : ''} onClick={()=>setMode('sectionsWithResults')}>%Обработени</button>
         </MapControls>,
@@ -170,14 +170,14 @@ export default handleViewport(props => {
                 </button>
             )
         }
-            <div style={{width: '100%'}}>    
+            <div style={{width: '100%'}}>
                 <button className={singlePartyMode === 'percentage'? 'selected' : ''} onClick={()=>setSinglePartyMode('percentage')}>Процент</button>
                 <button className={singlePartyMode === 'votes'? 'selected' : ''} onClick={()=>setSinglePartyMode('votes')}>Гласове</button>
             </div>
         </MapControlsSingleParty> : null,
         <BulgariaMapStyle>
-        <StyledTooltip 
-            multiline={true} 
+        <StyledTooltip
+            multiline={true}
             html={true}
             border={true}
             borderColor={'#aaa'}
