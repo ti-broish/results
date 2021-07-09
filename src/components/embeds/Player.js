@@ -5,7 +5,7 @@ import axios from "axios";
 
 import "video.js/dist/video-js.css";
 
-import styled, { ThemeConsumer } from "styled-components";
+import styled from "styled-components";
 
 const Wrapper = styled.div`
   height: 70vh;
