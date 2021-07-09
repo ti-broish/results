@@ -11,7 +11,7 @@ import ResultsTable from "../components/results_table/ResultsTable";
 import { ElectionContext } from "../Election";
 import Crumbs from "../components/Crumbs";
 
-import StreamPlayer from "../embeds/StreamPlayer";
+import Player from "../embeds/Player";
 
 import styled from "styled-components";
 
@@ -129,7 +129,7 @@ export default (props) => {
         </tbody>
       </SectionDetailsTable>
       <h2>Видеонаблюдение</h2>
-      <StreamPlayer />
+      <Player section={data.segment}/>
     </div>
   );
 };
