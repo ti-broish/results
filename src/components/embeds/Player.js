@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import videojs from "video.js";
+import 'videojs-playlist'
 import axios from "axios";
 
 import "video.js/dist/video-js.css";
 
 import styled from "styled-components";
-
-//videojs.registerPlugin("playlist", videojsPlaylistPlugin);
-//videojs.registerPlugin("concat", videojsConcatPlugin);
 
 const Wrapper = styled.div`
   border-collapse: collapse;
