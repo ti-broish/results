@@ -18,7 +18,7 @@ export default props => {
     const dataURL = process.env.DATA_URL? process.env.DATA_URL : '/json';
 
     useEffect(() => {
-        axios.get(`${dataURL}/meta.json`).then(res => {
+        axios.get(`${dataURL}/results/meta.json`).then(res => {
             setMeta(res.data);
         });
     }, []);

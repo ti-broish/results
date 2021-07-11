@@ -53,16 +53,11 @@ export default (props) => {
 
   const [data, setData] = useState(null);
 
-  useEffect(() => {
-    axios
-      .get(`${dataURL}/${unit}.json`)
-      .then((res) => {
-        setData(res.data);
-      })
-      .catch((err) => {
-        if (!data) history.push("/");
-      });
-  }, []);
+    useEffect(() => {
+        axios.get(`${dataURL}/results/${unit}.json`).then(res => {
+            setData(res.data);
+        }).catch(err => { if(!data) history.push('/') });
+    }, []);
 
   return !data ? (
     <LoadingScreen />
