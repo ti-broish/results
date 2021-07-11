@@ -27,13 +27,8 @@ const StyledPlayer = styled.div`
   height: 100%;
 
   .vjs-big-play-button {
-    right: 0;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    margin: auto;
-    display: block;
-    position: absolute;
+    top: calc(50% - 25px);
+    left: calc(50% - 45px);
   }
 `;
 
@@ -205,13 +200,15 @@ export default props => {
             <h1 style={{textAlign: 'center'}}>Стриймове от секциите</h1>
             {
                 !data.items? <LoadingScreen/> :
-                    data.items.map(renderStream)
-            }
-            {
-                !data.moreToLoad? null :
-                    <ShowMoreButton disabled={loading} onClick={getMoreStreams}>
-                        {loading? 'Зареждане...' : 'Покажи още'}
-                    </ShowMoreButton>
+                    <>
+                        {data.items.map(renderStream)}
+                        {
+                            !data.moreToLoad? null :
+                                <ShowMoreButton disabled={loading} onClick={getMoreStreams}>
+                                    {loading? 'Зареждане...' : 'Покажи още'}
+                                </ShowMoreButton>
+                        }
+                    </>
             }
         </LiveStreams>
     );
