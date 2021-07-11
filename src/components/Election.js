@@ -81,7 +81,7 @@ export default props => {
     }, []);
 
     const isElectionDayOver = () => {
-        //return true;
+        return true;
         if(!meta) return false;
         else return Date.now() - new Date(meta.endOfElectionDayTimestamp) > 0;
     };
