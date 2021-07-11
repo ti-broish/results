@@ -69,6 +69,16 @@ export default props => {
                         Тук ще видите различни варианти да вградите ТиБроиш
                         във Вашия сайт!
                     </p>
+                    <h2>Сигнали за нередности</h2>
+                    <iframe
+                        width="600"
+                        height="560"
+                        style={{border: 'none', margin: '0 auto', display: 'block'}}
+                        loading="lazy"
+                        allowFullScreen
+                        src={`${publicURL}/embed/violations`}>
+                    </iframe>
+                    <EmbedCodeDisplay code={`<iframe width="600" height="560" style="border: none;" loading="lazy" allowfullscreen src="https://tibroish.bg${publicURL}/embed/violations"></iframe>`}/>
                     <h2>1. Пълни резултати</h2>
                     <iframe
                         width="600"
