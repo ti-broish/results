@@ -49,7 +49,7 @@ export default props => {
     const [data, setData] = useState(null);
 
     useEffect(() => {
-        axios.get(`${dataURL}/${unit}.json`).then(res => {
+        axios.get(`${dataURL}/results/${unit}.json`).then(res => {
             setData(res.data);
         }).catch(err => { if(!data) history.push('/') });
     }, []);
