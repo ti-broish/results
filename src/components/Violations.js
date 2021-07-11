@@ -24,9 +24,10 @@ const Violation = styled.div`
     padding: 10px 25px;
     box-shadow: 0 0 10px #ddd;
     border-bottom: 3px solid #bbb;
+    color: #333;
 
     h4, p {
-        margin: 10px 0;
+        margin: 5px 0;
     }
 `;
 
@@ -115,14 +116,17 @@ export default props => {
                                 МИР {electionRegion.code}. {electionRegion.name}
                             </Link>
                         }
+                        {electionRegion && violation.section? ', ' : ''}
+                        {!violation.section? '' :
+                            <>
+                                Секция <Link to={`/${violation.section.id}`}>{violation.section.id}</Link>
+                            </>
+                        }
                     </h4>
-                    <h5>Подадено на: {formatDateTime(new Date(violation.createdAt))}</h5>
+                    {!violation.section? null : <h5 style={{margin: '5px 0'}}>{violation.section.place}</h5>}
+                    <h5 style={{color: '#888', margin: '5px 0'}}>Получен: {formatDateTime(new Date(violation.createdAt))}</h5>
                     
-                    {/*<h4>Секция {violation.section.id}</h4>
-                    <h5>{violation.section.electionRegion.code} {violation.section.electionRegion.name}</h5>
-                    <h5>{violation.town.name}</h5>
-                <p>{violation.section.place}</p>*/}
-                    <p>{violation.publishedText}</p>
+                    <p style={{margin: '20px 0 20px 0'}}>{violation.publishedText}</p>
                 </Violation>
             </Fade>
         );
