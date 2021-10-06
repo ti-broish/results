@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
-import videojs from "video.js";
-import "videojs-playlist";
-import axios from "axios";
+import React, { useEffect, useState } from 'react';
+import videojs from 'video.js';
+import 'videojs-playlist';
+import axios from 'axios';
 
-import "video.js/dist/video-js.css";
+import 'video.js/dist/video-js.css';
 
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const Wrapper = styled.div`
   height: 70vh;
@@ -31,8 +31,8 @@ class VideoPlayer extends React.Component {
         this.videoNode,
         this.props,
         function onPlayerReady() {
-          console.log("onPlayerReady", this);
-          console.log("playing stream");
+          console.log('onPlayerReady', this);
+          console.log('playing stream');
         }
       );
     } else {
@@ -40,8 +40,8 @@ class VideoPlayer extends React.Component {
         this.videoNode,
         this.props,
         function onPlayerReady() {
-          console.log("onPlayerReady", this);
-          console.log("playing video");
+          console.log('onPlayerReady', this);
+          console.log('playing video');
         }
       );
       this.player.playlist(this.props.playlist);
@@ -62,11 +62,11 @@ class VideoPlayer extends React.Component {
   render() {
     return (
       <StyledPlayer>
-        <div style={{ height: "100%", width: "100%" }}>
+        <div style={{ height: '100%', width: '100%' }}>
           <video
             ref={(node) => (this.videoNode = node)}
             className="video-js"
-            style={{ height: "100%", width: "100%" }}
+            style={{ height: '100%', width: '100%' }}
           ></video>
         </div>
       </StyledPlayer>
@@ -75,9 +75,9 @@ class VideoPlayer extends React.Component {
 }
 
 const Player = (props) => {
-  const dataURL = process.env.DATA_URL ? process.env.DATA_URL : "";
+  const dataURL = process.env.DATA_URL ? process.env.DATA_URL : '';
 
-  const URL = dataURL.replace("/results", ""); //to be removed on push!!!
+  const URL = dataURL.replace('/results', ''); //to be removed on push!!!
 
   const [data, setData] = useState(null);
 
@@ -87,7 +87,7 @@ const Player = (props) => {
     });
   }, []);
 
-  const list = () => { 
+  const list = () => {
     return data.map((entry, index) => {
       const videoJsOptions = {
         autoplay: false,
@@ -96,7 +96,7 @@ const Player = (props) => {
         sources: [
           {
             src: entry.broadcastUrl,
-            type: "application/x-mpegURL",
+            type: 'application/x-mpegURL',
           },
         ],
       };
@@ -107,8 +107,8 @@ const Player = (props) => {
             {...videoJsOptions}
             playlist={entry.chunks.map((source) => {
               return {
-                sources: [{ src: source.url, type: "video/mp4" }],
-                poster: "",
+                sources: [{ src: source.url, type: 'video/mp4' }],
+                poster: '',
               };
             })}
             isStreaming={entry.isStreaming}
