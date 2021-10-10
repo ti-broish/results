@@ -94,30 +94,24 @@ export default (props) => {
             const percentage = party.validVotes / props.totalValid;
             const barPercent = party.validVotes / displayParties[0].validVotes;
             return (
-              <>
-                {
-                  (percentage < 0.04 &&
-                  !thresholdPlaced &&
-                  props.showThreshold ? (
-                    <tr key={index} className="threshold-row">
-                      <td colSpan="2" style={{ textAlign: 'center' }}>
-                        В парламента
-                        <hr />
-                        Извън парламента
-                      </td>
-                      {(thresholdPlaced = true)}
-                    </tr>
-                  ) : null,
-                  (
-                    <ResultsTableRow
-                      key={index}
-                      party={party}
-                      percentage={percentage}
-                      barPercent={barPercent}
-                    />
-                  ))
-                }
-              </>
+              percentage < 0.04 && !thresholdPlaced && props.showThreshold ? (
+                <tr key={index} className="threshold-row">
+                  <td colSpan="2" style={{ textAlign: 'center' }}>
+                    В парламента
+                    <hr />
+                    Извън парламента
+                  </td>
+                  {(thresholdPlaced = true)}
+                </tr>
+              ) : null,
+              (
+                <ResultsTableRow
+                  key={index}
+                  party={party}
+                  percentage={percentage}
+                  barPercent={barPercent}
+                />
+              )
             );
           })}
           <ResultsTableRow
