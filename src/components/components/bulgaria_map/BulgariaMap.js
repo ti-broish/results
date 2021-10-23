@@ -102,6 +102,7 @@ import {
   generateNullTooltip,
   generateTooltipCoverage,
   generateTooltipProcessed,
+  generateTooltipSignals,
 } from './generateTooltipContent';
 
 import {
@@ -112,6 +113,7 @@ import {
   generateRegionDataVoters,
   generateRegionDataCoverage,
   generateRegionDataProcessed,
+  generateRegionDataSignals,
 } from './generateRegionData';
 
 import handleViewport from 'react-in-viewport';
@@ -163,6 +165,12 @@ export default handleViewport((props) => {
           props.parties,
           props.results
         );
+      case 'signals':
+        return generateRegionDataSignals(
+          props.regions,
+          props.parties,
+          props.results
+        );
     }
   };
 
@@ -181,6 +189,8 @@ export default handleViewport((props) => {
         return generateTooltipCoverage(region, tooltipData);
       case 'sectionsWithResults':
         return generateTooltipProcessed(region, tooltipData);
+      case 'signals':
+        return generateTooltipSignals(region, tooltipData);
     }
   };
 
@@ -227,12 +237,19 @@ export default handleViewport((props) => {
           >
             %Обработени
           </button>
+          <button
+            className={mode === 'signals' ? 'selected' : ''}
+            onClick={() => setMode('signals')}
+          >
+            Сигнали
+          </button>
         </MapControls>
       )}
       {props.mapModesHidden ? null : mode === 'single-party' ? (
         <MapControlsSingleParty embed={props.embed} homepage={props.homepage}>
-          {displayParties.map((party) => (
+          {displayParties.map((party, idx) => (
             <button
+              key={idx}
               className={singleParty === party.number ? 'selected' : ''}
               onClick={() => setSingleParty(party.number)}
             >
