@@ -172,8 +172,8 @@ export default handleViewport((props) => {
       )}
       {!props.showLegend ? null : (
         <div className="legend">
-          {displayParties.map((party) => (
-            <LegendItem>
+          {displayParties.map((party, idx) => (
+            <LegendItem key={idx}>
               <LegendItemColor style={{ backgroundColor: party.color }} />
               {party.name}
             </LegendItem>
