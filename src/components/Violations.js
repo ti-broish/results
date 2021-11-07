@@ -2,6 +2,8 @@ import React, { useEffect, useContext, useState } from 'react';
 
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 import { Link } from 'react-router-dom';
 import LoadingScreen from './layout/LoadingScreen';
@@ -66,6 +68,37 @@ const ShowMoreButton = styled.button`
   }
 `;
 
+const BackButton = styled.button`
+  color: black;
+  font-size: 26px;
+  text-decoration: none;
+  font-weight: bold;
+  border: none;
+  background: none;
+  cursor: pointer;
+  vertical-align: top;
+  float: left;
+  ${(props) =>
+    props.embed
+      ? `
+        font-size: 9px;
+    `
+      : null}
+`;
+
+const PointyArrowBase = styled.span`
+  display: inline-block;
+  height: 30px;
+  box-sizing: border-box;
+  vertical-align: top;
+`;
+
+const PointyArrowMiddle = styled(PointyArrowBase)`
+  background-color: #eee;
+  padding: 6px;
+`;
+
+const defaultRegionName = 'Последни сигнали';
 export default (props) => {
   const { meta, parties, dataURL } = useContext(ElectionContext);
   const [resultsData, setResultsData] = useState(null);
@@ -74,8 +107,10 @@ export default (props) => {
     items: null,
     moreToLoad: true,
   });
-  const [regionName, setRegionName] = useState('Последни сигнали за страната');
+  const [regionName, setRegionName] = useState(defaultRegionName);
   const [loading, setLoading] = useState(false);
+  const [showBackButton, setShowBackButton] = useState(false);
+
   const { unit } = useParams();
 
   useEffect(() => {
@@ -90,13 +125,7 @@ export default (props) => {
         if (!data) history.push('/');
       });
 
-    axios.get(`${dataURL}/violations/feed`).then((res) => {
-      console.log(res.data);
-      setViolationData({
-        items: res.data,
-        moreToLoad: res.data.length >= 50,
-      });
-    });
+    getViolationFeeds();
   }, []);
 
   const getMoreViolations = () => {
@@ -114,28 +143,31 @@ export default (props) => {
       });
   };
 
-  const loadViolationsForRegion = (key) => {
-    console.log(key);
-
-    const region = resultsData.nodes.find((node) => node.segment == key);
-    console.log(region);
+  const loadViolationsForRegion = (segment) => {
+    const region = resultsData.nodes.find((node) => node.segment == segment);
 
     setLoading(true);
+    setRegionName(region ? region.name : '');
+    setShowBackButton(true);
+    getViolationFeeds(segment);
+  };
 
-    setTimeout(() => {
-      setRegionName(region ? region.name : '');
+  const getViolationFeeds = (segment) => {
+    const baseUrl = `${dataURL}/violations/feed`;
+    const url = segment ? baseUrl + `/${segment}` : baseUrl;
+    axios.get(url).then((res) => {
+      setViolationData({
+        items: res.data,
+        moreToLoad: res.data.length >= 50,
+      });
       setLoading(false);
-    }, 2000);
+    });
+  };
 
-    // axios
-    // .get(`${dataURL}/violations/feed/${key}`)
-    // .then((res) => {
-    //   setViolationData({
-    //     items: [...violationData.items, ...res.data],
-    //     moreToLoad: res.data.length >= 50,
-    //   });
-    //   setLoading(false);
-    // });
+  const resetViolations = () => {
+    setShowBackButton(false);
+    setRegionName(defaultRegionName);
+    getViolationFeeds();
   };
 
   const renderViolation = (violation, i) => {
@@ -210,7 +242,16 @@ export default (props) => {
         <LoadingScreen />
       ) : (
         <ViolationFeed>
-          <h1 style={{ textAlign: 'center' }}>{regionName}</h1>
+          <div>
+            {showBackButton ? (
+              <BackButton onClick={resetViolations}>
+                <PointyArrowMiddle style={{ backgroundColor: '#0000' }}>
+                  <FontAwesomeIcon icon={faArrowLeft} />
+                </PointyArrowMiddle>
+              </BackButton>
+            ) : null}
+            <h1 style={{ textAlign: 'center' }}>{regionName}</h1>
+          </div>
           {violationData.items.map(renderViolation)}
           {!violationData.moreToLoad ? null : (
             <ShowMoreButton disabled={loading} onClick={getMoreViolations}>
