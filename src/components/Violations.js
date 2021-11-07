@@ -217,9 +217,11 @@ export default (props) => {
           {!violation.section ? null : (
             <h5 style={{ margin: '5px 0' }}>{violation.section.place}</h5>
           )}
-          <h5 style={{ color: '#888', margin: '5px 0' }}>
-            Получен: {formatDateTime(new Date(violation.createdAt))}
-          </h5>
+          {violation.createdAt ? (
+            <h5 style={{ color: '#888', margin: '5px 0' }}>
+              Получен: {formatDateTime(new Date(violation.createdAt))}
+            </h5>
+          ) : null}
 
           <p style={{ margin: '20px 0 20px 0' }}>{violation.publishedText}</p>
         </Violation>
