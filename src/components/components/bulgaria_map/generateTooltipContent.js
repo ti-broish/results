@@ -289,7 +289,7 @@ export const generateTooltipViolations = (region, tooltipData) => {
                     <td style="text-align: right;">
                     
                     ${
-                      tooltipData.violationsCount
+                      tooltipData.violationsCount != null
                         ? `${formatCount(tooltipData.violationsCount)}`
                         : `0`
                     }</td>
@@ -298,8 +298,8 @@ export const generateTooltipViolations = (region, tooltipData) => {
                     <td style="padding-right: 20px;">Обработени сигнали</td>
                     <td style="text-align: right;">
                     ${
-                      tooltipData.publishedViolations
-                        ? `${formatCount(tooltipData.publishedViolations)}`
+                      tooltipData.processedViolations != null
+                        ? `${formatCount(tooltipData.processedViolations)}`
                         : `0`
                     }
                     
@@ -309,8 +309,8 @@ export const generateTooltipViolations = (region, tooltipData) => {
                     <td style="padding-right: 20px;">Публикувани сигнали</td>
                     <td style="text-align: right;">
                     ${
-                      tooltipData.processedViolations
-                        ? `${formatCount(tooltipData.processedViolations)}`
+                      tooltipData.publishedViolations != null
+                        ? `${formatCount(tooltipData.publishedViolations)}`
                         : `0`
                     }
                     </td>

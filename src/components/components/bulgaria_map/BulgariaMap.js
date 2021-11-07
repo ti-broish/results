@@ -318,7 +318,8 @@ export default handleViewport((props) => {
               const tooltipData = regionDataForKey
                 ? regionDataForKey.tooltipData
                 : null;
-              const regionHasNoViolations = tooltipData?.violationsCount == 0;
+              const regionHasNoViolations =
+                tooltipData?.publishedViolations == 0;
 
               const clickHandler = () => {
                 if (props.linkToMainSite) {
