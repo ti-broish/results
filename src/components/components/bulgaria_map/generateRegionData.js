@@ -330,15 +330,10 @@ export const generateRegionDataViolations = (regions) => {
       (region.stats.violationsCount - lowestCount) /
       (highestCount - lowestCount);
     regionData[region.id] = {};
-    regionData[region.id].color = rgbGradient(
-      202,
-      253,
-      200,
-      0,
-      255,
-      0,
-      percentage
-    );
+    regionData[region.id].color =
+      region.stats.violationsCount === 0
+        ? '#eee'
+        : rgbGradient(239, 238, 95, 255, 0, 0, percentage);
     regionData[region.id].tooltipData = {
       violationsCount: region.stats.violationsCount,
       publishedViolations: region.stats.publishedViolations,

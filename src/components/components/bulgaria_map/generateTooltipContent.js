@@ -291,7 +291,7 @@ export const generateTooltipViolations = (region, tooltipData) => {
                     ${
                       tooltipData.violationsCount
                         ? `${formatCount(tooltipData.violationsCount)}`
-                        : `Няма данни`
+                        : `0`
                     }</td>
                 </tr>
                 <tr>
@@ -300,7 +300,7 @@ export const generateTooltipViolations = (region, tooltipData) => {
                     ${
                       tooltipData.publishedViolations
                         ? `${formatCount(tooltipData.publishedViolations)}`
-                        : `Няма данни`
+                        : `0`
                     }
                     
                     </td>
@@ -311,7 +311,7 @@ export const generateTooltipViolations = (region, tooltipData) => {
                     ${
                       tooltipData.processedViolations
                         ? `${formatCount(tooltipData.processedViolations)}`
-                        : `Няма данни`
+                        : `0`
                     }
                     </td>
                 </tr>

@@ -25,6 +25,10 @@ const BulgariaMapStyle = styled.div`
     cursor: pointer;
     filter: brightness(0.9);
   }
+
+  path.no-data:hover {
+    cursor: not-allowed;
+  }
 `;
 
 const MapControls = styled.div`
@@ -314,6 +318,8 @@ export default handleViewport((props) => {
               const tooltipData = regionDataForKey
                 ? regionDataForKey.tooltipData
                 : null;
+              const regionHasNoViolations = tooltipData?.violationsCount == 0;
+
               const clickHandler = () => {
                 if (props.linkToMainSite) {
                   const newHref = `https://tibroish.bg${publicURL}/${key}`;
@@ -321,7 +327,7 @@ export default handleViewport((props) => {
                 } else if (props.embed) {
                   history.push(`/embed/mini-results/${key}`);
                 } else if (props.showViolationsOnly) {
-                  if (tooltipData?.violationsCount == 0) {
+                  if (regionHasNoViolations) {
                     return;
                   }
                   props.loadViolationsForRegion(key);
@@ -341,6 +347,7 @@ export default handleViewport((props) => {
                     fill: shouldLoad ? color : '#888',
                     transition: 'fill 1.5s ease',
                   }}
+                  className={regionHasNoViolations ? 'no-data' : ''}
                   d={regionPaths[key].path}
                   data-tip={generateTooltipContent(region, tooltipData)}
                   data-for={'bulgariaMapTooltip'}
