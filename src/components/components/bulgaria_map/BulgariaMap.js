@@ -102,7 +102,7 @@ import {
   generateNullTooltip,
   generateTooltipCoverage,
   generateTooltipProcessed,
-  generateTooltipSignals,
+  generateTooltipViolations,
 } from './generateTooltipContent';
 
 import {
@@ -113,7 +113,7 @@ import {
   generateRegionDataVoters,
   generateRegionDataCoverage,
   generateRegionDataProcessed,
-  generateRegionDataSignals,
+  generateRegionDataViolations,
 } from './generateRegionData';
 
 import handleViewport from 'react-in-viewport';
@@ -125,7 +125,9 @@ export default handleViewport((props) => {
   const shouldLoad = inViewport || alreadyLoaded.current;
 
   const history = useHistory();
-  const [mode, setMode] = useState('dominant');
+  const [mode, setMode] = useState(
+    props.showViolationsOnly ? 'violations' : 'dominant'
+  );
   const [singleParty, setSingleParty] = useState('');
   const [singlePartyMode, setSinglePartyMode] = useState('percentage');
 
@@ -152,11 +154,7 @@ export default handleViewport((props) => {
           props.results
         );
       case 'voters':
-        return generateRegionDataVoters(
-          props.regions,
-          props.parties,
-          props.results
-        );
+        return generateRegionDataVoters(props.regions);
       case 'coverage':
         return generateRegionDataCoverage(props.regions);
       case 'sectionsWithResults':
@@ -165,8 +163,8 @@ export default handleViewport((props) => {
           props.parties,
           props.results
         );
-      case 'signals':
-        return generateRegionDataSignals(
+      case 'violations':
+        return generateRegionDataViolations(
           props.regions,
           props.parties,
           props.results
@@ -189,8 +187,8 @@ export default handleViewport((props) => {
         return generateTooltipCoverage(region, tooltipData);
       case 'sectionsWithResults':
         return generateTooltipProcessed(region, tooltipData);
-      case 'signals':
-        return generateTooltipSignals(region, tooltipData);
+      case 'violations':
+        return generateTooltipViolations(region, tooltipData);
     }
   };
 
@@ -209,7 +207,7 @@ export default handleViewport((props) => {
 
   return (
     <>
-      {props.mapModesHidden ? null : (
+      {props.mapModesHidden || props.showViolationsOnly ? null : (
         <MapControls embed={props.embed} homepage={props.homepage}>
           <button
             className={mode === 'dominant' ? 'selected' : ''}
@@ -238,14 +236,15 @@ export default handleViewport((props) => {
             %Обработени
           </button>
           <button
-            className={mode === 'signals' ? 'selected' : ''}
-            onClick={() => setMode('signals')}
+            className={mode === 'violations' ? 'selected' : ''}
+            onClick={() => setMode('violations')}
           >
             Сигнали
           </button>
         </MapControls>
       )}
-      {props.mapModesHidden ? null : mode === 'single-party' ? (
+      {props.mapModesHidden || props.showViolationsOnly ? null : mode ===
+        'single-party' ? (
         <MapControlsSingleParty embed={props.embed} homepage={props.homepage}>
           {displayParties.map((party, idx) => (
             <button
@@ -311,19 +310,25 @@ export default handleViewport((props) => {
         >
           <g id="Plan_x0020_1" transform="translate(-1740.6745,-1498.0644)">
             {Object.keys(regionPaths).map((key, index) => {
+              const regionDataForKey = regionData[key];
+              const tooltipData = regionDataForKey
+                ? regionDataForKey.tooltipData
+                : null;
               const clickHandler = () => {
                 if (props.linkToMainSite) {
                   const newHref = `https://tibroish.bg${publicURL}/${key}`;
                   top.location.href = newHref;
-                } else if (props.embed)
+                } else if (props.embed) {
                   history.push(`/embed/mini-results/${key}`);
-                else history.push(`/${key}`);
+                } else if (props.showViolationsOnly) {
+                  if (tooltipData?.violationsCount == 0) {
+                    return;
+                  }
+                  props.loadViolationsForRegion(key);
+                } else history.push(`/${key}`);
               };
+              const color = regionDataForKey ? regionDataForKey.color : '#eee';
 
-              const color = regionData[key] ? regionData[key].color : '#eee';
-              const tooltipData = regionData[key]
-                ? regionData[key].tooltipData
-                : null;
               const region = props.regions.find(
                 (region) => region.id.toString() === key.toString()
               );

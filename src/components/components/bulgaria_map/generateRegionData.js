@@ -227,7 +227,7 @@ export const generateRegionDataTurnout = (regions, parties) => {
   return regionData;
 };
 
-export const generateRegionDataVoters = (regions, parties) => {
+export const generateRegionDataVoters = (regions) => {
   const regionData = {};
 
   let lowestCount = 1000000000;
@@ -312,25 +312,37 @@ export const generateRegionDataProcessed = (regions) => {
   return regionData;
 };
 
-export const generateRegionDataSignals = (regions) => {
+export const generateRegionDataViolations = (regions) => {
   const regionData = {};
+
+  let lowestCount = 1000000000;
+  let highestCount = 0;
+  for (const region of regions) {
+    const currentCount = region.stats.violationsCount;
+
+    if (currentCount > highestCount) highestCount = currentCount;
+
+    if (currentCount < lowestCount) lowestCount = currentCount;
+  }
 
   for (const region of regions) {
     const percentage =
-      region.stats.sectionsWithProtocols / region.stats.sectionsCount;
+      (region.stats.violationsCount - lowestCount) /
+      (highestCount - lowestCount);
     regionData[region.id] = {};
     regionData[region.id].color = rgbGradient(
-      237,
-      237,
-      255,
-      10,
-      116,
+      202,
       253,
+      200,
+      0,
+      255,
+      0,
       percentage
     );
     regionData[region.id].tooltipData = {
-      sections: region.stats.sectionsCount,
-      sectionsWithProtocols: region.stats.sectionsWithProtocols,
+      violationsCount: region.stats.violationsCount,
+      publishedViolations: region.stats.publishedViolations,
+      processedViolations: region.stats.processedViolations,
     };
   }
 

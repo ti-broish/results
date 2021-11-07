@@ -1,11 +1,13 @@
 import React, { useEffect, useContext, useState } from 'react';
 
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 import { Link } from 'react-router-dom';
 import LoadingScreen from './layout/LoadingScreen';
 import { ElectionContext } from './Election';
 import { formatDateTime } from './Util';
+import BulgariaMap from './components/bulgaria_map/BulgariaMap';
 
 import styled from 'styled-components';
 
@@ -66,16 +68,31 @@ const ShowMoreButton = styled.button`
 
 export default (props) => {
   const { meta, parties, dataURL } = useContext(ElectionContext);
-  const [data, setData] = useState({
+  const [resultsData, setResultsData] = useState(null);
+
+  const [violationData, setViolationData] = useState({
     items: null,
     moreToLoad: true,
   });
+  const [regionName, setRegionName] = useState('Последни сигнали за страната');
   const [loading, setLoading] = useState(false);
+  const { unit } = useParams();
 
   useEffect(() => {
+    axios
+      .get(`${dataURL}/results/${unit ? unit : 'index'}.json`)
+      .then((res) => {
+        //res.data = populateWithFakeResults(res.data, parties);
+        setResultsData(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+        if (!data) history.push('/');
+      });
+
     axios.get(`${dataURL}/violations/feed`).then((res) => {
       console.log(res.data);
-      setData({
+      setViolationData({
         items: res.data,
         moreToLoad: res.data.length >= 50,
       });
@@ -84,16 +101,41 @@ export default (props) => {
 
   const getMoreViolations = () => {
     setLoading(true);
-    const lastViolation = data.items[data.items.length - 1].id;
+    const lastViolation =
+      violationData.items[violationData.items.length - 1].id;
     axios
       .get(`${dataURL}/violations/feed?after=${lastViolation}`)
       .then((res) => {
-        setData({
-          items: [...data.items, ...res.data],
+        setViolationData({
+          items: [...violationData.items, ...res.data],
           moreToLoad: res.data.length >= 50,
         });
         setLoading(false);
       });
+  };
+
+  const loadViolationsForRegion = (key) => {
+    console.log(key);
+
+    const region = resultsData.nodes.find((node) => node.segment == key);
+    console.log(region);
+
+    setLoading(true);
+
+    setTimeout(() => {
+      setRegionName(region ? region.name : '');
+      setLoading(false);
+    }, 2000);
+
+    // axios
+    // .get(`${dataURL}/violations/feed/${key}`)
+    // .then((res) => {
+    //   setViolationData({
+    //     items: [...violationData.items, ...res.data],
+    //     moreToLoad: res.data.length >= 50,
+    //   });
+    //   setLoading(false);
+    // });
   };
 
   const renderViolation = (violation, i) => {
@@ -153,17 +195,30 @@ export default (props) => {
     );
   };
 
-  return !data.items ? (
+  return !resultsData || !violationData?.items ? (
     <LoadingScreen />
   ) : (
-    <ViolationFeed>
-      <h1 style={{ textAlign: 'center' }}>Последни сигнали</h1>
-      {data.items.map(renderViolation)}
-      {!data.moreToLoad ? null : (
-        <ShowMoreButton disabled={loading} onClick={getMoreViolations}>
-          {loading ? 'Зареждане...' : 'Покажи още'}
-        </ShowMoreButton>
+    <>
+      <BulgariaMap
+        regions={resultsData.nodes}
+        parties={parties}
+        results={resultsData.results}
+        showViolationsOnly={true}
+        loadViolationsForRegion={(key) => loadViolationsForRegion(key)}
+      />
+      {loading ? (
+        <LoadingScreen />
+      ) : (
+        <ViolationFeed>
+          <h1 style={{ textAlign: 'center' }}>{regionName}</h1>
+          {violationData.items.map(renderViolation)}
+          {!violationData.moreToLoad ? null : (
+            <ShowMoreButton disabled={loading} onClick={getMoreViolations}>
+              {loading ? 'Зареждане...' : 'Покажи още'}
+            </ShowMoreButton>
+          )}
+        </ViolationFeed>
       )}
-    </ViolationFeed>
+    </>
   );
 };

@@ -277,7 +277,7 @@ export const generateTooltipProcessed = (region, tooltipData) => {
     `;
 };
 
-export const generateTooltipSignals = (region, tooltipData) => {
+export const generateTooltipViolations = (region, tooltipData) => {
   return `
         <div>
             <h2 style="margin: 5px;">${region.name}</h2>
@@ -289,8 +289,8 @@ export const generateTooltipSignals = (region, tooltipData) => {
                     <td style="text-align: right;">
                     
                     ${
-                      tooltipData.voters
-                        ? `${formatCount(tooltipData.voters)}`
+                      tooltipData.violationsCount
+                        ? `${formatCount(tooltipData.violationsCount)}`
                         : `Няма данни`
                     }</td>
                 </tr>
@@ -298,8 +298,8 @@ export const generateTooltipSignals = (region, tooltipData) => {
                     <td style="padding-right: 20px;">Обработени сигнали</td>
                     <td style="text-align: right;">
                     ${
-                      tooltipData.voters
-                        ? `${formatCount(tooltipData.votes)}`
+                      tooltipData.publishedViolations
+                        ? `${formatCount(tooltipData.publishedViolations)}`
                         : `Няма данни`
                     }
                     
@@ -309,10 +309,8 @@ export const generateTooltipSignals = (region, tooltipData) => {
                     <td style="padding-right: 20px;">Публикувани сигнали</td>
                     <td style="text-align: right;">
                     ${
-                      tooltipData.voters
-                        ? `${formatPercentage(
-                            tooltipData.votes / tooltipData.voters
-                          )}%`
+                      tooltipData.processedViolations
+                        ? `${formatCount(tooltipData.processedViolations)}`
                         : `Няма данни`
                     }
                     </td>
