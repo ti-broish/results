@@ -4,7 +4,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const LoadablePlugin = require('@loadable/webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');    
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = env => {
     return {
@@ -49,8 +49,8 @@ module.exports = env => {
             new CleanWebpackPlugin(),
             new LoadablePlugin(),
             new CopyWebpackPlugin({ patterns: [ { from: './static/' } ]}),
-            new HtmlWebpackPlugin({ 
-                title: 'Резултати от избори',
+            new HtmlWebpackPlugin({
+                title: 'Ти Броиш',
                 template: 'src/index.ejs',
                 publicPath: env['PUBLIC_URL']? env['PUBLIC_URL'] : '/'
             }),
