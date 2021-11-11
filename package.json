@@ -5,7 +5,8 @@
   "scripts": {
     "build": "webpack --env PUBLIC_URL=/results/parliament-2021-04-04 DATA_URL=https://api.tibroish.bg --config webpack/build.config.js",
     "build-staging": "webpack --env PUBLIC_URL=/results/parl20210404apitest DATA_URL=https://d1tapi.dabulgaria.bg --config webpack/build.config.js",
-    "serve": "webpack serve --env DATA_URL=https://api.tibroish.bg --config webpack/serve.config.js"
+    "serve": "webpack serve --env DATA_URL=https://api.tibroish.bg --config webpack/serve.config.js",
+    "serve-staging": "webpack serve --env DATA_URL=https://d1tapi.dabulgaria.bg --config webpack/serve.config.js"
   },
   "author": "",
   "license": "ISC",
