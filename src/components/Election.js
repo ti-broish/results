@@ -23,9 +23,10 @@ const NavigationTabsBackground = styled.div`
 
 const NavigationTabs = styled.nav`
     width: 100%;
-    max-width: 600px;
+    max-width: 1000px;
     margin: 0 auto;
     padding-top: 10px;
+    text-align: center;
 `;
 
 const NavigationTab = styled.button`
@@ -68,6 +69,7 @@ export const ElectionContext = React.createContext();
 
 export default props => {
     const [meta, setMeta] = useState(null);
+    const [protocols, setProtocols] = useState([])
 
     const dataURL = process.env.DATA_URL? process.env.DATA_URL : '/json';
 
@@ -78,8 +80,13 @@ export default props => {
         axios.get(`${dataURL}/results/meta.json`).then(res => {
             setMeta(res.data);
         });
+
+        axios.get(`${dataURL}/results/120200027.json`).then(res => {
+            setProtocols(res.data);
+        });
     }, []);
 
+    console.log(protocols)
     const isElectionDayOver = () => {
         return true;
         if(!meta) return false;
@@ -98,12 +105,14 @@ export default props => {
         else return '/';
     };
 
-    return(
-        <ElectionContext.Provider value={{ meta, parties: !meta? null : meta.parties, dataURL }}>
-            <Header title={!meta? null : meta.name}/>
-            <NavigationTabsBackground>
-                <NavigationTabs>
-                    <NavigationTab 
+    return (
+      <ElectionContext.Provider
+        value={{ meta, parties: !meta ? null : meta.parties, dataURL }}
+      >
+        <Header title={!meta ? null : meta.name} />
+        <NavigationTabsBackground>
+          <NavigationTabs>
+            <NavigationTab 
                         disabled={!isElectionDayOver()} 
                         onClick={() => history.push('/')}
                         className={getLocation() === '/'? 'selected' : ''}
@@ -122,21 +131,28 @@ export default props => {
                         className={getLocation() === 'videos'? 'selected' : ''}
                     >
                         Видео
-                    </NavigationTab>
-                </NavigationTabs>
-            </NavigationTabsBackground>
-            <Wrapper>
-            {
-                !meta? <LoadingScreen/> :
-                    <Switch>
-                        <Route path='/videos' render={()=>showAfterElectionDate(<Videos/>)}/>
-                        <Route path='/violations' component={Violations}/>
-                        <Route path={[`/:unit`, `/`]} render={()=>showAfterElectionDate(<ResultUnit/>)}/>
-                        <Redirect to={`/`}/>
-                    </Switch>
-            }
-            </Wrapper>
-            <Footer/>
-        </ElectionContext.Provider>
+            </NavigationTab>
+          </NavigationTabs>
+        </NavigationTabsBackground>
+        <Wrapper>
+          {!meta ? (
+            <LoadingScreen />
+          ) : (
+            <Switch>
+              <Route
+                path="/videos"
+                render={() => showAfterElectionDate(<Videos />)}
+              />
+              <Route path="/violations" component={Violations} />
+              <Route
+                path={[`/:unit`, `/`]}
+                render={() => showAfterElectionDate(<ResultUnit />)}
+              />
+              <Redirect to={`/`} />
+            </Switch>
+          )}
+        </Wrapper>
+        <Footer />
+      </ElectionContext.Provider>
     );
 };
