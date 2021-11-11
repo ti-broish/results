@@ -1,4 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react';
+import Helmet from 'react-helmet';
 
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
@@ -99,6 +100,9 @@ const PointyArrowMiddle = styled(PointyArrowBase)`
 `;
 
 const defaultRegionName = 'Последни сигнали';
+
+let metaUrl = 'https://tibroish.bg/';
+
 export default (props) => {
   const { meta, parties, dataURL } = useContext(ElectionContext);
   const [resultsData, setResultsData] = useState(null);
@@ -233,6 +237,14 @@ export default (props) => {
     <LoadingScreen />
   ) : (
     <>
+      <Helmet>
+        <title>Сигнали</title>
+        <link rel="canonical" href={metaUrl} />
+        <meta property="og:url" content={metaUrl} />
+        <meta property="og:image" content={'/brand/ti-broish-cover.png'} />
+        <meta property="og:image:width" content={'1200'} />
+        <meta property="og:image:height" content={'628'} />
+      </Helmet>
       <BulgariaMap
         regions={resultsData.nodes}
         parties={parties}
