@@ -129,9 +129,8 @@ export default handleViewport((props) => {
   const shouldLoad = inViewport || alreadyLoaded.current;
 
   const history = useHistory();
-  const [mode, setMode] = useState(
-    props.showViolationsOnly ? 'violations' : 'dominant'
-  );
+  //    props.showViolationsOnly ? 'violations' : 'dominant'
+  const [mode, setMode] = useState('violations');
   const [singleParty, setSingleParty] = useState('');
   const [singlePartyMode, setSinglePartyMode] = useState('percentage');
 
@@ -214,6 +213,12 @@ export default handleViewport((props) => {
       {props.mapModesHidden || props.showViolationsOnly ? null : (
         <MapControls embed={props.embed} homepage={props.homepage}>
           <button
+            className={mode === 'violations' ? 'selected' : ''}
+            onClick={() => setMode('violations')}
+          >
+            Сигнали
+          </button>
+          {/* <button
             className={mode === 'dominant' ? 'selected' : ''}
             onClick={() => setMode('dominant')}
           >
@@ -224,7 +229,7 @@ export default handleViewport((props) => {
             onClick={() => setMode('single-party')}
           >
             Отделна партия
-          </button>
+          </button> */}
           {/*<button className={mode === 'turnout'? 'selected' : ''} onClick={()=>setMode('turnout')}>Активност</button>*/}
           <button
             className={mode === 'voters' ? 'selected' : ''}
@@ -237,13 +242,7 @@ export default handleViewport((props) => {
             className={mode === 'sectionsWithResults' ? 'selected' : ''}
             onClick={() => setMode('sectionsWithResults')}
           >
-            %Обработени
-          </button>
-          <button
-            className={mode === 'violations' ? 'selected' : ''}
-            onClick={() => setMode('violations')}
-          >
-            Сигнали
+            Секции
           </button>
         </MapControls>
       )}

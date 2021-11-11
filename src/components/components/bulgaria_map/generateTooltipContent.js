@@ -160,19 +160,9 @@ export const generateTooltipTurnout = (region, tooltipData) => {
 };
 
 export const generateTooltipVoters = (region, tooltipData) => {
-  return `
-        <div>
-            <h2 style="margin: 5px;">${region.name}</h2>
-            <hr style="border-color: #aaa; border-top: none;"/>
-            <table style="width: 100%;">
-            <tbody>
-                <tr>
-                    <td style="padding-right: 20px;">Избиратели</td>
-                    <td style="text-align: right;">${formatCount(
-                      tooltipData.voters
-                    )}</td>
-                </tr>
-                <tr>
+  /**
+   * 
+   *           <tr>
                     <td style="padding-right: 20px;">Гласували</td>
                     <td style="text-align: right;">
                     ${
@@ -195,6 +185,20 @@ export const generateTooltipVoters = (region, tooltipData) => {
                     }
                     </td>
                 </tr>
+   */
+  return `
+        <div>
+            <h2 style="margin: 5px;">${region.name}</h2>
+            <hr style="border-color: #aaa; border-top: none;"/>
+            <table style="width: 100%;">
+            <tbody>
+                <tr>
+                    <td style="padding-right: 20px;">Избиратели</td>
+                    <td style="text-align: right;">${formatCount(
+                      tooltipData.voters
+                    )}</td>
+                </tr>
+      
             </tbody>
             </table>
         </div>  
@@ -240,19 +244,9 @@ export const generateTooltipCoverage = (region, tooltipData) => {
 };
 
 export const generateTooltipProcessed = (region, tooltipData) => {
-  return `
-        <div>
-            <h2 style="margin: 5px;">${region.name}</h2>
-            <hr style="border-color: #aaa; border-top: none;"/>
-            <table style="width: 100%;">
-            <tbody>
-                <tr>
-                    <td style="padding-right: 20px;">Общо секции</td>
-                    <td style="text-align: right;">${formatCount(
-                      tooltipData.sections
-                    )}</td>
-                </tr>
-                <tr>
+  /**
+   * 
+   *          <tr>
                     <td style="padding-right: 20px;">Секции с резултати</td>
                     <td style="text-align: right;">
                     ${formatCount(tooltipData.sectionsWithResults)}
@@ -271,6 +265,20 @@ export const generateTooltipProcessed = (region, tooltipData) => {
                     }
                     </td>
                 </tr>
+   */
+  return `
+        <div>
+            <h2 style="margin: 5px;">${region.name}</h2>
+            <hr style="border-color: #aaa; border-top: none;"/>
+            <table style="width: 100%;">
+            <tbody>
+                <tr>
+                    <td style="padding-right: 20px;">Общо секции</td>
+                    <td style="text-align: right;">${formatCount(
+                      tooltipData.sections
+                    )}</td>
+                </tr>
+       
             </tbody>
             </table>
         </div>  

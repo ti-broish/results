@@ -333,7 +333,7 @@ export default (props) => {
                 Активност
               </button>
             </SubdivisionTableControls>
-            <SubdivisionControlsParty embed={props.embed}>
+            {/* <SubdivisionControlsParty embed={props.embed}>
               {mode !== 'distribution' ? null : (
                 <>
                   Подреди по партия:
@@ -361,7 +361,7 @@ export default (props) => {
                   ))}
                 </>
               )}
-            </SubdivisionControlsParty>
+            </SubdivisionControlsParty> */}
           </>
         )}
       </div>

@@ -163,7 +163,7 @@ export default (props) => {
       {data.type === 'election' ? null : (
         <Crumbs data={data} embed={props.embed} />
       )}
-      <ProgressBar
+      {/* <ProgressBar
         percentage={data.stats.sectionsWithResults / data.stats.sectionsCount}
         color={'#5a5aff'}
         emptyColor={'rgb(189, 189, 249)'}
@@ -172,7 +172,7 @@ export default (props) => {
           'Тази линия показва процента от секциите, които влизат в резултатите ни към момента'
         }
         embed={props.embed}
-      />
+      /> */}
       <h1 style={props.embed ? { fontSize: '15px' } : {}}>
         {data.type === 'election'
           ? null
@@ -187,14 +187,14 @@ export default (props) => {
           results={data.results}
         />
       )}
-      <ResultsTable
+      {/* <ResultsTable
         results={data.results}
         parties={parties}
         totalValid={data.stats.validVotes}
         totalInvalid={data.stats.invalidVotes}
         showThreshold={data.type === 'election'}
         embed={props.embed}
-      />
+      /> */}
       <h1 style={props.embed ? { fontSize: '15px' } : {}}>
         {mapNodesType(data.nodesType)}
       </h1>
