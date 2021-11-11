@@ -72,7 +72,6 @@ const NavigationTab = styled.button`
 
 export const ElectionContext = React.createContext();
 
-
 export default (props) => {
   const [meta, setMeta] = useState(null);
 
@@ -156,4 +155,3 @@ export default (props) => {
     </ElectionContext.Provider>
   );
 };
-
