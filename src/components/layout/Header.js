@@ -5,7 +5,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { slide as Menu } from "react-burger-menu";
 
-import styled from "styled-components";
+
+import styled from 'styled-components';
+
+
+const MOBILE_WIDTH = 952;
 
 export const Wrapper = styled.div`
   max-width: 1000px;
@@ -111,8 +115,6 @@ const MobileNavMenu = styled.div`
     padding: 10px 0;
   }
 `;
-
-const MOBILE_WIDTH = 952;
 
 export default (props) => {
   const [menuOpen, setMenuOpen] = useState(false);
