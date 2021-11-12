@@ -127,14 +127,12 @@ export default (props) => {
           <LogoImage src="/brand/logo_horizontal_white.png?v=2" />
         </Link>
         <Navigation>
-          <Link to="/about">Kампанията</Link>
-          <Link to="/signup">Запиши се</Link>
-          <Link to="/instructions">Инструкции</Link>
-          <Link to="/videos">Видео</Link>
-          <Link to="/results/parliament-president-2021-11-14/violations">
-            Сигнали
-          </Link>
-          <Link to="/ti-glasuvash">Ти Гласуваш</Link>
+          <a href="/about">Kампанията</a>
+          <a href="/signup">Запиши се</a>
+          <a href="/instructions">Инструкции</a>
+          <a href="/videos">Видео</a>
+          <Link to="/violations">Сигнали</Link>
+          <a href="/ti-glasuvash">Ти Гласуваш</a>
         </Navigation>
         <MobileMenuButton onClick={() => setMenuOpen(!menuOpen)}>
           <FontAwesomeIcon icon={faBars} />
@@ -153,33 +151,30 @@ export default (props) => {
           <Link to="/" onClick={() => setMenuOpen(false)}>
             Начало
           </Link>
-          <Link to="/about" onClick={() => setMenuOpen(false)}>
+          <a href="/about" onClick={() => setMenuOpen(false)}>
             Kампанията
-          </Link>
-          <Link to="/signup" onClick={() => setMenuOpen(false)}>
+          </a>
+          <a href="/signup" onClick={() => setMenuOpen(false)}>
             Запиши се
-          </Link>
-          <Link to="/instructions" onClick={() => setMenuOpen(false)}>
+          </a>
+          <a href="/instructions" onClick={() => setMenuOpen(false)}>
             Инструкции
-          </Link>
-          <Link to="/videos" onClick={() => setMenuOpen(false)}>
+          </a>
+          <a href="/videos" onClick={() => setMenuOpen(false)}>
             Видео
-          </Link>
-          <Link to="/news" onClick={() => setMenuOpen(false)}>
+          </a>
+          <a href="/news" onClick={() => setMenuOpen(false)}>
             Актуална информация
-          </Link>
-          <Link to="/privacy-notice" onClick={() => setMenuOpen(false)}>
+          </a>
+          <a href="/privacy-notice" onClick={() => setMenuOpen(false)}>
             Декларация за поверителност
-          </Link>
-          <Link
-            to="/results/parliament-president-2021-11-14/violations"
-            onClick={() => setMenuOpen(false)}
-          >
+          </a>
+          <Link to="/violations" onClick={() => setMenuOpen(false)}>
             Сигнали
           </Link>
-          <Link to="/ti-glasuvash" onClick={() => setMenuOpen(false)}>
+          <a href="/ti-glasuvash" onClick={() => setMenuOpen(false)}>
             Ти Гласуваш!
-          </Link>
+          </a>
         </MobileNavMenu>
       </Menu>
     </MobileNavigation>,
