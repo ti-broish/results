@@ -110,30 +110,6 @@ export default (props) => {
       value={{ meta, parties: !meta ? null : meta.parties, dataURL }}
     >
       <Header title={!meta ? null : meta.name} />
-      <NavigationTabsBackground>
-        <NavigationTabs>
-          <NavigationTab
-            disabled={!isElectionDayOver()}
-            onClick={() => history.push('/')}
-            className={getLocation() === '/' ? 'selected' : ''}
-          >
-            Резултати
-          </NavigationTab>
-          <NavigationTab
-            onClick={() => history.push('/violations')}
-            className={getLocation() === 'violations' ? 'selected' : ''}
-          >
-            Сигнали
-          </NavigationTab>
-          <NavigationTab
-            disabled={!isElectionDayOver()}
-            onClick={() => history.push('/videos')}
-            className={getLocation() === 'videos' ? 'selected' : ''}
-          >
-            Видео
-          </NavigationTab>
-        </NavigationTabs>
-      </NavigationTabsBackground>
       <Wrapper>
         {!meta ? (
           <LoadingScreen />
