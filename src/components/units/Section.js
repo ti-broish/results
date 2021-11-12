@@ -1,19 +1,19 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from 'react';
 
-import Helmet from "react-helmet";
-import axios from "axios";
-import { useParams, useHistory } from "react-router-dom";
-import { mapNodeType } from "../ResultUnit";
-import LoadingScreen from "../layout/LoadingScreen";
+import Helmet from 'react-helmet';
+import axios from 'axios';
+import { useParams, useHistory } from 'react-router-dom';
+import { mapNodeType } from '../ResultUnit';
+import LoadingScreen from '../layout/LoadingScreen';
 
-import ResultsTable from "../components/results_table/ResultsTable";
+import ResultsTable from '../components/results_table/ResultsTable';
 
-import { ElectionContext } from "../Election";
-import Crumbs from "../components/Crumbs";
+import { ElectionContext } from '../Election';
+import Crumbs from '../components/Crumbs';
 
-import Player from "../embeds/Player";
+import Player from '../embeds/Player';
 
-import styled from "styled-components";
+import styled from 'styled-components';
 
 const SectionDetailsTable = styled.table`
   margin: 20px 0;
@@ -53,11 +53,16 @@ export default (props) => {
 
   const [data, setData] = useState(null);
 
-    useEffect(() => {
-        axios.get(`${dataURL}/results/${unit}.json`).then(res => {
-            setData(res.data);
-        }).catch(err => { if(!data) history.push('/') });
-    }, []);
+  useEffect(() => {
+    axios
+      .get(`${dataURL}/results/${unit}.json`)
+      .then((res) => {
+        setData(res.data);
+      })
+      .catch((err) => {
+        if (!data) history.push('/');
+      });
+  }, []);
 
   return !data ? (
     <LoadingScreen />
@@ -67,7 +72,7 @@ export default (props) => {
         <title>Секция {data.segment}</title>
       </Helmet>
       <Crumbs data={data} embed={props.embed} />
-      <h1 style={props.embed ? { fontSize: "15px" } : {}}>
+      <h1 style={props.embed ? { fontSize: '15px' } : {}}>
         Секция {data.segment}
       </h1>
       <ResultsTable
@@ -86,7 +91,7 @@ export default (props) => {
           </tr>
           {data.crumbs.map((crumb, i) =>
             i === 0 ? null : (
-              <tr>
+              <tr key={i}>
                 <td>{mapNodeType(crumb.type)}</td>
                 <td>{crumb.name}</td>
               </tr>
@@ -124,7 +129,7 @@ export default (props) => {
         </tbody>
       </SectionDetailsTable>
       <h2>Видеонаблюдение</h2>
-      <Player section={data.segment}/>
+      <Player section={data.segment} />
     </div>
   );
 };

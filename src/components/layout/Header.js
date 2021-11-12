@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React from 'react';
 
-import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { slide as Menu } from "react-burger-menu";
+import { Link } from 'react-router-dom';
+import Logo from './Logo';
 
-import styled from "styled-components";
+import styled from 'styled-components';
+
 
 const MOBILE_WIDTH = 952;
 
@@ -15,104 +14,38 @@ export const Wrapper = styled.div`
 `;
 
 const HeaderCompensator = styled.div`
-  height: 60px;
+    height: 60px;
 `;
 
-const HeaderStyle = styled.header`
-  height: 60px;
-  position: fixed;
-  width: 100%;
-  top: 0;
-  z-index: 20;
-  background-color: #38decb;
-  padding: 10px;
-  box-sizing: border-box;
-`;
-
-const LogoImage = styled.img`
-  height: 40px;
-`;
-
-const Navigation = styled.nav`
-  float: right;
-  font-weight: bold;
-  padding-top: 10px;
-
-  a {
+const HeaderDiv = styled.header`
+    background-color: #00D5BD;
     color: white;
-    text-decoration: none;
-    padding: 10px;
-    //margin-left: 15px;
-
-    &:hover {
-      color: #eee;
-    }
-  }
-
-  @media only screen and (max-width: 854px) {
-    font-size: 15px;
-    a {
-      padding: 7px;
-    }
-  }
-
-  @media only screen and (max-width: 790px) {
-    font-size: 14px;
-    a {
-      padding: 5px;
-    }
-  }
-
-  @media only screen and (max-width: ${MOBILE_WIDTH}px) {
-    display: none;
-  }
-`;
-
-const MobileMenuButton = styled.button`
-  float: right;
-  border: none;
-  background: none;
-  color: white;
-  font-size: 35px;
-  display: none;
-
-  @media only screen and (max-width: ${MOBILE_WIDTH}px) {
-    display: block;
-  }
-`;
-
-const MobileNavigation = styled.div`
-  display: none;
-
-  @media only screen and (max-width: ${MOBILE_WIDTH}px) {
-    display: block;
-  }
-
-  .bm-menu {
-    background-color: #20a898;
-  }
-
-  .bm-burger-button {
-    display: none;
-  }
-`;
-
-const MobileNavMenu = styled.div`
-  background-color: #20a898;
-  height: 100%;
-  padding: 20px;
-  box-sizing: border-box;
-
-  a {
-    color: white;
+    padding: 8px 0;
+    height: 60px;
+    position: fixed;
+    box-sizing: border-box;
+    top: 0;
     width: 100%;
-    display: block;
-    font-size: 18px;
-    text-decoration: none;
-    font-weight: bold;
-    padding: 10px 0;
-  }
+    z-index: 20;
+
+    a {
+        margin: 0;
+        svg { height: 45px; }
+    }
+
+    h2 {
+        float: right;
+        margin: 8px 0;
+    }
 `;
+
+const AppTitle = styled.span`
+    vertical-align: top;
+    display: inline-block;
+    color: white;
+    font-size: 34px;
+`;
+
 
 export default (props) => {
   const [menuOpen, setMenuOpen] = useState(false);
