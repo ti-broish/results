@@ -127,7 +127,9 @@ const SubdivisionControlsParty = styled.div`
 export default (props) => {
   const { unit } = useParams();
   const [depthMode, setDepthMode] = useState('showAll');
-  const [mode, setMode] = useState('distribution');
+  const [mode, setMode] = useState(
+    props.resultsAvailable ? 'distribution' : 'violations'
+  );
   const [singleParty, setSingleParty] = useState('');
 
   useEffect(() => {
@@ -175,6 +177,8 @@ export default (props) => {
       case 'voters':
         return sortTableVoters(subdivisions);
       case 'turnout':
+        return sortTableTurnout(subdivisions);
+      case 'violations':
         return sortTableTurnout(subdivisions);
     }
   };
@@ -308,12 +312,35 @@ export default (props) => {
             </SubdivisionTableControls>
 
             <SubdivisionTableControls embed={props.embed}>
+              {props.resultsAvailable ? (
+                <>
+                  <button
+                    className={mode === 'distribution' ? 'selected' : ''}
+                    onClick={() => setMode('distribution')}
+                  >
+                    Разпределение
+                  </button>
+
+                  <button
+                    className={mode === 'turnout' ? 'selected' : ''}
+                    onClick={() => {
+                      //if(maxDepth != 1 && depthMode === 'showAll') setDepthMode('showBottomNodes');
+                      setMode('turnout');
+                    }}
+                  >
+                    Активност
+                  </button>
+                </>
+              ) : null}
               <button
-                className={mode === 'distribution' ? 'selected' : ''}
-                onClick={() => setMode('distribution')}
+                className={mode === 'violations' ? 'selected' : ''}
+                onClick={() => {
+                  setMode('violations');
+                }}
               >
-                Разпределение
+                Сигнали
               </button>
+
               <button
                 className={mode === 'voters' ? 'selected' : ''}
                 onClick={() => {
@@ -324,13 +351,13 @@ export default (props) => {
                 Избиратели
               </button>
               <button
-                className={mode === 'turnout' ? 'selected' : ''}
+                disabled={true}
+                className={mode === 'video' ? 'selected' : ''}
                 onClick={() => {
-                  //if(maxDepth != 1 && depthMode === 'showAll') setDepthMode('showBottomNodes');
-                  setMode('turnout');
+                  setMode('video');
                 }}
               >
-                Активност
+                Видео
               </button>
             </SubdivisionTableControls>
             <SubdivisionControlsParty embed={props.embed}>

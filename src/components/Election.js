@@ -72,7 +72,6 @@ const NavigationTab = styled.button`
 
 export const ElectionContext = React.createContext();
 
-
 export default (props) => {
   const [meta, setMeta] = useState(null);
 
@@ -88,14 +87,13 @@ export default (props) => {
   }, []);
 
   const isElectionDayOver = () => {
-    return false;
+    return true;
     if (!meta) return false;
     else return Date.now() - new Date(meta.endOfElectionDayTimestamp) > 0;
   };
 
   const showAfterElectionDate = (component) => {
-    if (isElectionDayOver()) return component;
-    else return <Redirect to="/violations" />;
+    return isElectionDayOver() ? component : <Redirect to="/violations" />;
   };
 
   const getLocation = () => {
@@ -132,4 +130,3 @@ export default (props) => {
     </ElectionContext.Provider>
   );
 };
-

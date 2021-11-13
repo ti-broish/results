@@ -130,11 +130,15 @@ export default handleViewport((props) => {
 
   const history = useHistory();
   const [mode, setMode] = useState(
-    props.showViolationsOnly ? 'violations' : 'dominant'
+    props.showViolationsOnly || !props.resultsAvailable
+      ? 'violations'
+      : 'dominant'
   );
   const [singleParty, setSingleParty] = useState('');
   const [singlePartyMode, setSinglePartyMode] = useState('percentage');
 
+  console.log(props.showViolationsOnly || !props.resultsAvailable);
+  console.log(mode);
   const generateRegionData = () => {
     switch (mode) {
       case 'dominant':
@@ -213,19 +217,29 @@ export default handleViewport((props) => {
     <>
       {props.mapModesHidden || props.showViolationsOnly ? null : (
         <MapControls embed={props.embed} homepage={props.homepage}>
-          <button
-            className={mode === 'dominant' ? 'selected' : ''}
-            onClick={() => setMode('dominant')}
-          >
-            Водеща партия
-          </button>
-          <button
-            className={mode === 'single-party' ? 'selected' : ''}
-            onClick={() => setMode('single-party')}
-          >
-            Отделна партия
-          </button>
+          {props.resultsAvailable ? (
+            <>
+              <button
+                className={mode === 'dominant' ? 'selected' : ''}
+                onClick={() => setMode('dominant')}
+              >
+                Водеща партия
+              </button>
+              <button
+                className={mode === 'single-party' ? 'selected' : ''}
+                onClick={() => setMode('single-party')}
+              >
+                Отделна партия
+              </button>
+            </>
+          ) : null}
           {/*<button className={mode === 'turnout'? 'selected' : ''} onClick={()=>setMode('turnout')}>Активност</button>*/}
+          <button
+            className={mode === 'violations' ? 'selected' : ''}
+            onClick={() => setMode('violations')}
+          >
+            Сигнали
+          </button>
           <button
             className={mode === 'voters' ? 'selected' : ''}
             onClick={() => setMode('voters')}
@@ -237,13 +251,14 @@ export default handleViewport((props) => {
             className={mode === 'sectionsWithResults' ? 'selected' : ''}
             onClick={() => setMode('sectionsWithResults')}
           >
-            %Обработени
+            Секции
           </button>
           <button
-            className={mode === 'violations' ? 'selected' : ''}
-            onClick={() => setMode('violations')}
+            disabled={true}
+            className={mode === 'video' ? 'selected' : ''}
+            onClick={() => setMode('video')}
           >
-            Сигнали
+            Видео
           </button>
         </MapControls>
       )}

@@ -129,6 +129,7 @@ export const populateWithFakeResults = (data, parties) => {
 export default (props) => {
   const { meta, parties, dataURL } = useContext(ElectionContext);
   const [data, setData] = useState(null);
+  const [resultsAvailable, setResultsAvailable] = useState(false);
   const { unit } = useParams();
   const history = useHistory();
 
@@ -141,11 +142,13 @@ export default (props) => {
 
   const refreshResults = () => {
     setData(null);
+    setResultsAvailable(false);
     axios
       .get(`${dataURL}/results/${unit ? unit : 'index'}.json`)
       .then((res) => {
         //res.data = populateWithFakeResults(res.data, parties);
         setData(res.data);
+        // setResultsAvailable(res.data?.results.length > 0);
       })
       .catch((err) => {
         console.log(err);
@@ -163,7 +166,7 @@ export default (props) => {
       {data.type === 'election' ? null : (
         <Crumbs data={data} embed={props.embed} />
       )}
-      <ProgressBar
+      {/* <ProgressBar
         percentage={data.stats.sectionsWithResults / data.stats.sectionsCount}
         color={'#5a5aff'}
         emptyColor={'rgb(189, 189, 249)'}
@@ -172,7 +175,7 @@ export default (props) => {
           'Тази линия показва процента от секциите, които влизат в резултатите ни към момента'
         }
         embed={props.embed}
-      />
+      /> */}
       <h1 style={props.embed ? { fontSize: '15px' } : {}}>
         {data.type === 'election'
           ? null
@@ -185,25 +188,30 @@ export default (props) => {
           regions={data.nodes}
           parties={parties}
           results={data.results}
+          resultsAvailable={resultsAvailable}
         />
       )}
-      <ResultsTable
-        results={data.results}
-        parties={parties}
-        totalValid={data.stats.validVotes}
-        totalInvalid={data.stats.invalidVotes}
-        showThreshold={data.type === 'election'}
-        embed={props.embed}
-      />
+      {resultsAvailable ? (
+        <ResultsTable
+          results={data.results}
+          parties={parties}
+          totalValid={data.stats.validVotes}
+          totalInvalid={data.stats.invalidVotes}
+          showThreshold={data.type === 'election'}
+          embed={props.embed}
+        />
+      ) : null}
       <h1 style={props.embed ? { fontSize: '15px' } : {}}>
         {mapNodesType(data.nodesType)}
       </h1>
       <SubdivisionTable
         parties={parties}
         results={data.results}
+        resultsAvailable={resultsAvailable}
         showNumbers
         subdivisions={data.nodes.map(aggregateData)}
         embed={props.embed}
+        resultsAvailable={resultsAvailable}
       />
     </>
   );
