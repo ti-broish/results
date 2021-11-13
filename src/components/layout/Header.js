@@ -1,13 +1,11 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
-import { slide as Menu } from "react-burger-menu";
-
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { slide as Menu } from 'react-burger-menu';
 
 import styled from 'styled-components';
-
 
 const MOBILE_WIDTH = 952;
 
@@ -130,7 +128,7 @@ export default (props) => {
           <a href="/about">Kампанията</a>
           <a href="/instructions">Инструкции</a>
           <a href="/videos">Видео</a>
-          <Link to="/violations">Сигнали</Link>
+          <Link to="/">Сигнали</Link>
           <a href="/ti-glasuvash">Ти Гласуваш</a>
         </Navigation>
         <MobileMenuButton onClick={() => setMenuOpen(!menuOpen)}>
@@ -165,7 +163,7 @@ export default (props) => {
           <a href="/privacy-notice" onClick={() => setMenuOpen(false)}>
             Декларация за поверителност
           </a>
-          <Link to="/violations" onClick={() => setMenuOpen(false)}>
+          <Link to="/" onClick={() => setMenuOpen(false)}>
             Сигнали
           </Link>
           <a href="/ti-glasuvash" onClick={() => setMenuOpen(false)}>
