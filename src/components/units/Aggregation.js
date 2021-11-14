@@ -13,7 +13,8 @@ import LoadingScreen from '../layout/LoadingScreen';
 import Crumbs from '../components/Crumbs';
 
 import { mapNodeType, mapNodesType } from '../ResultUnit';
-import ProgressBar from '../components/ProgressBar';
+import ViolationFeeds from '../ViolationFeeds';
+import Videos from '../Videos';
 
 export const aggregateData = (data) => {
   if (data.nodes) {
@@ -42,6 +43,7 @@ export const aggregateData = (data) => {
         data.stats.validVotes += node.stats.validVotes;
         data.stats.violationsCount += node.stats.violationsCount;
         data.stats.voters += node.stats.voters;
+        data.stats.processedViolations += node.stats.processedViolations;
       }
     }
   }
@@ -130,6 +132,7 @@ export default (props) => {
   const { meta, parties, dataURL } = useContext(ElectionContext);
   const [data, setData] = useState(null);
   const [resultsAvailable, setResultsAvailable] = useState(false);
+  const [selectedMode, setSelectedMode] = useState('violations');
   const { unit } = useParams();
   const history = useHistory();
 
@@ -183,36 +186,56 @@ export default (props) => {
           ? `${data.id}. ${data.name}`
           : `${mapNodeType(data.type)} ${data.name}`}
       </h1>
+
       {data.type !== 'election' ? null : (
         <BulgariaMap
           regions={data.nodes}
           parties={parties}
           results={data.results}
           resultsAvailable={resultsAvailable}
+          selectedMode={(mode) => setSelectedMode(mode)}
         />
       )}
-      {resultsAvailable ? (
-        <ResultsTable
-          results={data.results}
-          parties={parties}
-          totalValid={data.stats.validVotes}
-          totalInvalid={data.stats.invalidVotes}
-          showThreshold={data.type === 'election'}
-          embed={props.embed}
-        />
-      ) : null}
-      <h1 style={props.embed ? { fontSize: '15px' } : {}}>
-        {mapNodesType(data.nodesType)}
-      </h1>
-      <SubdivisionTable
-        parties={parties}
-        results={data.results}
-        resultsAvailable={resultsAvailable}
-        showNumbers
-        subdivisions={data.nodes.map(aggregateData)}
-        embed={props.embed}
-        resultsAvailable={resultsAvailable}
-      />
+
+      {selectedMode === 'video' ? (
+        <Videos />
+      ) : (
+        <>
+          {resultsAvailable && selectedMode == 'dominant' ? (
+            <ResultsTable
+              results={data.results}
+              parties={parties}
+              totalValid={data.stats.validVotes}
+              totalInvalid={data.stats.invalidVotes}
+              showThreshold={data.type === 'election'}
+              embed={props.embed}
+            />
+          ) : null}
+
+          {selectedMode != 'sectionsWithResults' ? (
+            <h1 style={props.embed ? { fontSize: '15px' } : {}}>
+              {mapNodesType(data.nodesType)}
+            </h1>
+          ) : null}
+          <SubdivisionTable
+            parties={parties}
+            results={data.results}
+            resultsAvailable={resultsAvailable}
+            showNumbers
+            subdivisions={data.nodes.map(aggregateData)}
+            embed={props.embed}
+            resultsAvailable={resultsAvailable}
+            selectedMode={selectedMode}
+          />
+
+          {selectedMode == 'violations' ? (
+            <>
+              <h1 style={props.embed ? { fontSize: '15px' } : {}}>Сигнали</h1>
+              <ViolationFeeds unit={unit}></ViolationFeeds>
+            </>
+          ) : null}
+        </>
+      )}
     </>
   );
 };
