@@ -20,7 +20,7 @@ const StyledPlayer = styled.div`
 `;
 
 const Message = () => {
-  return <>Няма налични видеа в момента.</>;
+  return <p>Няма налични видеа в момента.</p>;
 };
 
 class VideoPlayer extends React.Component {
@@ -100,30 +100,29 @@ const Player = (props) => {
           },
         ],
       };
-      return (
-        <Wrapper>
-          <VideoPlayer
-            key={index}
-            {...videoJsOptions}
-            playlist={entry.chunks.map((source) => {
-              return {
-                sources: [{ src: source.url, type: 'video/mp4' }],
-                poster: '',
-              };
-            })}
-            isStreaming={entry.isStreaming}
-            index={index}
-            chunks={entry.chunks}
-            broadcastUrl={entry.broadcastUrl}
-          />
-        </Wrapper>
-      );
+      return;
+      <Wrapper>
+        <VideoPlayer
+          key={index}
+          {...videoJsOptions}
+          playlist={entry.chunks.map((source) => {
+            return {
+              sources: [{ src: source.url, type: 'video/mp4' }],
+              poster: '',
+            };
+          })}
+          isStreaming={entry.isStreaming}
+          index={index}
+          chunks={entry.chunks}
+          broadcastUrl={entry.broadcastUrl}
+        />
+      </Wrapper>;
     });
   };
 
   return (
     // Render a streaming video player
-    <>{data ? list() : <Message />}</>
+    <>{data?.length > 0 ? list() : <Message />}</>
   );
 };
 
