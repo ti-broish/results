@@ -261,6 +261,7 @@ export default handleViewport((props) => {
             Секции
           </button>
           <button
+            disabled={true}
             className={mode === 'video' ? 'selected' : ''}
             onClick={() => setSelectedMode('video')}
           >
