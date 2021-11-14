@@ -1,19 +1,21 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext } from "react";
 
-import Helmet from 'react-helmet';
-import axios from 'axios';
-import { useParams, useHistory } from 'react-router-dom';
-import { mapNodeType } from '../ResultUnit';
-import LoadingScreen from '../layout/LoadingScreen';
+import Helmet from "react-helmet";
+import axios from "axios";
+import { useParams, useHistory } from "react-router-dom";
+import { mapNodeType } from "../ResultUnit";
+import LoadingScreen from "../layout/LoadingScreen";
 
-import ResultsTable from '../components/results_table/ResultsTable';
+import ResultsTable from "../components/results_table/ResultsTable";
 
-import { ElectionContext } from '../Election';
-import Crumbs from '../components/Crumbs';
+import ImageGallery from "../../utils/ImageGallery";
 
-import Player from '../embeds/Player';
+import { ElectionContext } from "../Election";
+import Crumbs from "../components/Crumbs";
 
-import styled from 'styled-components';
+import Player from "../embeds/Player";
+
+import styled from "styled-components";
 
 const SectionDetailsTable = styled.table`
   margin: 20px 0;
@@ -46,12 +48,30 @@ const SectionDetailsTable = styled.table`
       : null}
 `;
 
+const ContentPanel = styled.div`
+  background-color: white;
+  margin: 30px auto;
+  max-width: 840px;
+  border-radius: 15px;
+  //box-shadow: 0px 0px 5px #aaa;
+  border: 1px solid #eee;
+  padding: 20px 50px;
+
+  hr {
+    margin: 20px 0;
+    border: 1px solid #ddd;
+    border-top: 0;
+  }
+`;
+
 export default (props) => {
   const history = useHistory();
   const { dataURL, globalData, parties } = useContext(ElectionContext);
   const { unit } = useParams();
 
   const [data, setData] = useState(null);
+
+  const baseURL = "https://tibroish.bg/";
 
   useEffect(() => {
     axios
@@ -60,7 +80,7 @@ export default (props) => {
         setData(res.data);
       })
       .catch((err) => {
-        if (!data) history.push('/');
+        if (!data) history.push("/");
       });
   }, []);
 
@@ -72,7 +92,7 @@ export default (props) => {
         <title>Секция {data.segment}</title>
       </Helmet>
       <Crumbs data={data} embed={props.embed} />
-      <h1 style={props.embed ? { fontSize: '15px' } : {}}>
+      <h1 style={props.embed ? { fontSize: "15px" } : {}}>
         Секция {data.segment}
       </h1>
       <ResultsTable
@@ -130,6 +150,21 @@ export default (props) => {
       </SectionDetailsTable>
       <h2>Видеонаблюдение</h2>
       <Player section={data.segment} />
+      <h2>Протоколи:</h2>
+      {data.protocols
+        ? data.protocols.map((protocol, index) => {
+            return (
+              <>
+                <h3>Протокол {index + 1}</h3>
+                <ImageGallery
+                  items={protocol.pictures.map((picture) => ({
+                    original: picture.url,
+                  }))}
+                />
+              </>
+            );
+          })
+        : null}
     </div>
   );
 };
