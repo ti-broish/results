@@ -14,6 +14,7 @@ import Crumbs from '../components/Crumbs';
 import Player from '../embeds/Player';
 
 import styled from 'styled-components';
+import ViolationFeeds from '../ViolationFeeds';
 
 const SectionDetailsTable = styled.table`
   margin: 20px 0;
@@ -130,6 +131,9 @@ export default (props) => {
       </SectionDetailsTable>
       <h2>Видеонаблюдение</h2>
       <Player section={data.segment} />
+
+      <h2 style={props.embed ? { fontSize: '15px' } : {}}>Сигнали</h2>
+      <ViolationFeeds unit={unit}></ViolationFeeds>
     </div>
   );
 };
