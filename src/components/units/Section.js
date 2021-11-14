@@ -14,8 +14,8 @@ import { ElectionContext } from "../Election";
 import Crumbs from "../components/Crumbs";
 
 import Player from "../embeds/Player";
-
-import styled from "styled-components";
+import styled from 'styled-components';
+import ViolationFeeds from '../ViolationFeeds';
 
 const SectionDetailsTable = styled.table`
   margin: 20px 0;
@@ -40,7 +40,7 @@ const SectionDetailsTable = styled.table`
   ${(props) =>
     props.embed
       ? `
-        td { 
+        td {
             font-size: 12px;
             padding: 5px;
         }
@@ -148,7 +148,7 @@ export default (props) => {
       </SectionDetailsTable>
       <h2>Видеонаблюдение</h2>
       <Player section={data.segment} />
-      <h2>Протоколи:</h2>
+      {data.protocols.length > 0 ? (<h2>Протоколи:</h2>) : null}
       {data.protocols
         ? data.protocols.map((protocol, index) => {
             return (
@@ -163,6 +163,8 @@ export default (props) => {
             );
           })
         : null}
+      <h2 style={props.embed ? { fontSize: '15px' } : {}}>Сигнали</h2>
+      <ViolationFeeds unit={unit}></ViolationFeeds>
     </div>
   );
 };

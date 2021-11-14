@@ -130,7 +130,9 @@ export default handleViewport((props) => {
 
   const history = useHistory();
   const [mode, setMode] = useState(
-    props.showViolationsOnly ? 'violations' : 'dominant'
+    props.showViolationsOnly || !props.resultsAvailable
+      ? 'violations'
+      : 'dominant'
   );
   const [singleParty, setSingleParty] = useState('');
   const [singlePartyMode, setSinglePartyMode] = useState('percentage');
@@ -173,6 +175,8 @@ export default handleViewport((props) => {
           props.parties,
           props.results
         );
+      default:
+        return generateRegionDataViolations(props.regions);
     }
   };
 
@@ -193,6 +197,8 @@ export default handleViewport((props) => {
         return generateTooltipProcessed(region, tooltipData);
       case 'violations':
         return generateTooltipViolations(region, tooltipData);
+      default:
+        return generateTooltipViolations(region, tooltipData);
     }
   };
 
@@ -207,157 +213,182 @@ export default handleViewport((props) => {
     '0'
   );
 
+  const setSelectedMode = (mode) => {
+    setMode(mode);
+    props.selectedMode(mode);
+  };
+
   const publicURL = process.env.PUBLIC_URL ? process.env.PUBLIC_URL : '/';
 
   return (
     <>
       {props.mapModesHidden || props.showViolationsOnly ? null : (
         <MapControls embed={props.embed} homepage={props.homepage}>
-          <button
-            className={mode === 'dominant' ? 'selected' : ''}
-            onClick={() => setMode('dominant')}
-          >
-            Водеща партия
-          </button>
-          <button
-            className={mode === 'single-party' ? 'selected' : ''}
-            onClick={() => setMode('single-party')}
-          >
-            Отделна партия
-          </button>
+          {props.resultsAvailable ? (
+            <>
+              <button
+                className={mode === 'dominant' ? 'selected' : ''}
+                onClick={() => setSelectedMode('dominant')}
+              >
+                Водеща партия
+              </button>
+              <button
+                className={mode === 'single-party' ? 'selected' : ''}
+                onClick={() => setSelectedMode('single-party')}
+              >
+                Отделна партия
+              </button>
+            </>
+          ) : null}
           {/*<button className={mode === 'turnout'? 'selected' : ''} onClick={()=>setMode('turnout')}>Активност</button>*/}
           <button
+            className={mode === 'violations' ? 'selected' : ''}
+            onClick={() => setSelectedMode('violations')}
+          >
+            Сигнали
+          </button>
+          <button
             className={mode === 'voters' ? 'selected' : ''}
-            onClick={() => setMode('voters')}
+            onClick={() => setSelectedMode('voters')}
           >
             Избиратели
           </button>
           {/*<button className={mode === 'coverage'? 'selected' : ''} onClick={()=>setMode('coverage')}>Покритие</button>*/}
           <button
             className={mode === 'sectionsWithResults' ? 'selected' : ''}
-            onClick={() => setMode('sectionsWithResults')}
+            onClick={() => setSelectedMode('sectionsWithResults')}
           >
-            %Обработени
+            Секции
           </button>
           <button
-            className={mode === 'violations' ? 'selected' : ''}
-            onClick={() => setMode('violations')}
+            disabled={true}
+            className={mode === 'video' ? 'selected' : ''}
+            onClick={() => setSelectedMode('video')}
           >
-            Сигнали
+            Видео
           </button>
         </MapControls>
       )}
-      {props.mapModesHidden || props.showViolationsOnly ? null : mode ===
-        'single-party' ? (
-        <MapControlsSingleParty embed={props.embed} homepage={props.homepage}>
-          {displayParties.map((party, idx) => (
-            <button
-              key={idx}
-              className={singleParty === party.number ? 'selected' : ''}
-              onClick={() => setSingleParty(party.number)}
-            >
-              {party.displayName}
-            </button>
-          ))}
-          <div style={{ width: '100%' }}>
-            <button
-              className={singlePartyMode === 'percentage' ? 'selected' : ''}
-              onClick={() => setSinglePartyMode('percentage')}
-            >
-              Процент
-            </button>
-            <button
-              className={singlePartyMode === 'votes' ? 'selected' : ''}
-              onClick={() => setSinglePartyMode('votes')}
-            >
-              Гласове
-            </button>
-          </div>
-        </MapControlsSingleParty>
-      ) : null}
-      <BulgariaMapStyle>
-        <StyledTooltip
-          multiline={true}
-          html={true}
-          border={true}
-          borderColor={'#aaa'}
-          arrowColor={'white'}
-          effect={'solid'}
-          place={'top'}
-          backgroundColor={'#fff'}
-          type={'dark'}
-          id={'bulgariaMapTooltip'}
-        />
-        <svg
-          id="bulgaria-map"
-          style={{
-            width: '100%',
-            opacity: shouldLoad ? 1 : 0,
-            transition: 'opacity 1s ease',
-          }}
-          width="261.27612mm"
-          height={props.embed ? 'auto' : '169.67859mm'}
-          version="1.0"
-          viewBox="0 0 26127.612 16967.859"
-          pagecolor="#ffffff"
-          bordercolor="#666666"
-          borderopacity="1"
-          objecttolerance="10"
-          gridtolerance="10"
-          guidetolerance="10"
-          showgrid="false"
-          fit-margin-top="0"
-          fit-margin-left="0"
-          fit-margin-right="0"
-          fit-margin-bottom="0"
-          ref={forwardedRef}
-        >
-          <g id="Plan_x0020_1" transform="translate(-1740.6745,-1498.0644)">
-            {Object.keys(regionPaths).map((key, index) => {
-              const regionDataForKey = regionData[key];
-              const tooltipData = regionDataForKey
-                ? regionDataForKey.tooltipData
-                : null;
-              const regionHasNoViolations =
-                tooltipData?.publishedViolations == 0;
 
-              const clickHandler = () => {
-                if (props.linkToMainSite) {
-                  const newHref = `https://tibroish.bg${publicURL}/${key}`;
-                  top.location.href = newHref;
-                } else if (props.embed) {
-                  history.push(`/embed/mini-results/${key}`);
-                } else if (props.showViolationsOnly) {
-                  if (regionHasNoViolations) {
-                    return;
-                  }
-                  props.loadViolationsForRegion(key);
-                } else history.push(`/${key}`);
-              };
-              const color = regionDataForKey ? regionDataForKey.color : '#eee';
+      {mode === 'video' ? null : (
+        <>
+          {props.mapModesHidden || props.showViolationsOnly ? null : mode ===
+            'single-party' ? (
+            <MapControlsSingleParty
+              embed={props.embed}
+              homepage={props.homepage}
+            >
+              {displayParties?.map((party, idx) => (
+                <button
+                  key={idx}
+                  className={singleParty === party.number ? 'selected' : ''}
+                  onClick={() => setSingleParty(party.number)}
+                >
+                  {party.displayName}
+                </button>
+              ))}
+              <div style={{ width: '100%' }}>
+                <button
+                  className={singlePartyMode === 'percentage' ? 'selected' : ''}
+                  onClick={() => setSinglePartyMode('percentage')}
+                >
+                  Процент
+                </button>
+                <button
+                  className={singlePartyMode === 'votes' ? 'selected' : ''}
+                  onClick={() => setSinglePartyMode('votes')}
+                >
+                  Гласове
+                </button>
+              </div>
+            </MapControlsSingleParty>
+          ) : null}
+          <BulgariaMapStyle>
+            <StyledTooltip
+              multiline={true}
+              html={true}
+              border={true}
+              borderColor={'#aaa'}
+              arrowColor={'white'}
+              effect={'solid'}
+              place={'top'}
+              backgroundColor={'#fff'}
+              type={'dark'}
+              id={'bulgariaMapTooltip'}
+            />
+            <svg
+              id="bulgaria-map"
+              style={{
+                width: '100%',
+                opacity: shouldLoad ? 1 : 0,
+                transition: 'opacity 1s ease',
+              }}
+              width="261.27612mm"
+              height={props.embed ? 'auto' : '169.67859mm'}
+              version="1.0"
+              viewBox="0 0 26127.612 16967.859"
+              pagecolor="#ffffff"
+              bordercolor="#666666"
+              borderopacity="1"
+              objecttolerance="10"
+              gridtolerance="10"
+              guidetolerance="10"
+              showgrid="false"
+              fit-margin-top="0"
+              fit-margin-left="0"
+              fit-margin-right="0"
+              fit-margin-bottom="0"
+              ref={forwardedRef}
+            >
+              <g id="Plan_x0020_1" transform="translate(-1740.6745,-1498.0644)">
+                {Object.keys(regionPaths)?.map((key, index) => {
+                  const regionDataForKey = regionData[key];
+                  const tooltipData = regionDataForKey
+                    ? regionDataForKey.tooltipData
+                    : null;
+                  const regionHasNoViolations =
+                    tooltipData?.publishedViolations == 0;
 
-              const region = props.regions.find(
-                (region) => region.id.toString() === key.toString()
-              );
+                  const clickHandler = () => {
+                    if (props.linkToMainSite) {
+                      const newHref = `https://tibroish.bg${publicURL}/${key}`;
+                      top.location.href = newHref;
+                    } else if (props.embed) {
+                      history.push(`/embed/mini-results/${key}`);
+                    } else if (props.showViolationsOnly) {
+                      if (regionHasNoViolations) {
+                        return;
+                      }
+                      props.loadViolationsForRegion(key);
+                    } else history.push(`/${key}`);
+                  };
+                  const color = regionDataForKey
+                    ? regionDataForKey.color
+                    : '#eee';
 
-              return (
-                <path
-                  key={index}
-                  onClick={clickHandler}
-                  style={{
-                    fill: shouldLoad ? color : '#888',
-                    transition: 'fill 1.5s ease',
-                  }}
-                  className={regionHasNoViolations ? 'no-data' : ''}
-                  d={regionPaths[key].path}
-                  data-tip={generateTooltipContent(region, tooltipData)}
-                  data-for={'bulgariaMapTooltip'}
-                />
-              );
-            })}
-          </g>
-        </svg>
-      </BulgariaMapStyle>
+                  const region = props.regions.find(
+                    (region) => region.id.toString() === key.toString()
+                  );
+
+                  return (
+                    <path
+                      key={index}
+                      onClick={clickHandler}
+                      style={{
+                        fill: shouldLoad ? color : '#888',
+                        transition: 'fill 1.5s ease',
+                      }}
+                      d={regionPaths[key].path}
+                      data-tip={generateTooltipContent(region, tooltipData)}
+                      data-for={'bulgariaMapTooltip'}
+                    />
+                  );
+                })}
+              </g>
+            </svg>
+          </BulgariaMapStyle>
+        </>
+      )}
     </>
   );
 });

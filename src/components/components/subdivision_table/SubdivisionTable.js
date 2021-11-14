@@ -12,6 +12,7 @@ import {
   sortTableDistribution,
   sortTableVoters,
   sortTableTurnout,
+  sortTableViolations,
 } from './sortSubdivisionTable';
 
 const StyledTooltip = styled(ReactTooltip)`
@@ -127,7 +128,9 @@ const SubdivisionControlsParty = styled.div`
 export default (props) => {
   const { unit } = useParams();
   const [depthMode, setDepthMode] = useState('showAll');
-  const [mode, setMode] = useState('distribution');
+  const [mode, setMode] = useState(
+    props.resultsAvailable ? 'distribution' : 'violations'
+  );
   const [singleParty, setSingleParty] = useState('');
 
   useEffect(() => {
@@ -139,7 +142,22 @@ export default (props) => {
   useEffect(() => {
     ReactTooltip.rebuild();
   }, [depthMode]);
+  useEffect(() => {
+    ReactTooltip.rebuild();
+    setMode(getSelectedMode());
+  }, [props?.selectedMode]);
 
+  const getSelectedMode = () => {
+    const mode = props?.selectedMode;
+    switch (mode) {
+      case 'violations':
+      case 'voters':
+      case 'turnout':
+        return mode;
+      default:
+        'distribution';
+    }
+  };
   const calculateMaxDepth = () => {
     let topNode = props.subdivisions[0];
     if (!topNode.nodes) return 1;
@@ -176,6 +194,8 @@ export default (props) => {
         return sortTableVoters(subdivisions);
       case 'turnout':
         return sortTableTurnout(subdivisions);
+      case 'violations':
+        return sortTableViolations(subdivisions);
     }
   };
 
@@ -193,14 +213,14 @@ export default (props) => {
           : 'bottom'
         : 'bottom';
 
-    return sorted(subdivisions).map((subdivision) => [
+    return sorted(subdivisions)?.map((subdivision) => [
       renderSubdivision(subdivision, type),
       curDepth <= 1 ? null : renderAll(subdivision.nodes, curDepth - 1),
     ]);
   };
 
   const renderSubdivisions = (subdivisions) => {
-    return sorted(subdivisions).map(renderSubdivision);
+    return sorted(subdivisions)?.map(renderSubdivision);
   };
 
   const renderSubdivision = (subdivision, type) => {
@@ -308,30 +328,45 @@ export default (props) => {
             </SubdivisionTableControls>
 
             <SubdivisionTableControls embed={props.embed}>
-              <button
-                className={mode === 'distribution' ? 'selected' : ''}
-                onClick={() => setMode('distribution')}
-              >
-                Разпределение
-              </button>
-              <button
-                className={mode === 'voters' ? 'selected' : ''}
-                onClick={() => {
-                  //if(maxDepth != 1 && depthMode === 'showAll') setDepthMode('showBottomNodes');
-                  setMode('voters');
-                }}
-              >
-                Избиратели
-              </button>
-              <button
-                className={mode === 'turnout' ? 'selected' : ''}
-                onClick={() => {
-                  //if(maxDepth != 1 && depthMode === 'showAll') setDepthMode('showBottomNodes');
-                  setMode('turnout');
-                }}
-              >
-                Активност
-              </button>
+              {props.resultsAvailable ? (
+                <>
+                  <button
+                    className={mode === 'distribution' ? 'selected' : ''}
+                    onClick={() => setMode('distribution')}
+                  >
+                    Разпределение
+                  </button>
+
+                  <button
+                    className={mode === 'turnout' ? 'selected' : ''}
+                    onClick={() => {
+                      //if(maxDepth != 1 && depthMode === 'showAll') setDepthMode('showBottomNodes');
+                      setMode('turnout');
+                    }}
+                  >
+                    Активност
+                  </button>
+
+                  <button
+                    className={mode === 'violations' ? 'selected' : ''}
+                    onClick={() => {
+                      setMode('violations');
+                    }}
+                  >
+                    Сигнали
+                  </button>
+
+                  <button
+                    className={mode === 'voters' ? 'selected' : ''}
+                    onClick={() => {
+                      //if(maxDepth != 1 && depthMode === 'showAll') setDepthMode('showBottomNodes');
+                      setMode('voters');
+                    }}
+                  >
+                    Избиратели
+                  </button>
+                </>
+              ) : null}
             </SubdivisionTableControls>
             <SubdivisionControlsParty embed={props.embed}>
               {mode !== 'distribution' ? null : (
@@ -346,7 +381,7 @@ export default (props) => {
                     {' '}
                     Никоя
                   </button>{' '}
-                  {displayParties.map((party, index) => (
+                  {displayParties?.map((party, index) => (
                     <button
                       key={index}
                       style={{ fontSize: '12px' }}

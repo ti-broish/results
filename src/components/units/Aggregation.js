@@ -13,7 +13,8 @@ import LoadingScreen from '../layout/LoadingScreen';
 import Crumbs from '../components/Crumbs';
 
 import { mapNodeType, mapNodesType } from '../ResultUnit';
-import ProgressBar from '../components/ProgressBar';
+import ViolationFeeds from '../ViolationFeeds';
+import Videos from '../Videos';
 
 export const aggregateData = (data) => {
   if (data.nodes) {
@@ -42,6 +43,7 @@ export const aggregateData = (data) => {
         data.stats.validVotes += node.stats.validVotes;
         data.stats.violationsCount += node.stats.violationsCount;
         data.stats.voters += node.stats.voters;
+        data.stats.processedViolations += node.stats.processedViolations;
       }
     }
   }
@@ -129,6 +131,8 @@ export const populateWithFakeResults = (data, parties) => {
 export default (props) => {
   const { meta, parties, dataURL } = useContext(ElectionContext);
   const [data, setData] = useState(null);
+  const [resultsAvailable, setResultsAvailable] = useState(false);
+  const [selectedMode, setSelectedMode] = useState('violations');
   const { unit } = useParams();
   const history = useHistory();
 
@@ -141,11 +145,13 @@ export default (props) => {
 
   const refreshResults = () => {
     setData(null);
+    setResultsAvailable(false);
     axios
       .get(`${dataURL}/results/${unit ? unit : 'index'}.json`)
       .then((res) => {
         //res.data = populateWithFakeResults(res.data, parties);
         setData(res.data);
+        // setResultsAvailable(res.data?.results.length > 0);
       })
       .catch((err) => {
         console.log(err);
@@ -163,7 +169,7 @@ export default (props) => {
       {data.type === 'election' ? null : (
         <Crumbs data={data} embed={props.embed} />
       )}
-      <ProgressBar
+      {/* <ProgressBar
         percentage={data.stats.sectionsWithResults / data.stats.sectionsCount}
         color={'#5a5aff'}
         emptyColor={'rgb(189, 189, 249)'}
@@ -172,7 +178,7 @@ export default (props) => {
           'Тази линия показва процента от секциите, които влизат в резултатите ни към момента'
         }
         embed={props.embed}
-      />
+      /> */}
       <h1 style={props.embed ? { fontSize: '15px' } : {}}>
         {data.type === 'election'
           ? null
@@ -180,31 +186,56 @@ export default (props) => {
           ? `${data.id}. ${data.name}`
           : `${mapNodeType(data.type)} ${data.name}`}
       </h1>
+
       {data.type !== 'election' ? null : (
         <BulgariaMap
           regions={data.nodes}
           parties={parties}
           results={data.results}
+          resultsAvailable={resultsAvailable}
+          selectedMode={(mode) => setSelectedMode(mode)}
         />
       )}
-      <ResultsTable
-        results={data.results}
-        parties={parties}
-        totalValid={data.stats.validVotes}
-        totalInvalid={data.stats.invalidVotes}
-        showThreshold={data.type === 'election'}
-        embed={props.embed}
-      />
-      <h1 style={props.embed ? { fontSize: '15px' } : {}}>
-        {mapNodesType(data.nodesType)}
-      </h1>
-      <SubdivisionTable
-        parties={parties}
-        results={data.results}
-        showNumbers
-        subdivisions={data.nodes.map(aggregateData)}
-        embed={props.embed}
-      />
+
+      {selectedMode === 'video' ? (
+        <Videos />
+      ) : (
+        <>
+          {resultsAvailable && selectedMode == 'dominant' ? (
+            <ResultsTable
+              results={data.results}
+              parties={parties}
+              totalValid={data.stats.validVotes}
+              totalInvalid={data.stats.invalidVotes}
+              showThreshold={data.type === 'election'}
+              embed={props.embed}
+            />
+          ) : null}
+
+          {selectedMode != 'sectionsWithResults' ? (
+            <h1 style={props.embed ? { fontSize: '15px' } : {}}>
+              {mapNodesType(data.nodesType)}
+            </h1>
+          ) : null}
+          <SubdivisionTable
+            parties={parties}
+            results={data.results}
+            resultsAvailable={resultsAvailable}
+            showNumbers
+            subdivisions={data.nodes.map(aggregateData)}
+            embed={props.embed}
+            resultsAvailable={resultsAvailable}
+            selectedMode={selectedMode}
+          />
+
+          {selectedMode == 'violations' ? (
+            <>
+              <h1 style={props.embed ? { fontSize: '15px' } : {}}>Сигнали</h1>
+              <ViolationFeeds unit={unit}></ViolationFeeds>
+            </>
+          ) : null}
+        </>
+      )}
     </>
   );
 };
