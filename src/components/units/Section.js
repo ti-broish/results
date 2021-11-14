@@ -71,8 +71,6 @@ export default (props) => {
 
   const [data, setData] = useState(null);
 
-  const baseURL = "https://tibroish.bg/";
-
   useEffect(() => {
     axios
       .get(`${dataURL}/results/${unit}.json`)
