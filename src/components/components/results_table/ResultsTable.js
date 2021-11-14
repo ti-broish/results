@@ -76,6 +76,10 @@ import ResultsTableRow from './ResultsTableRow';
 import { generateDisplayParties } from '../bulgaria_map/generateRegionData';
 
 export default (props) => {
+  if (props.results.length === 0) {
+      return null;
+  }
+
   const { displayParties, displayPartiesTotal } = generateDisplayParties(
     props.parties,
     props.results,
