@@ -128,7 +128,6 @@ export default (props) => {
         </Link>
         <Navigation>
           <a href="/about">Kампанията</a>
-          <a href="/signup">Запиши се</a>
           <a href="/instructions">Инструкции</a>
           <a href="/videos">Видео</a>
           <Link to="/violations">Сигнали</Link>
@@ -153,9 +152,6 @@ export default (props) => {
           </Link>
           <a href="/about" onClick={() => setMenuOpen(false)}>
             Kампанията
-          </a>
-          <a href="/signup" onClick={() => setMenuOpen(false)}>
-            Запиши се
           </a>
           <a href="/instructions" onClick={() => setMenuOpen(false)}>
             Инструкции
