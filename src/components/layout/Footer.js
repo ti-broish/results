@@ -18,7 +18,7 @@ const FooterDiv = styled.footer`
 export default props => {
     return(
         <FooterDiv>
-            <p>„Демократична България - обединение“ © 2021</p>
+            <p>„Демократична България - обединение“ © {(new Date).getFullYear()}</p>
         </FooterDiv>
     )
 };
