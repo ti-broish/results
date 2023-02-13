@@ -36,17 +36,20 @@ export default function ViolationForm() {
   const {
     register,
     handleSubmit,
+    getValues,
     formState: { errors },
   } = useForm();
   const [electionRegions, setElectionRegions] = useState([]);
   const [selectedElectionRegion, setSelectedElectionRegion] = useState('');
   const [selectedMunicipality, setSelectedMunicipality] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('');
+  const [selectedTown, setSelectedTown] = useState(0);
   const [towns, setTowns] = useState([]);
 
   const api_endpoint = 'http://localhost:4000';
 
   useEffect(() => {
+    setSelectedCountry(getValues('countryField'));
     axios
       .get(`${api_endpoint}/election_regions`)
       .then((res) => setElectionRegions(res.data));
@@ -132,6 +135,7 @@ export default function ViolationForm() {
             name="countryField"
             {...register('countryField', { required: false })}
             onChange={(e) => setSelectedCountry(e.target.value)}
+            checked
           />
           <label className="radioLabel" for="fieldBg">
             България
@@ -174,7 +178,12 @@ export default function ViolationForm() {
           onChange={(e) => setSelectedMunicipality(e.target.value)}
         >
           {selectedElectionRegion != '' ? (
-            getMunicipalities(selectedElectionRegion)
+            <>
+              <option value="choose" disabled selected="selected">
+                -- Община --
+              </option>
+              {getMunicipalities(selectedElectionRegion)}
+            </>
           ) : (
             <option value="choose" disabled selected="selected">
               -- Община --
@@ -192,7 +201,12 @@ export default function ViolationForm() {
           onChange={(e) => setSelectedTown(e.target.value)}
         >
           {towns.length != 0 ? (
-            createTownOptions()
+            <>
+              <option value="choose" disabled selected="selected">
+                -- Градове --
+              </option>
+              {createTownOptions()}
+            </>
           ) : (
             <option value="choose" disabled selected="selected">
               -- Градове --
