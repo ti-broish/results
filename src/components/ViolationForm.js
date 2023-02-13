@@ -160,14 +160,18 @@ export default function ViolationForm() {
       <div>
         <select
           className="form-control"
-          {...register('electionRegion')}
+          name="electionRegion"
+          {...register('electionRegion', { required: true })}
           onChange={(e) => setSelectedElectionRegion(e.target.value)}
         >
-          <option value="choose" disabled selected="selected">
+          <option value="" disabled selected="selected">
             -- МИР --
           </option>
           {getElectionRegions()}
         </select>
+        {errors.electionRegion && errors.electionRegion.type === 'required' && (
+          <p className="errorMsg">Полето е задължително.</p>
+        )}
       </div>
       <div>
         <label className="inputLabel">Община</label>
@@ -175,22 +179,26 @@ export default function ViolationForm() {
       <div>
         <select
           className="form-control"
-          {...register('municipality')}
+          name="municipality"
+          {...register('municipality', { required: true })}
           onChange={(e) => setSelectedMunicipality(e.target.value)}
         >
           {selectedElectionRegion != '' ? (
             <>
-              <option value="choose" disabled selected="selected">
+              <option value="" disabled selected="selected">
                 -- Община --
               </option>
               {getMunicipalities(selectedElectionRegion)}
             </>
           ) : (
-            <option value="choose" disabled selected="selected">
+            <option value="" disabled selected="selected">
               -- Община --
             </option>
           )}
         </select>
+        {errors.municipality && errors.municipality.type === 'required' && (
+          <p className="errorMsg">Полето е задължително.</p>
+        )}
       </div>
       <div>
         <label className="inputLabel">Град/село</label>
@@ -198,22 +206,26 @@ export default function ViolationForm() {
       <div>
         <select
           className="form-control"
-          {...register('town')}
+          name="town"
+          {...register('town', { required: true })}
           onChange={(e) => setSelectedTown(e.target.value)}
         >
           {towns.length != 0 ? (
             <>
-              <option value="choose" disabled selected="selected">
+              <option value="" disabled selected="selected">
                 -- Градове --
               </option>
               {createTownOptions()}
             </>
           ) : (
-            <option value="choose" disabled selected="selected">
+            <option value="" disabled selected="selected">
               -- Градове --
             </option>
           )}
         </select>
+        {errors.town && errors.town.type === 'required' && (
+          <p className="errorMsg">Полето е задължително.</p>
+        )}
       </div>
       <div className="form-control">
         <label className="inputLabel">Име</label>
@@ -231,10 +243,20 @@ export default function ViolationForm() {
         <input
           type="text"
           name="email"
-          {...register('email', { required: true })}
+          {...register('email', {
+            required: true,
+            pattern: {
+              value:
+                /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+              message: 'Въведете валиден имейл',
+            },
+          })}
         />
         {errors.email && errors.email.type === 'required' && (
           <p className="errorMsg">Полето е задължително.</p>
+        )}
+        {errors.email && errors.email.message && (
+          <p className="errorMsg">{errors.email.message}</p>
         )}
       </div>
       <div className="form-control">
@@ -253,8 +275,17 @@ export default function ViolationForm() {
         <input
           type="text"
           name="section"
-          {...register('section', { required: false })}
+          {...register('section', {
+            required: false,
+            pattern: {
+              value: /^(0|[1-9]\d*)(\.\d+)?$/,
+              message: 'Забранено въвеждането на текст',
+            },
+          })}
         />
+        {errors.section && errors.section.message && (
+          <p className="errorMsg">errors.section.message</p>
+        )}
       </div>
       <div className="form-control">
         <label className="inputLabel">Описание на нарушението</label>
