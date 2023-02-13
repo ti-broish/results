@@ -112,7 +112,7 @@ export default function ViolationForm() {
       description: data.description,
       town: Number(town),
     };
-
+    data.section ? (body['section'] = data.section) : body;
     axios
       .post(`${api_endpoint}/violations`, body, {
         headers: {
