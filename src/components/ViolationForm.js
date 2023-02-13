@@ -46,7 +46,7 @@ export default function ViolationForm() {
   const [selectedTown, setSelectedTown] = useState(0);
   const [towns, setTowns] = useState([]);
 
-  const api_endpoint = 'http://localhost:4000';
+  const api_endpoint = process.env.DATA_URL;
 
   useEffect(() => {
     setSelectedCountry(getValues('countryField'));
@@ -79,6 +79,7 @@ export default function ViolationForm() {
       );
     });
   };
+
   const getMunicipalities = (selectedElectionRegion) => {
     const filteredRegions = electionRegions.filter(
       (electionRegion) => electionRegion.code == selectedElectionRegion
