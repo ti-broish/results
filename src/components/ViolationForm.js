@@ -9,22 +9,19 @@ const CommentFormStyle = styled.form`
   .errorMsg {
     color: red;
   }
-  .radioLabel {
-    float: left;
-    clear: none;
-    display: block;
-    padding: 0px 1em 0px 8px;
-  }
+
   input[type='radio'] {
-    float: left;
-    clear: none;
-    margin: 2px 0 0 2px;
+    margin: 5px;
+    vertical-align: middle;
   }
-  label {
+
+  .inputLabel {
     display: block;
     margin-left: 5px;
+    padding: 5px;
   }
-  input {
+
+  input[type='text'] {
     width: 80%;
     font-size: 18px;
     padding: 20px;
@@ -41,36 +38,35 @@ export default function ViolationForm() {
     handleSubmit,
     formState: { errors },
   } = useForm();
-
   const [electionRegions, setElectionRegions] = useState([]);
   const [selectedElectionRegion, setSelectedElectionRegion] = useState('');
   const [selectedMunicipality, setSelectedMunicipality] = useState('');
+  const [selectedCountry, setSelectedCountry] = useState('');
   const [towns, setTowns] = useState([]);
 
   const api_endpoint = 'http://localhost:4000';
 
   useEffect(() => {
-    console.log(selectedElectionRegion);
     axios
       .get(`${api_endpoint}/election_regions`)
       .then((res) => setElectionRegions(res.data));
   }, []);
 
   useEffect(() => {
-    console.log('in 2nd use effect before if');
     if (selectedElectionRegion != '') {
-      console.log('get municipalities');
       getMunicipalities(selectedElectionRegion);
     }
     if (selectedElectionRegion != '' && selectedMunicipality != '') {
-      console.log('in 2nd use effect after if');
+      const countryCode = selectedCountry == 'Bulgaria' ? '00' : null;
       axios
         .get(
-          `${api_endpoint}/towns?country=00&election_region=${selectedElectionRegion}&municipality=${selectedMunicipality}`
+          `${api_endpoint}/towns?country=${countryCode}&election_region=${selectedElectionRegion}&municipality=${selectedMunicipality}`
         )
-        .then((res) => setTowns(res.data));
+        .then((res) => setTowns(res.data))
+        .catch((err) => console.log(err));
     }
   }, [selectedElectionRegion, selectedMunicipality]);
+
   const getElectionRegions = () => {
     return electionRegions.map((election_region) => {
       return (
@@ -81,8 +77,6 @@ export default function ViolationForm() {
     });
   };
   const getMunicipalities = (selectedElectionRegion) => {
-    console.log('here');
-
     const filteredRegions = electionRegions.filter(
       (electionRegion) => electionRegion.code == selectedElectionRegion
     );
@@ -90,7 +84,6 @@ export default function ViolationForm() {
     filteredRegions[0].municipalities.forEach((municipality) => {
       municipalities.push(municipality);
     });
-
     return municipalities.map((municipality) => {
       return (
         <option key={municipality.code} value={municipality.code}>
@@ -99,22 +92,24 @@ export default function ViolationForm() {
       );
     });
   };
+
   const createTownOptions = () => {
-    console.log('in create town');
     return towns.map((town) => {
       return (
-        <option id={town.code} key={town.code} value={town.code}>
+        <option id={town.code} key={town.code} value={town.id}>
           {town.name}
         </option>
       );
     });
   };
+
   const onSubmit = (data) => {
+    const town = data.municipality == 46 ? 68134 : data.town;
     const body = {
       description: data.description,
-      town: 68134,
+      town: Number(town),
     };
-    console.log(JSON.stringify(body));
+
     axios
       .post(`${api_endpoint}/violations`, body, {
         headers: {
@@ -129,27 +124,38 @@ export default function ViolationForm() {
     <CommentFormStyle onSubmit={handleSubmit(onSubmit)}>
       <div className="form-control">
         <label>Секция в:</label>
-        <div className="radio_button_1">
+        <div>
           <input
             type="radio"
             id="fieldBg"
-            {...register('fieldBg', { required: false })}
+            value="Bulgaria"
+            name="countryField"
+            {...register('countryField', { required: false })}
+            onChange={(e) => setSelectedCountry(e.target.value)}
           />
-          <label className="radioLabel">България</label>
+          <label className="radioLabel" for="fieldBg">
+            България
+          </label>
           <input
             type="radio"
             id="fieldForeign"
-            {...register('fieldForeign', { required: false })}
+            value="Foreign"
+            name="countryField"
+            {...register('countryField', { required: false })}
+            onChange={(e) => setSelectedCountry(e.target.value)}
           />
-          <label className="radioLabel">Чужбина</label>
+          <label className="radioLabel" for="fieldForeign">
+            Чужбина
+          </label>
         </div>
       </div>
       <div>
-        <label>МИР</label>
+        <label className="inputLabel">МИР</label>
       </div>
       <div>
         <select
           className="form-control"
+          {...register('electionRegion')}
           onChange={(e) => setSelectedElectionRegion(e.target.value)}
         >
           <option value="choose" disabled selected="selected">
@@ -159,11 +165,12 @@ export default function ViolationForm() {
         </select>
       </div>
       <div>
-        <label>Община</label>
+        <label className="inputLabel">Община</label>
       </div>
       <div>
         <select
           className="form-control"
+          {...register('municipality')}
           onChange={(e) => setSelectedMunicipality(e.target.value)}
         >
           {selectedElectionRegion != '' ? (
@@ -176,10 +183,14 @@ export default function ViolationForm() {
         </select>
       </div>
       <div>
-        <label>Град/село</label>
+        <label className="inputLabel">Град/село</label>
       </div>
       <div>
-        <select className="form-control">
+        <select
+          className="form-control"
+          {...register('town')}
+          onChange={(e) => setSelectedTown(e.target.value)}
+        >
           {towns.length != 0 ? (
             createTownOptions()
           ) : (
@@ -190,7 +201,7 @@ export default function ViolationForm() {
         </select>
       </div>
       <div className="form-control">
-        <label>Име</label>
+        <label className="inputLabel">Име</label>
         <input
           type="text"
           name="name"
@@ -201,7 +212,7 @@ export default function ViolationForm() {
         )}
       </div>
       <div className="form-control">
-        <label>Имейл</label>
+        <label className="inputLabel">Имейл</label>
         <input
           type="text"
           name="email"
@@ -212,7 +223,7 @@ export default function ViolationForm() {
         )}
       </div>
       <div className="form-control">
-        <label>Телефон</label>
+        <label className="inputLabel">Телефон</label>
         <input
           type="text"
           name="phoneNumber"
@@ -223,7 +234,7 @@ export default function ViolationForm() {
         )}
       </div>
       <div className="form-control">
-        <label>Секция</label>
+        <label className="inputLabel">Секция</label>
         <input
           type="text"
           name="section"
@@ -231,7 +242,7 @@ export default function ViolationForm() {
         />
       </div>
       <div className="form-control">
-        <label>Описание на нарушението</label>
+        <label className="inputLabel">Описание на нарушението</label>
         <input
           type="text"
           name="description"
