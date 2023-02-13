@@ -44,6 +44,7 @@ export default function ViolationForm() {
   const [selectedMunicipality, setSelectedMunicipality] = useState('');
   const [selectedCountry, setSelectedCountry] = useState('');
   const [selectedTown, setSelectedTown] = useState(0);
+  const [selectedCityRegion, setSelectedCityRegion] = useState('');
   const [towns, setTowns] = useState([]);
 
   const api_endpoint = process.env.DATA_URL;
@@ -102,6 +103,31 @@ export default function ViolationForm() {
       return (
         <option id={town.code} key={town.code} value={town.id}>
           {town.name}
+        </option>
+      );
+    });
+  };
+
+  const getTownById = (id) => {
+    console.log('here');
+    const town = towns.filter((town) => town.id == id);
+    console.log(town);
+    return town;
+  };
+
+  const getCityRegions = () => {
+    const city_regions = [];
+    getTownById(selectedTown)[0].cityRegions.forEach((city_region) => {
+      city_regions.push(city_region);
+    });
+    return city_regions.map((city_region) => {
+      return (
+        <option
+          id={city_region.code}
+          key={city_region.code}
+          value={city_region.code}
+        >
+          {city_region.name}
         </option>
       );
     });
@@ -225,6 +251,30 @@ export default function ViolationForm() {
         </select>
         {errors.town && errors.town.type === 'required' && (
           <p className="errorMsg">Полето е задължително.</p>
+        )}
+      </div>
+      <div>
+        {selectedTown ? (
+          getTownById(selectedTown)[0].cityRegions.length != 0 ? (
+            <div>
+              <label className="inputLabel">Квартал</label>
+              <select
+                className="form-control"
+                name="city_region"
+                {...register('city_region', { required: true })}
+                onChange={(e) => setSelectedCityRegion(e.target.value)}
+              >
+                <option value="" disabled selected="selected">
+                  -- Квартали --
+                </option>
+                {getCityRegions()}
+              </select>
+            </div>
+          ) : (
+            <div> not</div>
+          )
+        ) : (
+          <div></div>
         )}
       </div>
       <div className="form-control">
