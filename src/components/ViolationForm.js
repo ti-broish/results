@@ -265,7 +265,7 @@ export default function ViolationForm() {
                 onChange={(e) => setSelectedCityRegion(e.target.value)}
               >
                 <option value="" disabled selected="selected">
-                  -- Квартали --
+                  -- Райони --
                 </option>
                 {getCityRegions()}
               </select>
