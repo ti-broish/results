@@ -116,6 +116,7 @@ export default function ViolationForm() {
   };
 
   const getCityRegions = () => {
+    console.log('Here 2');
     const city_regions = [];
     getTownById(selectedTown)[0].cityRegions.forEach((city_region) => {
       city_regions.push(city_region);
@@ -257,7 +258,7 @@ export default function ViolationForm() {
         {selectedTown ? (
           getTownById(selectedTown)[0].cityRegions.length != 0 ? (
             <div>
-              <label className="inputLabel">Квартал</label>
+              <label className="inputLabel">Район</label>
               <select
                 className="form-control"
                 name="city_region"
@@ -271,7 +272,7 @@ export default function ViolationForm() {
               </select>
             </div>
           ) : (
-            <div> not</div>
+            <div></div>
           )
         ) : (
           <div></div>
@@ -328,13 +329,13 @@ export default function ViolationForm() {
           {...register('section', {
             required: false,
             pattern: {
-              value: /^(0|[1-9]\d*)(\.\d+)?$/,
+              value: /^\d{3}$/,
               message: 'Забранено въвеждането на текст',
             },
           })}
         />
         {errors.section && errors.section.message && (
-          <p className="errorMsg">errors.section.message</p>
+          <p className="errorMsg">{errors.section.message}</p>
         )}
       </div>
       <div className="form-control">
