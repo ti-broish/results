@@ -20,6 +20,7 @@ import Violations from './Violations';
 import Videos from './Videos';
 
 import styled from 'styled-components';
+import ViolationForm from './ViolationForm';
 
 const NavigationTabsBackground = styled.div`
   background-color: #ddd;
@@ -117,6 +118,7 @@ export default (props) => {
               path="/videos"
               render={() => showAfterElectionDate(<Videos />)}
             />
+            <Route path="/violation_form" component={ViolationForm} />
             <Route path="/violations" component={Violations} />
             <Route
               path={[`/:unit`, `/`]}
