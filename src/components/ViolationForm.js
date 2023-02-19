@@ -1,7 +1,8 @@
-import { useForm } from 'react-hook-form'
+import { useForm, FormProvider } from 'react-hook-form'
 import styled from 'styled-components'
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
+import SectionSelector from './SectionSelector'
 
 const CommentFormStyle = styled.form`
   width: 100%;
@@ -33,24 +34,24 @@ const CommentFormStyle = styled.form`
 `
 
 export default function ViolationForm() {
+  const methods = useForm()
   const {
-    register,
-    handleSubmit,
-    getValues,
     formState: { errors },
-  } = useForm()
+  } = methods
   const [electionRegions, setElectionRegions] = useState([])
   const [selectedElectionRegion, setSelectedElectionRegion] = useState('')
   const [selectedMunicipality, setSelectedMunicipality] = useState('')
   const [selectedCountry, setSelectedCountry] = useState('')
   const [selectedTown, setSelectedTown] = useState(0)
   const [selectedCityRegion, setSelectedCityRegion] = useState('')
+  const [selectedSection, setSelectedSecion] = useState('')
+  const [sections, setSections] = useState('')
   const [towns, setTowns] = useState([])
 
   const api_endpoint = process.env.DATA_URL
 
   useEffect(() => {
-    setSelectedCountry(getValues('countryField'))
+    setSelectedCountry(methods.getValues('countryField'))
     axios
       .get(`${api_endpoint}/election_regions`)
       .then((res) => setElectionRegions(res.data))
@@ -135,10 +136,9 @@ export default function ViolationForm() {
   }
 
   const onSubmit = (data) => {
-    const town = data.municipality == 46 ? 68134 : data.town
     const body = {
       description: data.description,
-      town: Number(town),
+      town: Number(data.town),
     }
     data.section ? (body['section'] = data.section) : body
     axios
@@ -152,207 +152,220 @@ export default function ViolationForm() {
   }
 
   return (
-    <CommentFormStyle onSubmit={handleSubmit(onSubmit)}>
-      <div className="form-control">
-        <label>Секция в:</label>
-        <div>
-          <input
-            type="radio"
-            id="fieldBg"
-            value="Bulgaria"
-            name="countryField"
-            {...register('countryField', { required: false })}
-            onChange={(e) => setSelectedCountry(e.target.value)}
-            checked
-          />
-          <label className="radioLabel" for="fieldBg">
-            България
-          </label>
-          <input
-            type="radio"
-            id="fieldForeign"
-            value="Foreign"
-            name="countryField"
-            {...register('countryField', { required: false })}
-            onChange={(e) => setSelectedCountry(e.target.value)}
-          />
-          <label className="radioLabel" for="fieldForeign">
-            Чужбина
-          </label>
+    <FormProvider {...methods}>
+      <CommentFormStyle onSubmit={methods.handleSubmit(onSubmit)}>
+        <div className="form-control">
+          <label>Секция в:</label>
+          <div>
+            <input
+              type="radio"
+              id="fieldBg"
+              value="Bulgaria"
+              name="countryField"
+              {...methods.register('countryField', { required: false })}
+              onChange={(e) => setSelectedCountry(e.target.value)}
+              checked
+            />
+            <label className="radioLabel" for="fieldBg">
+              България
+            </label>
+            <input
+              type="radio"
+              id="fieldForeign"
+              value="Foreign"
+              name="countryField"
+              {...methods.register('countryField', { required: false })}
+              onChange={(e) => setSelectedCountry(e.target.value)}
+            />
+            <label className="radioLabel" for="fieldForeign">
+              Чужбина
+            </label>
+          </div>
         </div>
-      </div>
-      <div>
-        <label className="inputLabel">МИР</label>
-      </div>
-      <div>
-        <select
-          className="form-control"
-          name="electionRegion"
-          {...register('electionRegion', { required: true })}
-          onChange={(e) => setSelectedElectionRegion(e.target.value)}
-        >
-          <option value="" disabled selected="selected">
-            -- МИР --
-          </option>
-          {getElectionRegions()}
-        </select>
-        {errors.electionRegion && errors.electionRegion.type === 'required' && (
-          <p className="errorMsg">Полето е задължително.</p>
-        )}
-      </div>
-      <div>
-        <label className="inputLabel">Община</label>
-      </div>
-      <div>
-        <select
-          className="form-control"
-          name="municipality"
-          {...register('municipality', { required: true })}
-          onChange={(e) => setSelectedMunicipality(e.target.value)}
-        >
-          {selectedElectionRegion != '' ? (
-            <>
+        <div>
+          <label className="inputLabel">МИР</label>
+        </div>
+        <div>
+          <select
+            className="form-control"
+            name="electionRegion"
+            {...methods.register('electionRegion', { required: true })}
+            onChange={(e) => setSelectedElectionRegion(e.target.value)}
+          >
+            <option value="" disabled selected="selected">
+              -- МИР --
+            </option>
+            {getElectionRegions()}
+          </select>
+          {errors.electionRegion &&
+            errors.electionRegion.type === 'required' && (
+              <p className="errorMsg">Полето е задължително.</p>
+            )}
+        </div>
+        <div>
+          <label className="inputLabel">Община</label>
+        </div>
+        <div>
+          <select
+            className="form-control"
+            name="municipality"
+            {...methods.register('municipality', { required: true })}
+            onChange={(e) => setSelectedMunicipality(e.target.value)}
+          >
+            {selectedElectionRegion != '' ? (
+              <>
+                <option value="" disabled selected="selected">
+                  -- Община --
+                </option>
+                {getMunicipalities(selectedElectionRegion)}
+              </>
+            ) : (
               <option value="" disabled selected="selected">
                 -- Община --
               </option>
-              {getMunicipalities(selectedElectionRegion)}
-            </>
-          ) : (
-            <option value="" disabled selected="selected">
-              -- Община --
-            </option>
+            )}
+          </select>
+          {errors.municipality && errors.municipality.type === 'required' && (
+            <p className="errorMsg">Полето е задължително.</p>
           )}
-        </select>
-        {errors.municipality && errors.municipality.type === 'required' && (
-          <p className="errorMsg">Полето е задължително.</p>
-        )}
-      </div>
-      <div>
-        <label className="inputLabel">Град/село</label>
-      </div>
-      <div>
-        <select
-          className="form-control"
-          name="town"
-          {...register('town', { required: true })}
-          onChange={(e) => setSelectedTown(e.target.value)}
-        >
-          {towns.length != 0 ? (
-            <>
+        </div>
+        <div>
+          <label className="inputLabel">Град/село</label>
+        </div>
+        <div>
+          <select
+            className="form-control"
+            name="town"
+            {...methods.register('town', { required: true })}
+            onChange={(e) => setSelectedTown(e.target.value)}
+          >
+            {towns.length != 0 ? (
+              <>
+                <option value="" disabled selected="selected">
+                  -- Градове --
+                </option>
+                {createTownOptions()}
+              </>
+            ) : (
               <option value="" disabled selected="selected">
                 -- Градове --
               </option>
-              {createTownOptions()}
-            </>
-          ) : (
-            <option value="" disabled selected="selected">
-              -- Градове --
-            </option>
+            )}
+          </select>
+          {errors.town && errors.town.type === 'required' && (
+            <p className="errorMsg">Полето е задължително.</p>
           )}
-        </select>
-        {errors.town && errors.town.type === 'required' && (
-          <p className="errorMsg">Полето е задължително.</p>
-        )}
-      </div>
-      <div>
-        {selectedTown ? (
-          getTownById(selectedTown)[0].cityRegions.length != 0 ? (
-            <div>
-              <label className="inputLabel">Район</label>
-              <select
-                className="form-control"
-                name="city_region"
-                {...register('city_region', { required: true })}
-                onChange={(e) => setSelectedCityRegion(e.target.value)}
-              >
-                <option value="" disabled selected="selected">
-                  -- Райони --
-                </option>
-                {getCityRegions()}
-              </select>
-            </div>
+        </div>
+        <div>
+          {selectedTown ? (
+            getTownById(selectedTown)[0].cityRegions.length != 0 ? (
+              <div>
+                <label className="inputLabel">Район</label>
+                <select
+                  className="form-control"
+                  name="city_region"
+                  {...methods.register('city_region', { required: true })}
+                  onChange={(e) => setSelectedCityRegion(e.target.value)}
+                >
+                  <option value="" disabled selected="selected">
+                    -- Райони --
+                  </option>
+                  {getCityRegions()}
+                </select>
+              </div>
+            ) : (
+              <div></div>
+            )
           ) : (
             <div></div>
-          )
-        ) : (
-          <div></div>
-        )}
-      </div>
-      <div className="form-control">
-        <label className="inputLabel">Име</label>
-        <input
-          type="text"
-          name="name"
-          {...register('name', { required: true })}
-        />
-        {errors.name && errors.name.type === 'required' && (
-          <p className="errorMsg">Полето е задължително.</p>
-        )}
-      </div>
-      <div className="form-control">
-        <label className="inputLabel">Имейл</label>
-        <input
-          type="text"
-          name="email"
-          {...register('email', {
-            required: true,
-            pattern: {
-              value:
-                /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-              message: 'Въведете валиден имейл',
-            },
-          })}
-        />
-        {errors.email && errors.email.type === 'required' && (
-          <p className="errorMsg">Полето е задължително.</p>
-        )}
-        {errors.email && errors.email.message && (
-          <p className="errorMsg">{errors.email.message}</p>
-        )}
-      </div>
-      <div className="form-control">
-        <label className="inputLabel">Телефон</label>
-        <input
-          type="text"
-          name="phoneNumber"
-          {...register('phoneNumber', { required: true })}
-        />
-        {errors.phoneNumber && errors.phoneNumber.type === 'required' && (
-          <p className="errorMsg">Полето е задължително.</p>
-        )}
-      </div>
-      <div className="form-control">
-        <label className="inputLabel">Секция</label>
-        <input
-          type="text"
+          )}
+        </div>
+        <div>
+          <label className="inputLabel">Номер на секция</label>
+        </div>
+        <SectionSelector
           name="section"
-          {...register('section', {
-            required: false,
-            pattern: {
-              value: /^\d{3}$/,
-              message: 'Забранено въвеждането на текст',
-            },
-          })}
+          town={selectedTown}
+          city_region={
+            selectedCityRegion != '' ? selectedCityRegion : undefined
+          }
         />
-        {errors.section && errors.section.message && (
-          <p className="errorMsg">{errors.section.message}</p>
-        )}
-      </div>
-      <div className="form-control">
-        <label className="inputLabel">Описание на нарушението</label>
-        <input
-          type="text"
-          name="description"
-          {...register('description', { required: true })}
-        />
-        {errors.name && errors.name.type === 'required' && (
-          <p className="errorMsg">Полето е задължително.</p>
-        )}
-      </div>
-      <div className="form-control">
-        <label></label>
-        <button type="submit">Изпрати сигнал</button>
-      </div>
-    </CommentFormStyle>
+        <div className="form-control">
+          <label className="inputLabel">Име</label>
+          <input
+            type="text"
+            name="name"
+            {...methods.register('name', { required: true })}
+          />
+          {errors.name && errors.name.type === 'required' && (
+            <p className="errorMsg">Полето е задължително.</p>
+          )}
+        </div>
+        <div className="form-control">
+          <label className="inputLabel">Имейл</label>
+          <input
+            type="text"
+            name="email"
+            {...methods.register('email', {
+              required: true,
+              pattern: {
+                value:
+                  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                message: 'Въведете валиден имейл',
+              },
+            })}
+          />
+          {errors.email && errors.email.type === 'required' && (
+            <p className="errorMsg">Полето е задължително.</p>
+          )}
+          {errors.email && errors.email.message && (
+            <p className="errorMsg">{errors.email.message}</p>
+          )}
+        </div>
+        <div className="form-control">
+          <label className="inputLabel">Телефон</label>
+          <input
+            type="text"
+            name="phoneNumber"
+            {...methods.register('phoneNumber', { required: true })}
+          />
+          {errors.phoneNumber && errors.phoneNumber.type === 'required' && (
+            <p className="errorMsg">Полето е задължително.</p>
+          )}
+        </div>
+        <div className="form-control">
+          <label className="inputLabel">Секция</label>
+          <input
+            type="text"
+            name="sectionText"
+            {...methods.register('sectionText', {
+              required: false,
+              pattern: {
+                value: /^\d{3}$/,
+                message: 'Забранено въвеждането на текст',
+              },
+            })}
+          />
+          {errors.sectionText && errors.sectionTxt.message && (
+            <p className="errorMsg">{errors.sectionText.message}</p>
+          )}
+        </div>
+        <div className="form-control">
+          <label className="inputLabel">Описание на нарушението</label>
+          <input
+            type="text"
+            name="description"
+            {...methods.register('description', { required: true })}
+          />
+          {errors.name && errors.name.type === 'required' && (
+            <p className="errorMsg">Полето е задължително.</p>
+          )}
+        </div>
+        <div className="form-control">
+          <label></label>
+          <button type="submit">Изпрати сигнал</button>
+        </div>
+      </CommentFormStyle>
+    </FormProvider>
   )
 }
