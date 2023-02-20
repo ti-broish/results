@@ -249,18 +249,12 @@ export default function ViolationForm() {
               methods.resetField('section')
             }}
           >
-            {/* {towns.length != 0 ? ( */}
             <>
               <option value="" disabled selected="selected">
                 -- Градове --
               </option>
               {towns.length != 0 ? createTownOptions() : null}
             </>
-            {/* ) : (
-            <option value="" disabled selected="selected">
-              -- Градове --
-            </option>
-            )} */}
           </select>
           {errors.town && errors.town.type === 'required' && (
             <p className="errorMsg">Полето е задължително.</p>
