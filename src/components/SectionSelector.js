@@ -54,7 +54,6 @@ export default function SectionSelector({ town, city_region }) {
         className="form-control"
         name="section"
         {...methods.register('section', { required: false })}
-        onChange={(e) => setSelectedSection(e.target.value)}
       >
         {sections.length != 0 ? (
           <>
