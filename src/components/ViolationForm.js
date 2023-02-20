@@ -44,8 +44,6 @@ export default function ViolationForm() {
   const [selectedCountry, setSelectedCountry] = useState('')
   const [selectedTown, setSelectedTown] = useState(0)
   const [selectedCityRegion, setSelectedCityRegion] = useState('')
-  const [selectedSection, setSelectedSecion] = useState('')
-  const [sections, setSections] = useState('')
   const [towns, setTowns] = useState([])
 
   const api_endpoint = process.env.DATA_URL
@@ -110,14 +108,11 @@ export default function ViolationForm() {
   }
 
   const getTownById = (id) => {
-    console.log('here')
     const town = towns.filter((town) => town.id == id)
-    console.log(town)
     return town
   }
 
   const getCityRegions = () => {
-    console.log('Here 2')
     const city_regions = []
     getTownById(selectedTown)[0].cityRegions.forEach((city_region) => {
       city_regions.push(city_region)
@@ -190,7 +185,14 @@ export default function ViolationForm() {
             className="form-control"
             name="electionRegion"
             {...methods.register('electionRegion', { required: true })}
-            onChange={(e) => setSelectedElectionRegion(e.target.value)}
+            onChange={(e) => {
+              setSelectedElectionRegion(e.target.value)
+              setSelectedMunicipality('')
+              setSelectedTown('')
+              methods.resetField('municipality')
+              methods.resetField('town')
+              methods.resetField('section')
+            }}
           >
             <option value="" disabled selected="selected">
               -- МИР --
@@ -210,7 +212,12 @@ export default function ViolationForm() {
             className="form-control"
             name="municipality"
             {...methods.register('municipality', { required: true })}
-            onChange={(e) => setSelectedMunicipality(e.target.value)}
+            onChange={(e) => {
+              setSelectedMunicipality(e.target.value)
+              setSelectedTown(0)
+              methods.resetField('town')
+              methods.resetField('section')
+            }}
           >
             {selectedElectionRegion != '' ? (
               <>
@@ -237,20 +244,23 @@ export default function ViolationForm() {
             className="form-control"
             name="town"
             {...methods.register('town', { required: true })}
-            onChange={(e) => setSelectedTown(e.target.value)}
+            onChange={(e) => {
+              setSelectedTown(e.target.value)
+              methods.resetField('section')
+            }}
           >
-            {towns.length != 0 ? (
-              <>
-                <option value="" disabled selected="selected">
-                  -- Градове --
-                </option>
-                {createTownOptions()}
-              </>
-            ) : (
+            {/* {towns.length != 0 ? ( */}
+            <>
               <option value="" disabled selected="selected">
                 -- Градове --
               </option>
-            )}
+              {towns.length != 0 ? createTownOptions() : null}
+            </>
+            {/* ) : (
+            <option value="" disabled selected="selected">
+              -- Градове --
+            </option>
+            )} */}
           </select>
           {errors.town && errors.town.type === 'required' && (
             <p className="errorMsg">Полето е задължително.</p>
@@ -281,15 +291,23 @@ export default function ViolationForm() {
           )}
         </div>
         <div>
-          <label className="inputLabel">Номер на секция</label>
+          {selectedTown || selectedCityRegion ? (
+            <div>
+              <label className="inputLabel">Номер на секция</label>
+
+              <SectionSelector
+                name="section"
+                town={selectedTown}
+                city_region={
+                  selectedCityRegion != '' ? selectedCityRegion : undefined
+                }
+              />
+            </div>
+          ) : (
+            <div></div>
+          )}
         </div>
-        <SectionSelector
-          name="section"
-          town={selectedTown}
-          city_region={
-            selectedCityRegion != '' ? selectedCityRegion : undefined
-          }
-        />
+
         <div className="form-control">
           <label className="inputLabel">Име</label>
           <input
@@ -331,23 +349,6 @@ export default function ViolationForm() {
           />
           {errors.phoneNumber && errors.phoneNumber.type === 'required' && (
             <p className="errorMsg">Полето е задължително.</p>
-          )}
-        </div>
-        <div className="form-control">
-          <label className="inputLabel">Секция</label>
-          <input
-            type="text"
-            name="sectionText"
-            {...methods.register('sectionText', {
-              required: false,
-              pattern: {
-                value: /^\d{3}$/,
-                message: 'Забранено въвеждането на текст',
-              },
-            })}
-          />
-          {errors.sectionText && errors.sectionTxt.message && (
-            <p className="errorMsg">{errors.sectionText.message}</p>
           )}
         </div>
         <div className="form-control">
