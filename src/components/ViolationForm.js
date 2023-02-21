@@ -191,6 +191,7 @@ export default function ViolationForm() {
               {...methods.register('countryField', { required: false })}
               onChange={(e) => {
                 setSelectedCountry(e.target.value)
+                setSelectedTown(0)
                 methods.resetField('town')
                 methods.resetField('section')
               }}
@@ -207,6 +208,7 @@ export default function ViolationForm() {
               {...methods.register('countryField', { required: false })}
               onChange={(e) => {
                 setSelectedCountry(e.target.value)
+                setSelectedTown(0)
                 methods.resetField('town')
                 methods.resetField('section')
               }}
@@ -279,73 +281,6 @@ export default function ViolationForm() {
                     <p className="errorMsg">Полето е задължително.</p>
                   )}
               </div>
-              <div>
-                <label className="inputLabel">Град/село</label>
-              </div>
-              <div>
-                <select
-                  className="form-control"
-                  name="town"
-                  {...methods.register('town', { required: true })}
-                  onChange={(e) => {
-                    setSelectedTown(e.target.value)
-                    methods.resetField('section')
-                  }}
-                >
-                  <>
-                    <option value="" disabled selected="selected">
-                      -- Градове --
-                    </option>
-                    {towns.length != 0 ? createTownOptions() : null}
-                  </>
-                </select>
-                {errors.town && errors.town.type === 'required' && (
-                  <p className="errorMsg">Полето е задължително.</p>
-                )}
-              </div>
-              <div>
-                {selectedTown ? (
-                  getTownById(selectedTown)[0].cityRegions.length != 0 ? (
-                    <div>
-                      <label className="inputLabel">Район</label>
-                      <select
-                        className="form-control"
-                        name="city_region"
-                        {...methods.register('city_region', { required: true })}
-                        onChange={(e) => setSelectedCityRegion(e.target.value)}
-                      >
-                        <option value="" disabled selected="selected">
-                          -- Райони --
-                        </option>
-                        {getCityRegions()}
-                      </select>
-                    </div>
-                  ) : (
-                    <div></div>
-                  )
-                ) : (
-                  <div></div>
-                )}
-              </div>
-              <div>
-                {selectedTown || selectedCityRegion ? (
-                  <div>
-                    <label className="inputLabel">Номер на секция</label>
-
-                    <SectionSelector
-                      name="section"
-                      town={selectedTown}
-                      city_region={
-                        selectedCityRegion != ''
-                          ? selectedCityRegion
-                          : undefined
-                      }
-                    />
-                  </div>
-                ) : (
-                  <div></div>
-                )}
-              </div>
             </div>
           ) : (
             <div>
@@ -372,50 +307,72 @@ export default function ViolationForm() {
                     <p className="errorMsg">Полето е задължително.</p>
                   )}
               </div>
+            </div>
+          )}
+        </div>
+        <div>
+          <label className="inputLabel">Град/село</label>
+        </div>
+        <div>
+          <select
+            className="form-control"
+            name="town"
+            {...methods.register('town', { required: true })}
+            onChange={(e) => {
+              setSelectedTown(e.target.value)
+              methods.resetField('section')
+            }}
+          >
+            <>
+              <option value="" disabled selected="selected">
+                -- Градове --
+              </option>
+              {towns.length != 0 ? createTownOptions() : null}
+            </>
+          </select>
+          {errors.town && errors.town.type === 'required' && (
+            <p className="errorMsg">Полето е задължително.</p>
+          )}
+        </div>
+        <div>
+          {selectedTown ? (
+            getTownById(selectedTown)[0].cityRegions.length != 0 ? (
               <div>
-                <label className="inputLabel">Град/село</label>
-              </div>
-              <div>
+                <label className="inputLabel">Район</label>
                 <select
                   className="form-control"
-                  name="town"
-                  {...methods.register('town', { required: true })}
-                  onChange={(e) => {
-                    setSelectedTown(e.target.value)
-                    methods.resetField('section')
-                  }}
+                  name="city_region"
+                  {...methods.register('city_region', { required: true })}
+                  onChange={(e) => setSelectedCityRegion(e.target.value)}
                 >
-                  <>
-                    <option value="" disabled selected="selected">
-                      -- Градове --
-                    </option>
-                    {towns.length != 0 ? createTownOptions() : null}
-                  </>
+                  <option value="" disabled selected="selected">
+                    -- Райони --
+                  </option>
+                  {getCityRegions()}
                 </select>
-                {errors.town && errors.town.type === 'required' && (
-                  <p className="errorMsg">Полето е задължително.</p>
-                )}
               </div>
-              <div>
-                {selectedTown || selectedCityRegion ? (
-                  <div>
-                    <label className="inputLabel">Номер на секция</label>
+            ) : (
+              <div></div>
+            )
+          ) : (
+            <div></div>
+          )}
+        </div>
+        <div>
+          {selectedTown || selectedCityRegion ? (
+            <div>
+              <label className="inputLabel">Номер на секция</label>
 
-                    <SectionSelector
-                      name="section"
-                      town={selectedTown}
-                      city_region={
-                        selectedCityRegion != ''
-                          ? selectedCityRegion
-                          : undefined
-                      }
-                    />
-                  </div>
-                ) : (
-                  <div></div>
-                )}
-              </div>
+              <SectionSelector
+                name="section"
+                town={selectedTown}
+                city_region={
+                  selectedCityRegion != '' ? selectedCityRegion : undefined
+                }
+              />
             </div>
+          ) : (
+            <div></div>
           )}
         </div>
         <div className="form-control">
