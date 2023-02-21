@@ -339,6 +339,9 @@ export default function ViolationForm() {
                   {...methods.register('foreignCountries', { required: true })}
                   onChange={(e) => {
                     setSelectedForeignCountry(e.target.value)
+                    setSelectedTown(0)
+                    methods.resetField('town')
+                    methods.resetField('section')
                   }}
                 >
                   <>
