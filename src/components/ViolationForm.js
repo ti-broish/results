@@ -11,10 +11,6 @@ const CommentFormStyle = styled.form`
     color: red;
   }
 
-  select {
-    witdth: 50%;
-  }
-
   input[type='radio'] {
     margin: 5px;
     vertical-align: middle;
