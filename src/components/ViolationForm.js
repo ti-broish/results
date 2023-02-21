@@ -39,12 +39,23 @@ const CommentFormStyle = styled.form`
     box-sizing: border-box;
     margin-left: 5px;
   }
+
+  .successfulMessage {
+    color: green;
+  }
+
+  .unsuccessfulMessage {
+    color: red;
+  }
 `
 
 export default function ViolationForm() {
   const methods = useForm()
   const {
     formState: { errors },
+    formState,
+    formState: { isSubmitSuccessful },
+    reset,
   } = methods
   const [electionRegions, setElectionRegions] = useState([])
   const [countries, setCountries] = useState([])
@@ -55,6 +66,7 @@ export default function ViolationForm() {
   const [selectedTown, setSelectedTown] = useState(0)
   const [selectedCityRegion, setSelectedCityRegion] = useState('')
   const [towns, setTowns] = useState([])
+  const [message, setMessage] = useState('')
 
   const api_endpoint = process.env.DATA_URL
 
@@ -100,6 +112,24 @@ export default function ViolationForm() {
         .catch((err) => console.log(err))
     }
   }, [selectedElectionRegion, selectedMunicipality])
+
+  useEffect(() => {
+    if (formState.isSubmitSuccessful) {
+      reset({
+        countryField: '',
+        electionRegion: '',
+        foreignCountries: '',
+        municipality: '',
+        town: '',
+        city_region: '',
+        section: '',
+        name: '',
+        email: '',
+        phoneNumber: '',
+        description: '',
+      })
+    }
+  }, [formState, reset])
 
   const getElectionRegions = () => {
     return electionRegions.map((election_region) => {
@@ -183,8 +213,14 @@ export default function ViolationForm() {
           'Content-Type': 'application/json',
         },
       })
-      .then((res) => console.log(res.data))
-      .catch((err) => console.log(err))
+      .then((res) => {
+        console.log(res.data)
+        setMessage('Сигналът ви беше изпратен успешно!')
+      })
+      .catch((err) => {
+        console.log(err)
+        setMessage('Сигналът ви не беше изпратен!')
+      })
   }
 
   return (
@@ -345,7 +381,7 @@ export default function ViolationForm() {
           )}
         </div>
         <div>
-          {selectedTown ? (
+          {selectedTown && !selectedForeignCountry ? (
             getTownById(selectedTown)[0].cityRegions.length != 0 ? (
               <div>
                 <label className="inputLabel">Район</label>
@@ -443,6 +479,17 @@ export default function ViolationForm() {
           <label></label>
           <button type="submit">Изпрати сигнал</button>
         </div>
+        {message != '' ? (
+          <div>
+            {!message.includes('не') ? (
+              <p className="successfulMessage">{message}</p>
+            ) : (
+              <p className="unsuccessfulMessage">{message}</p>
+            )}
+          </div>
+        ) : (
+          <div></div>
+        )}
       </CommentFormStyle>
     </FormProvider>
   )
