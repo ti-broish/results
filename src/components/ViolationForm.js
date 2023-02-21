@@ -11,6 +11,14 @@ const CommentFormStyle = styled.form`
     color: red;
   }
 
+  textarea {
+    width: 80%;
+    height: 50px;
+    padding: 20px;
+    margin-left: 5px;
+    margin-bottom: 10px;
+  }
+
   input[type='radio'] {
     margin: 5px;
     vertical-align: middle;
@@ -422,12 +430,12 @@ export default function ViolationForm() {
         </div>
         <div className="form-control">
           <label className="inputLabel">Описание на нарушението</label>
-          <input
-            type="text"
+          <textarea
+            id="violationText"
             name="description"
             {...methods.register('description', { required: true })}
           />
-          {errors.name && errors.name.type === 'required' && (
+          {errors.violationText && errors.violationText.type === 'required' && (
             <p className="errorMsg">Полето е задължително.</p>
           )}
         </div>
