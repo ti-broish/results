@@ -70,10 +70,12 @@ export default function ViolationForm() {
   }, [selectedCountry])
 
   useEffect(() => {
-    axios
-      .get(`${api_endpoint}/towns?country=${selectedForeignCountry}`)
-      .then((res) => setTowns(res.data))
-      .catch((err) => console.log(err))
+    if (selectedForeignCountry) {
+      axios
+        .get(`${api_endpoint}/towns?country=${selectedForeignCountry}`)
+        .then((res) => setTowns(res.data))
+        .catch((err) => console.log(err))
+    }
   }, [selectedForeignCountry])
 
   useEffect(() => {
@@ -197,7 +199,7 @@ export default function ViolationForm() {
               }}
               defaultChecked
             />
-            <label className="radioLabel" for="fieldBg">
+            <label className="radioLabel" htmlFor="fieldBg">
               България
             </label>
             <input
@@ -213,7 +215,7 @@ export default function ViolationForm() {
                 methods.resetField('section')
               }}
             />
-            <label className="radioLabel" for="fieldForeign">
+            <label className="radioLabel" htmlFor="fieldForeign">
               Чужбина
             </label>
           </div>
