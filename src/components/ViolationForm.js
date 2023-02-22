@@ -56,6 +56,7 @@ export default function ViolationForm() {
     formState,
     formState: { isSubmitSuccessful },
     reset,
+    getValues,
   } = methods
   const [electionRegions, setElectionRegions] = useState([])
   const [countries, setCountries] = useState([])
@@ -66,6 +67,7 @@ export default function ViolationForm() {
   const [selectedTown, setSelectedTown] = useState(0)
   const [selectedCityRegion, setSelectedCityRegion] = useState('')
   const [towns, setTowns] = useState([])
+  const [municipalities, setMunicipalities] = useState([])
   const [message, setMessage] = useState('')
 
   const api_endpoint = process.env.DATA_URL
@@ -99,16 +101,21 @@ export default function ViolationForm() {
   }, [selectedForeignCountry])
 
   useEffect(() => {
+    console.log('here')
     if (selectedElectionRegion != '') {
+      console.log('if election region')
       getMunicipalities(selectedElectionRegion)
     }
     if (selectedElectionRegion != '' && selectedMunicipality != '') {
+      console.log('if both')
       const countryCode = selectedCountry == 'Bulgaria' ? '00' : null
       axios
         .get(
           `${api_endpoint}/towns?country=${countryCode}&election_region=${selectedElectionRegion}&municipality=${selectedMunicipality}`
         )
-        .then((res) => setTowns(res.data))
+        .then((res) => {
+          setTowns(res.data)
+        })
         .catch((err) => console.log(err))
     }
   }, [selectedElectionRegion, selectedMunicipality])
@@ -149,6 +156,11 @@ export default function ViolationForm() {
     filteredRegions[0].municipalities.forEach((municipality) => {
       municipalities.push(municipality)
     })
+
+    setMunicipalities(municipalities)
+  }
+
+  const createMunicipalityOptions = () => {
     return municipalities.map((municipality) => {
       return (
         <option key={municipality.code} value={municipality.code}>
@@ -321,7 +333,7 @@ export default function ViolationForm() {
                       -- Община --
                     </option>
                     {selectedElectionRegion
-                      ? getMunicipalities(selectedElectionRegion)
+                      ? createMunicipalityOptions()
                       : null}
                   </>
                 </select>
