@@ -238,8 +238,10 @@ export default function ViolationForm() {
               onChange={(e) => {
                 setSelectedCountry(e.target.value)
                 setSelectedTown(0)
+                setTowns([])
                 methods.resetField('town')
                 methods.resetField('section')
+                methods.resetField('foreignCountries')
               }}
               defaultChecked
             />
@@ -254,7 +256,11 @@ export default function ViolationForm() {
               {...methods.register('countryField', { required: false })}
               onChange={(e) => {
                 setSelectedCountry(e.target.value)
+                setSelectedElectionRegion('')
                 setSelectedTown(0)
+                setTowns([])
+                methods.resetField('electionRegion')
+                methods.resetField('municipality')
                 methods.resetField('town')
                 methods.resetField('section')
               }}
@@ -279,6 +285,7 @@ export default function ViolationForm() {
                     setSelectedElectionRegion(e.target.value)
                     setSelectedMunicipality('')
                     setSelectedTown(0)
+                    setTowns([])
                     methods.resetField('municipality')
                     methods.resetField('town')
                     methods.resetField('section')
@@ -309,18 +316,14 @@ export default function ViolationForm() {
                     methods.resetField('section')
                   }}
                 >
-                  {selectedElectionRegion != '' ? (
-                    <>
-                      <option value="" disabled selected="selected">
-                        -- Община --
-                      </option>
-                      {getMunicipalities(selectedElectionRegion)}
-                    </>
-                  ) : (
+                  <>
                     <option value="" disabled selected="selected">
                       -- Община --
                     </option>
-                  )}
+                    {selectedElectionRegion
+                      ? getMunicipalities(selectedElectionRegion)
+                      : null}
+                  </>
                 </select>
                 {errors.municipality &&
                   errors.municipality.type === 'required' && (
