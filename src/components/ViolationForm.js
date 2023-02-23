@@ -142,7 +142,7 @@ export default function ViolationForm() {
     return electionRegions.map((election_region) => {
       return (
         <option key={election_region.code} value={election_region.code}>
-          {election_region.name}
+          {election_region.code + ' ' + election_region.name}
         </option>
       )
     })
@@ -181,13 +181,15 @@ export default function ViolationForm() {
   }
 
   const createCountriesOptions = () => {
-    return countries.map((country) => {
-      return (
-        <option id={country.code} key={country.code} value={country.code}>
-          {country.name}
-        </option>
-      )
-    })
+    return countries
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((country) => {
+        return (
+          <option id={country.code} key={country.code} value={country.code}>
+            {country.name}
+          </option>
+        )
+      })
   }
 
   const getTownById = (id) => {
@@ -274,6 +276,7 @@ export default function ViolationForm() {
                 methods.resetField('electionRegion')
                 methods.resetField('municipality')
                 methods.resetField('town')
+                methods.resetField('city_region')
                 methods.resetField('section')
               }}
             />
@@ -301,6 +304,7 @@ export default function ViolationForm() {
                     methods.resetField('municipality')
                     methods.resetField('town')
                     methods.resetField('section')
+                    methods.resetField('city_region')
                   }}
                 >
                   <option value="" disabled selected="selected">
@@ -327,6 +331,7 @@ export default function ViolationForm() {
                     methods.resetField('town')
                     methods.resetField('section')
                   }}
+                  disabled={selectedElectionRegion ? false : true}
                 >
                   <>
                     <option value="" disabled selected="selected">
@@ -386,10 +391,11 @@ export default function ViolationForm() {
               setSelectedTown(e.target.value)
               methods.resetField('section')
             }}
+            disabled={towns.length != 0 ? false : true}
           >
             <>
               <option value="" disabled selected="selected">
-                -- Градове --
+                -- Град --
               </option>
               {towns.length != 0 ? createTownOptions() : null}
             </>

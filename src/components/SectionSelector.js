@@ -42,7 +42,7 @@ export default function SectionSelector({ town, city_region }) {
     return sections.map((section) => {
       return (
         <option id={section.id} key={section.id} value={section.id}>
-          {section.id + section.place}
+          {section.id.slice(-3) + ' ' + section.place}
         </option>
       )
     })
