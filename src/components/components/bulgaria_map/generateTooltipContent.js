@@ -278,11 +278,23 @@ export const generateTooltipProcessed = (region, tooltipData) => {
                       tooltipData.sections
                     )}</td>
                 </tr>
+                <tr>
+                    <td style="padding-right: 20px;">Рискови секции (висок)</td>
+                    <td style="text-align: right;">${formatCount(
+                      tooltipData.highRiskSections
+                    )}</td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 20px;">Рискови секции (среден)</td>
+                    <td style="text-align: right;">${formatCount(
+                      tooltipData.midRiskSections
+                    )}</td>
+                </tr>
           
             </tbody>
             </table>
         </div>  
-    `;
+    `
 };
 
 export const generateTooltipViolations = (region, tooltipData) => {

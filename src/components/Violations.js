@@ -109,6 +109,7 @@ export default (props) => {
     items: null,
     moreToLoad: true,
   });
+  const [mode, setMode] = useState('violations')
   const [regionName, setRegionName] = useState(defaultRegionName);
   const [loading, setLoading] = useState(false);
   const [showBackButton, setShowBackButton] = useState(false);
@@ -242,6 +243,8 @@ export default (props) => {
         regions={resultsData.nodes}
         parties={parties}
         results={resultsData.results}
+        mode={mode}
+        setMode={(mode) => setMode(mode)}
         showViolationsOnly={true}
         loadViolationsForRegion={(key) => loadViolationsForRegion(key)}
       />

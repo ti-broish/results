@@ -1,9 +1,17 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
+import React, { useRef,useState, useEffect } from 'react';
 
 import { useHistory } from 'react-router-dom';
 
 import styled from 'styled-components';
 import ReactTooltip from 'react-tooltip';
+import { generateDisplayParties } from './generateRegionData';
+import { generateRegionData, generateTooltipContent } from './helpers';
+import regionPaths from './regionPaths';
+import handleViewport from 'react-in-viewport';
+
+// ----------------------------------------------------------------------------
+// Sub-components
+// ----------------------------------------------------------------------------
 
 const StyledTooltip = styled(ReactTooltip)`
   background-color: white !important;
@@ -31,7 +39,7 @@ const BulgariaMapStyle = styled.div`
   }
 `;
 
-const MapControls = styled.div`
+const PrimaryMapControls = styled.div`
   text-align: center;
 
   button {
@@ -50,8 +58,8 @@ const MapControls = styled.div`
     }
   }
 
-  ${(props) =>
-    props.embed && !props.homepage
+  ${({embed, homepage}) =>
+    embed && !homepage
       ? `
         font-size: 10px;
         font-weight: bold;
@@ -62,7 +70,7 @@ const MapControls = styled.div`
     `}
 `;
 
-const MapControlsSingleParty = styled.div`
+const SecondaryMapControls = styled.div`
   text-align: center;
   height: 40px;
   margin-bottom: -45px;
@@ -85,8 +93,8 @@ const MapControlsSingleParty = styled.div`
     }
   }
 
-  ${(props) =>
-    props.embed && !props.homepage
+  ${({embed, homepage}) =>
+    embed && !homepage
       ? `
         font-size: 10px;
         font-weight: bold;
@@ -96,31 +104,9 @@ const MapControlsSingleParty = styled.div`
     `}
 `;
 
-import regionPaths from './regionPaths';
-
-import {
-  generateTooltipDominant,
-  generateTooltipSingleParty,
-  generateTooltipTurnout,
-  generateTooltipVoters,
-  generateNullTooltip,
-  generateTooltipCoverage,
-  generateTooltipProcessed,
-  generateTooltipViolations,
-} from './generateTooltipContent';
-
-import {
-  generateDisplayParties,
-  generateRegionDataDominant,
-  generateRegionDataSingleParty,
-  generateRegionDataTurnout,
-  generateRegionDataVoters,
-  generateRegionDataCoverage,
-  generateRegionDataProcessed,
-  generateRegionDataViolations,
-} from './generateRegionData';
-
-import handleViewport from 'react-in-viewport';
+// ----------------------------------------------------------------------------
+// Component
+// ----------------------------------------------------------------------------
 
 export default handleViewport((props) => {
   const { inViewport, forwardedRef } = props;
@@ -129,80 +115,20 @@ export default handleViewport((props) => {
   const shouldLoad = inViewport || alreadyLoaded.current;
 
   const history = useHistory();
-  const [mode, setMode] = useState(
-    props.showViolationsOnly || !props.resultsAvailable
-      ? 'violations'
-      : 'dominant'
-  );
+  const { mode, setMode } = props;
   const [singleParty, setSingleParty] = useState('');
   const [singlePartyMode, setSinglePartyMode] = useState('percentage');
+  // We can optionally set default dynamically by checking if any sections have
+  // already been processed and adding useEffect hook
+  const [sectionsMode, setSectionsMode] = useState('risk');
 
-  const generateRegionData = () => {
-    switch (mode) {
-      case 'dominant':
-        return generateRegionDataDominant(
-          props.regions,
-          props.parties,
-          props.results
-        );
-      case 'single-party':
-        return generateRegionDataSingleParty(
-          singleParty,
-          singlePartyMode,
-          props.regions,
-          props.parties,
-          props.results
-        );
-      case 'turnout':
-        return generateRegionDataTurnout(
-          props.regions,
-          props.parties,
-          props.results
-        );
-      case 'voters':
-        return generateRegionDataVoters(props.regions);
-      case 'coverage':
-        return generateRegionDataCoverage(props.regions);
-      case 'sectionsWithResults':
-        return generateRegionDataProcessed(
-          props.regions,
-          props.parties,
-          props.results
-        );
-      case 'violations':
-        return generateRegionDataViolations(
-          props.regions,
-          props.parties,
-          props.results
-        );
-      default:
-        return generateRegionDataViolations(props.regions);
-    }
-  };
-
-  const generateTooltipContent = (region, tooltipData) => {
-    if (!tooltipData) return generateNullTooltip(region);
-    switch (mode) {
-      case 'dominant':
-        return generateTooltipDominant(region, tooltipData);
-      case 'single-party':
-        return generateTooltipSingleParty(singleParty, region, tooltipData);
-      case 'turnout':
-        return generateTooltipTurnout(region, tooltipData);
-      case 'voters':
-        return generateTooltipVoters(region, tooltipData);
-      case 'coverage':
-        return generateTooltipCoverage(region, tooltipData);
-      case 'sectionsWithResults':
-        return generateTooltipProcessed(region, tooltipData);
-      case 'violations':
-        return generateTooltipViolations(region, tooltipData);
-      default:
-        return generateTooltipViolations(region, tooltipData);
-    }
-  };
-
-  const regionData = generateRegionData();
+  const regionData = generateRegionData(
+    props,
+    mode,
+    singleParty,
+    singlePartyMode,
+    sectionsMode
+  );
 
   const { displayParties, displayPartiesTotal } = generateDisplayParties(
     props.parties,
@@ -213,28 +139,23 @@ export default handleViewport((props) => {
     '0'
   );
 
-  const setSelectedMode = (mode) => {
-    setMode(mode);
-    props.selectedMode(mode);
-  };
-
   const publicURL = process.env.PUBLIC_URL ? process.env.PUBLIC_URL : '/';
 
   return (
     <>
       {props.mapModesHidden || props.showViolationsOnly ? null : (
-        <MapControls embed={props.embed} homepage={props.homepage}>
+        <PrimaryMapControls embed={props.embed} homepage={props.homepage}>
           {props.resultsAvailable ? (
             <>
               <button
                 className={mode === 'dominant' ? 'selected' : ''}
-                onClick={() => setSelectedMode('dominant')}
+                onClick={() => setMode('dominant')}
               >
                 Водеща партия
               </button>
               <button
                 className={mode === 'single-party' ? 'selected' : ''}
-                onClick={() => setSelectedMode('single-party')}
+                onClick={() => setMode('single-party')}
               >
                 Отделна партия
               </button>
@@ -242,39 +163,40 @@ export default handleViewport((props) => {
           ) : null}
           {/*<button className={mode === 'turnout'? 'selected' : ''} onClick={()=>setMode('turnout')}>Активност</button>*/}
           <button
+            disabled={!props.violationsReported}
             className={mode === 'violations' ? 'selected' : ''}
-            onClick={() => setSelectedMode('violations')}
+            onClick={() => setMode('violations')}
           >
             Сигнали
           </button>
           <button
             className={mode === 'voters' ? 'selected' : ''}
-            onClick={() => setSelectedMode('voters')}
+            onClick={() => setMode('voters')}
           >
             Избиратели
           </button>
           {/*<button className={mode === 'coverage'? 'selected' : ''} onClick={()=>setMode('coverage')}>Покритие</button>*/}
           <button
             className={mode === 'sectionsWithResults' ? 'selected' : ''}
-            onClick={() => setSelectedMode('sectionsWithResults')}
+            onClick={() => setMode('sectionsWithResults')}
           >
             Секции
           </button>
           <button
             disabled={true}
             className={mode === 'video' ? 'selected' : ''}
-            onClick={() => setSelectedMode('video')}
+            onClick={() => setMode('video')}
           >
             Видео
           </button>
-        </MapControls>
+        </PrimaryMapControls>
       )}
 
-      {mode === 'video' ? null : (
+      {mode !== 'video' && (
         <>
           {props.mapModesHidden || props.showViolationsOnly ? null : mode ===
             'single-party' ? (
-            <MapControlsSingleParty
+            <SecondaryMapControls
               embed={props.embed}
               homepage={props.homepage}
             >
@@ -301,7 +223,29 @@ export default handleViewport((props) => {
                   Гласове
                 </button>
               </div>
-            </MapControlsSingleParty>
+            </SecondaryMapControls>
+          ) : null}
+          {props.mapModesHidden || props.showViolationsOnly ? null : mode ===
+            "sectionsWithResults" ? (
+            <SecondaryMapControls
+              embed={props.embed}
+              homepage={props.homepage}
+            >
+              <div style={{ width: "100%" }}>
+                <button
+                  className={sectionsMode === "processed" ? "selected" : ""}
+                  onClick={() => setSectionsMode("processed")}
+                >
+                  Обработени
+                </button>
+                <button
+                  className={sectionsMode === "risk" ? "selected" : ""}
+                  onClick={() => setSectionsMode("risk")}
+                >
+                  Рискови
+                </button>
+              </div>
+            </SecondaryMapControls>
           ) : null}
           <BulgariaMapStyle>
             <StyledTooltip
@@ -379,7 +323,12 @@ export default handleViewport((props) => {
                         transition: 'fill 1.5s ease',
                       }}
                       d={regionPaths[key].path}
-                      data-tip={generateTooltipContent(region, tooltipData)}
+                      data-tip={generateTooltipContent(
+                        singleParty,
+                        region,
+                        tooltipData,
+                        mode
+                      )}
                       data-for={'bulgariaMapTooltip'}
                     />
                   );

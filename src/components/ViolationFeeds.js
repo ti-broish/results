@@ -10,7 +10,6 @@ import { Link } from 'react-router-dom';
 import LoadingScreen from './layout/LoadingScreen';
 import { ElectionContext } from './Election';
 import { formatDateTime } from './Util';
-import BulgariaMap from './components/bulgaria_map/BulgariaMap';
 
 import styled from 'styled-components';
 
