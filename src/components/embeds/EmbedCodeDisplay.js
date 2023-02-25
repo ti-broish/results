@@ -36,13 +36,14 @@ const CopyButton = styled.button`
 
 export default (props) => {
   const [copied, setCopied] = useState(false)
+  let copied2 = `asf`
 
   return (
     <div>
       <h3>Код за вграждане</h3>
       <EmbedCode>{props.code}</EmbedCode>
       <CopyButton
-        disabled={copied}
+        disabled={copied2}
         onClick={() => {
           const el = document.createElement('textarea')
           el.value = props.code
