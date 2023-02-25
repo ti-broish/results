@@ -1,7 +1,7 @@
-import { useForm } from 'react-hook-form';
-import styled from 'styled-components';
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useForm } from 'react-hook-form'
+import styled from 'styled-components'
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
 
 const CommentFormStyle = styled.form`
   width: 100%;
@@ -30,7 +30,7 @@ const CommentFormStyle = styled.form`
     box-sizing: border-box;
     margin-left: 5px;
   }
-`;
+`
 
 export default function ViolationForm() {
   const {
@@ -38,38 +38,38 @@ export default function ViolationForm() {
     handleSubmit,
     getValues,
     formState: { errors },
-  } = useForm();
-  const [electionRegions, setElectionRegions] = useState([]);
-  const [selectedElectionRegion, setSelectedElectionRegion] = useState('');
-  const [selectedMunicipality, setSelectedMunicipality] = useState('');
-  const [selectedCountry, setSelectedCountry] = useState('');
-  const [selectedTown, setSelectedTown] = useState(0);
-  const [selectedCityRegion, setSelectedCityRegion] = useState('');
-  const [towns, setTowns] = useState([]);
+  } = useForm()
+  const [electionRegions, setElectionRegions] = useState([])
+  const [selectedElectionRegion, setSelectedElectionRegion] = useState('')
+  const [selectedMunicipality, setSelectedMunicipality] = useState('')
+  const [selectedCountry, setSelectedCountry] = useState('')
+  const [selectedTown, setSelectedTown] = useState(0)
+  const [selectedCityRegion, setSelectedCityRegion] = useState('')
+  const [towns, setTowns] = useState([])
 
-  const api_endpoint = process.env.DATA_URL;
+  const api_endpoint = process.env.DATA_URL
 
   useEffect(() => {
-    setSelectedCountry(getValues('countryField'));
+    setSelectedCountry(getValues('countryField'))
     axios
       .get(`${api_endpoint}/election_regions`)
-      .then((res) => setElectionRegions(res.data));
-  }, []);
+      .then((res) => setElectionRegions(res.data))
+  }, [])
 
   useEffect(() => {
     if (selectedElectionRegion != '') {
-      getMunicipalities(selectedElectionRegion);
+      getMunicipalities(selectedElectionRegion)
     }
     if (selectedElectionRegion != '' && selectedMunicipality != '') {
-      const countryCode = selectedCountry == 'Bulgaria' ? '00' : null;
+      const countryCode = selectedCountry == 'Bulgaria' ? '00' : null
       axios
         .get(
           `${api_endpoint}/towns?country=${countryCode}&election_region=${selectedElectionRegion}&municipality=${selectedMunicipality}`
         )
         .then((res) => setTowns(res.data))
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err))
     }
-  }, [selectedElectionRegion, selectedMunicipality]);
+  }, [selectedElectionRegion, selectedMunicipality])
 
   const getElectionRegions = () => {
     return electionRegions.map((election_region) => {
@@ -77,26 +77,26 @@ export default function ViolationForm() {
         <option key={election_region.code} value={election_region.code}>
           {election_region.name}
         </option>
-      );
-    });
-  };
+      )
+    })
+  }
 
   const getMunicipalities = (selectedElectionRegion) => {
     const filteredRegions = electionRegions.filter(
       (electionRegion) => electionRegion.code == selectedElectionRegion
-    );
-    const municipalities = [];
+    )
+    const municipalities = []
     filteredRegions[0].municipalities.forEach((municipality) => {
-      municipalities.push(municipality);
-    });
+      municipalities.push(municipality)
+    })
     return municipalities.map((municipality) => {
       return (
         <option key={municipality.code} value={municipality.code}>
           {municipality.name}
         </option>
-      );
-    });
-  };
+      )
+    })
+  }
 
   const createTownOptions = () => {
     return towns.map((town) => {
@@ -104,23 +104,23 @@ export default function ViolationForm() {
         <option id={town.code} key={town.code} value={town.id}>
           {town.name}
         </option>
-      );
-    });
-  };
+      )
+    })
+  }
 
   const getTownById = (id) => {
-    console.log('here');
-    const town = towns.filter((town) => town.id == id);
-    console.log(town);
-    return town;
-  };
+    console.log('here')
+    const town = towns.filter((town) => town.id == id)
+    console.log(town)
+    return town
+  }
 
   const getCityRegions = () => {
-    console.log('Here 2');
-    const city_regions = [];
+    console.log('Here 2')
+    const city_regions = []
     getTownById(selectedTown)[0].cityRegions.forEach((city_region) => {
-      city_regions.push(city_region);
-    });
+      city_regions.push(city_region)
+    })
     return city_regions.map((city_region) => {
       return (
         <option
@@ -130,17 +130,17 @@ export default function ViolationForm() {
         >
           {city_region.name}
         </option>
-      );
-    });
-  };
+      )
+    })
+  }
 
   const onSubmit = (data) => {
-    const town = data.municipality == 46 ? 68134 : data.town;
+    const town = data.municipality == 46 ? 68134 : data.town
     const body = {
       description: data.description,
       town: Number(town),
-    };
-    data.section ? (body['section'] = data.section) : body;
+    }
+    data.section ? (body['section'] = data.section) : body
     axios
       .post(`${api_endpoint}/violations`, body, {
         headers: {
@@ -148,8 +148,8 @@ export default function ViolationForm() {
         },
       })
       .then((res) => console.log(res.data))
-      .catch((err) => console.log(err));
-  };
+      .catch((err) => console.log(err))
+  }
 
   return (
     <CommentFormStyle onSubmit={handleSubmit(onSubmit)}>
@@ -354,5 +354,5 @@ export default function ViolationForm() {
         <button type="submit">Изпрати сигнал</button>
       </div>
     </CommentFormStyle>
-  );
+  )
 }

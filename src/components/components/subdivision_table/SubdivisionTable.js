@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 
-import ReactTooltip from 'react-tooltip';
-import SubdivisionTableRow from './SubdivisionTableRow';
-import { mapNodeType } from '../../ResultUnit';
+import ReactTooltip from 'react-tooltip'
+import SubdivisionTableRow from './SubdivisionTableRow'
+import { mapNodeType } from '../../ResultUnit'
 
-import { useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom'
 
-import styled from 'styled-components';
-import { generateDisplayParties } from '../bulgaria_map/generateRegionData';
+import styled from 'styled-components'
+import { generateDisplayParties } from '../bulgaria_map/generateRegionData'
 import {
   sortTableDistribution,
   sortTableVoters,
   sortTableTurnout,
   sortTableViolations,
-} from './sortSubdivisionTable';
+} from './sortSubdivisionTable'
 
 const StyledTooltip = styled(ReactTooltip)`
   background-color: white !important;
@@ -22,7 +22,7 @@ const StyledTooltip = styled(ReactTooltip)`
   border: none;
   padding: 0;
   margin: 0;
-`;
+`
 
 export const SubdivisionTableDiv = styled.table`
   width: 100%;
@@ -63,7 +63,7 @@ export const SubdivisionTableDiv = styled.table`
         }
     `
       : null}
-`;
+`
 
 const SubdivisionTableControls = styled.div`
   text-align: left;
@@ -93,7 +93,7 @@ const SubdivisionTableControls = styled.div`
         }
     `
       : null}
-`;
+`
 
 const SubdivisionControlsParty = styled.div`
   text-align: left;
@@ -123,81 +123,81 @@ const SubdivisionControlsParty = styled.div`
         font-size: 12px;
     `
       : null}
-`;
+`
 
 export default (props) => {
-  const { unit } = useParams();
-  const [depthMode, setDepthMode] = useState('showAll');
+  const { unit } = useParams()
+  const [depthMode, setDepthMode] = useState('showAll')
   const [mode, setMode] = useState(
     props.resultsAvailable ? 'distribution' : 'violations'
-  );
-  const [singleParty, setSingleParty] = useState('');
+  )
+  const [singleParty, setSingleParty] = useState('')
 
   useEffect(() => {
-    ReactTooltip.rebuild();
-  }, [mode]);
+    ReactTooltip.rebuild()
+  }, [mode])
   useEffect(() => {
-    ReactTooltip.rebuild();
-  }, [singleParty]);
+    ReactTooltip.rebuild()
+  }, [singleParty])
   useEffect(() => {
-    ReactTooltip.rebuild();
-  }, [depthMode]);
+    ReactTooltip.rebuild()
+  }, [depthMode])
   useEffect(() => {
-    ReactTooltip.rebuild();
-    setMode(getSelectedMode());
-  }, [props?.selectedMode]);
+    ReactTooltip.rebuild()
+    setMode(getSelectedMode())
+  }, [props?.selectedMode])
 
   const getSelectedMode = () => {
-    const mode = props?.selectedMode;
+    const mode = props?.selectedMode
     switch (mode) {
       case 'violations':
       case 'voters':
       case 'turnout':
-        return mode;
+        return mode
       default:
-        'distribution';
+        'distribution'
     }
-  };
+  }
   const calculateMaxDepth = () => {
-    let topNode = props.subdivisions[0];
-    if (!topNode.nodes) return 1;
-    let middleNode = topNode.nodes[0];
-    if (!middleNode.nodes) return 2;
-    else return 3;
-  };
+    let topNode = props.subdivisions[0]
+    if (!topNode.nodes) return 1
+    let middleNode = topNode.nodes[0]
+    if (!middleNode.nodes) return 2
+    else return 3
+  }
 
   const getTopNodeType = () => {
-    return props.subdivisions[0].type;
-  };
+    return props.subdivisions[0].type
+  }
 
   const getMiddleNodeType = () => {
-    let topNode = props.subdivisions[0];
-    if (!topNode.nodes) return null;
-    return topNode.nodes[0].type;
-  };
+    let topNode = props.subdivisions[0]
+    if (!topNode.nodes) return null
+    return topNode.nodes[0].type
+  }
 
   const getBottomNodeType = () => {
-    let topNode = props.subdivisions[0];
-    if (!topNode.nodes) return null;
-    let middleNode = topNode.nodes[0];
-    if (!middleNode.nodes) return null;
-    return middleNode.nodes[0].type;
-  };
+    let topNode = props.subdivisions[0]
+    if (!topNode.nodes) return null
+    let middleNode = topNode.nodes[0]
+    if (!middleNode.nodes) return null
+    return middleNode.nodes[0].type
+  }
 
-  const maxDepth = calculateMaxDepth();
+  const maxDepth = calculateMaxDepth()
 
   const sorted = (subdivisions) => {
     switch (mode) {
       case 'distribution':
-        return sortTableDistribution(subdivisions, singleParty);
+        return sortTableDistribution(subdivisions, singleParty)
       case 'voters':
-        return sortTableVoters(subdivisions);
+        return sortTableVoters(subdivisions)
       case 'turnout':
-        return sortTableTurnout(subdivisions);
+        return sortTableTurnout(subdivisions)
       case 'violations':
-        return sortTableViolations(subdivisions);
+        return sortTableViolations(subdivisions)
     }
-  };
+  }
 
   const renderAll = (subdivisions, curDepth) => {
     const type =
@@ -211,17 +211,17 @@ export default (props) => {
         ? curDepth === 2
           ? 'top'
           : 'bottom'
-        : 'bottom';
+        : 'bottom'
 
     return sorted(subdivisions)?.map((subdivision) => [
       renderSubdivision(subdivision, type),
       curDepth <= 1 ? null : renderAll(subdivision.nodes, curDepth - 1),
-    ]);
-  };
+    ])
+  }
 
   const renderSubdivisions = (subdivisions) => {
-    return sorted(subdivisions)?.map(renderSubdivision);
-  };
+    return sorted(subdivisions)?.map(renderSubdivision)
+  }
 
   const renderSubdivision = (subdivision, type) => {
     return (
@@ -235,32 +235,32 @@ export default (props) => {
         embed={props.embed}
         type={type}
       />
-    );
-  };
+    )
+  }
 
   const getTopNodes = () => {
-    return [...props.subdivisions];
-  };
+    return [...props.subdivisions]
+  }
 
   const getMiddleNodes = () => {
-    const nodes = [];
+    const nodes = []
     props.subdivisions.forEach((node) =>
       node.nodes.forEach((node) => nodes.push(node))
-    );
-    return nodes;
-  };
+    )
+    return nodes
+  }
 
   const getBottomNodes = () => {
-    const nodes = [];
+    const nodes = []
     props.subdivisions.forEach((node) => {
       node.nodes.forEach((node) => {
         node.nodes.forEach((node) => {
-          nodes.push(node);
-        });
-      });
-    });
-    return nodes;
-  };
+          nodes.push(node)
+        })
+      })
+    })
+    return nodes
+  }
 
   const { displayParties } = generateDisplayParties(
     props.parties,
@@ -269,7 +269,7 @@ export default (props) => {
     null,
     null,
     '0'
-  );
+  )
 
   return (
     <div>
@@ -341,7 +341,7 @@ export default (props) => {
                     className={mode === 'turnout' ? 'selected' : ''}
                     onClick={() => {
                       //if(maxDepth != 1 && depthMode === 'showAll') setDepthMode('showBottomNodes');
-                      setMode('turnout');
+                      setMode('turnout')
                     }}
                   >
                     Активност
@@ -350,7 +350,7 @@ export default (props) => {
                   <button
                     className={mode === 'violations' ? 'selected' : ''}
                     onClick={() => {
-                      setMode('violations');
+                      setMode('violations')
                     }}
                   >
                     Сигнали
@@ -360,7 +360,7 @@ export default (props) => {
                     className={mode === 'voters' ? 'selected' : ''}
                     onClick={() => {
                       //if(maxDepth != 1 && depthMode === 'showAll') setDepthMode('showBottomNodes');
-                      setMode('voters');
+                      setMode('voters')
                     }}
                   >
                     Избиратели
@@ -375,7 +375,7 @@ export default (props) => {
                   <button
                     className={singleParty === '' ? 'selected' : ''}
                     onClick={() => {
-                      setSingleParty('');
+                      setSingleParty('')
                     }}
                   >
                     {' '}
@@ -388,7 +388,7 @@ export default (props) => {
                       className={singleParty === party.number ? 'selected' : ''}
                       onClick={() => {
                         //if(maxDepth != 1 && depthMode === 'showAll') setDepthMode('showBottomNodes');
-                        setSingleParty(party.number);
+                        setSingleParty(party.number)
                       }}
                     >
                       {party.displayName}
@@ -414,5 +414,5 @@ export default (props) => {
         </tbody>
       </SubdivisionTableDiv>
     </div>
-  );
-};
+  )
+}

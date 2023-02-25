@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
-import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { slide as Menu } from 'react-burger-menu';
+import { Link } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBars } from '@fortawesome/free-solid-svg-icons'
+import { slide as Menu } from 'react-burger-menu'
 
-import styled from 'styled-components';
+import styled from 'styled-components'
 
-const MOBILE_WIDTH = 952;
+const MOBILE_WIDTH = 952
 
 export const Wrapper = styled.div`
   max-width: 1000px;
   margin: 0 auto;
-`;
+`
 
 const HeaderCompensator = styled.div`
   height: 60px;
-`;
+`
 
 const HeaderStyle = styled.header`
   height: 60px;
@@ -27,11 +27,11 @@ const HeaderStyle = styled.header`
   background-color: #38decb;
   padding: 10px;
   box-sizing: border-box;
-`;
+`
 
 const LogoImage = styled.img`
   height: 40px;
-`;
+`
 
 const Navigation = styled.nav`
   float: right;
@@ -66,7 +66,7 @@ const Navigation = styled.nav`
   @media only screen and (max-width: ${MOBILE_WIDTH}px) {
     display: none;
   }
-`;
+`
 
 const MobileMenuButton = styled.button`
   float: right;
@@ -79,7 +79,7 @@ const MobileMenuButton = styled.button`
   @media only screen and (max-width: ${MOBILE_WIDTH}px) {
     display: block;
   }
-`;
+`
 
 const MobileNavigation = styled.div`
   display: none;
@@ -95,7 +95,7 @@ const MobileNavigation = styled.div`
   .bm-burger-button {
     display: none;
   }
-`;
+`
 
 const MobileNavMenu = styled.div`
   background-color: #20a898;
@@ -112,10 +112,10 @@ const MobileNavMenu = styled.div`
     font-weight: bold;
     padding: 10px 0;
   }
-`;
+`
 
 export default (props) => {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false)
 
   return [
     <HeaderCompensator />,
@@ -141,7 +141,7 @@ export default (props) => {
         right
         isOpen={menuOpen}
         onStateChange={(state) => {
-          if (state.isOpen !== menuOpen) setMenuOpen(state.isOpen);
+          if (state.isOpen !== menuOpen) setMenuOpen(state.isOpen)
         }}
       >
         <MobileNavMenu>
@@ -172,5 +172,5 @@ export default (props) => {
         </MobileNavMenu>
       </Menu>
     </MobileNavigation>,
-  ];
-};
+  ]
+}

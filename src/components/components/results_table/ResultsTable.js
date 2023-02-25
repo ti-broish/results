@@ -1,6 +1,6 @@
-import React from 'react';
+import React from 'react'
 
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 const ResultsTableDiv = styled.table`
   width: 100%;
@@ -70,14 +70,14 @@ const ResultsTableDiv = styled.table`
         }
     `
       : null}
-`;
+`
 
-import ResultsTableRow from './ResultsTableRow';
-import { generateDisplayParties } from '../bulgaria_map/generateRegionData';
+import ResultsTableRow from './ResultsTableRow'
+import { generateDisplayParties } from '../bulgaria_map/generateRegionData'
 
 export default (props) => {
   if (props.results.length === 0) {
-      return null;
+    return null
   }
 
   const { displayParties, displayPartiesTotal } = generateDisplayParties(
@@ -86,17 +86,17 @@ export default (props) => {
     11,
     null,
     '0'
-  );
+  )
 
-  let thresholdPlaced = false;
+  let thresholdPlaced = false
 
   return (
     <>
       <ResultsTableDiv embed={props.embed}>
         <tbody>
           {displayParties.map((party, index) => {
-            const percentage = party.validVotes / props.totalValid;
-            const barPercent = party.validVotes / displayParties[0].validVotes;
+            const percentage = party.validVotes / props.totalValid
+            const barPercent = party.validVotes / displayParties[0].validVotes
             return (
               percentage < 0.04 && !thresholdPlaced && props.showThreshold ? (
                 <tr key={index} className="threshold-row">
@@ -116,7 +116,7 @@ export default (props) => {
                   barPercent={barPercent}
                 />
               )
-            );
+            )
           })}
           <ResultsTableRow
             party={{
@@ -136,5 +136,5 @@ export default (props) => {
         </tbody>
       </ResultsTableDiv>
     </>
-  );
-};
+  )
+}

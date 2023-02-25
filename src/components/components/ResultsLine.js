@@ -1,22 +1,22 @@
-import React, { useRef } from 'react';
+import React, { useRef } from 'react'
 
-import { formatCount, formatPercentage } from '../Util';
+import { formatCount, formatPercentage } from '../Util'
 
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 const LegendItem = styled.div`
   display: inline-block;
   vertical-align: top;
   margin: 0 6px;
   color: #bbb;
-`;
+`
 
 const LegendItemColor = styled.div`
   width: 10px;
   height: 10px;
   display: inline-block;
   margin: 2px;
-`;
+`
 
 const ResultLineSegment = styled.div`
   display: inline-block;
@@ -39,27 +39,27 @@ const ResultLineSegment = styled.div`
   &:hover {
     box-shadow: 0px 0px 3px #000;
   }
-`;
+`
 
-import handleViewport from 'react-in-viewport';
-import { generateDisplayParties } from './bulgaria_map/generateRegionData';
+import handleViewport from 'react-in-viewport'
+import { generateDisplayParties } from './bulgaria_map/generateRegionData'
 
 export default handleViewport((props) => {
-  const { inViewport, forwardedRef } = props;
-  const alreadyLoaded = useRef(false);
-  if (inViewport) alreadyLoaded.current = true;
-  const shouldLoad = inViewport || alreadyLoaded.current;
+  const { inViewport, forwardedRef } = props
+  const alreadyLoaded = useRef(false)
+  if (inViewport) alreadyLoaded.current = true
+  const shouldLoad = inViewport || alreadyLoaded.current
 
-  const results = props.results ? props.results : [];
+  const results = props.results ? props.results : []
 
-  const partyCount = props.parties.length;
+  const partyCount = props.parties.length
   const { displayParties, displayPartiesTotal } = generateDisplayParties(
     props.parties,
     results,
     partyCount,
     props.firstParty,
     '0'
-  );
+  )
 
   const generateTooltip = (
     color,
@@ -104,8 +104,8 @@ export default handleViewport((props) => {
                 </tbody>
                 </table>
             </div>
-        `;
-  };
+        `
+  }
 
   return (
     <div className="results-line" ref={forwardedRef}>
@@ -123,7 +123,7 @@ export default handleViewport((props) => {
       ) : (
         [
           displayParties.map((party, i) => {
-            const percentage = party.validVotes / props.totalValid;
+            const percentage = party.validVotes / props.totalValid
             return (
               <ResultLineSegment
                 key={i}
@@ -145,7 +145,7 @@ export default handleViewport((props) => {
                 )}
                 data-for={`subdivisionTableTooltip`}
               />
-            );
+            )
           }),
           <ResultLineSegment
             key={7}
@@ -181,5 +181,5 @@ export default handleViewport((props) => {
         </div>
       )}
     </div>
-  );
-});
+  )
+})

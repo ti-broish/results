@@ -1,16 +1,16 @@
-import React from 'react';
+import React from 'react'
 
-import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 
-import Election from './Election';
+import Election from './Election'
 
-import styled from 'styled-components';
-import Embed from './Embed';
+import styled from 'styled-components'
+import Embed from './Embed'
 
 export const Wrapper = styled.div`
   max-width: 900px;
   margin: 20px auto 50px auto;
-`;
+`
 
 const GlobalCSS = styled.div`
   font-family: 'Montserrat', sans-serif;
@@ -28,10 +28,10 @@ const GlobalCSS = styled.div`
     outline: none;
     -moz-outline-style: none;
   }
-`;
+`
 
 export default (props) => {
-  const publicURL = process.env.PUBLIC_URL ? process.env.PUBLIC_URL : '/';
+  const publicURL = process.env.PUBLIC_URL ? process.env.PUBLIC_URL : '/'
 
   return (
     <GlobalCSS>
@@ -43,5 +43,5 @@ export default (props) => {
         </Switch>
       </BrowserRouter>
     </GlobalCSS>
-  );
-};
+  )
+}

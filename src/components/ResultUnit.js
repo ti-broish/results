@@ -1,65 +1,65 @@
-import React, { useEffect } from 'react';
+import React, { useEffect } from 'react'
 
-import { useParams, useHistory } from 'react-router-dom';
-import Aggregation from './units/Aggregation';
-import Section from './units/Section';
+import { useParams, useHistory } from 'react-router-dom'
+import Aggregation from './units/Aggregation'
+import Section from './units/Section'
 
 export const mapNodeType = (nodesType) => {
   switch (nodesType) {
     case 'election':
-      return '';
+      return ''
     case 'electionRegion':
-      return 'Избирателен район';
+      return 'Избирателен район'
     case 'municipality':
-      return 'Община';
+      return 'Община'
     case 'town':
-      return 'Нас. място';
+      return 'Нас. място'
     case 'address':
-      return 'Адрес';
+      return 'Адрес'
     case 'section':
-      return 'Секция';
+      return 'Секция'
     case 'district':
-      return 'Район';
+      return 'Район'
     case 'country':
-      return 'Държава';
+      return 'Държава'
     default:
-      return 'Подразделение';
+      return 'Подразделение'
   }
-};
+}
 
 export const mapNodesType = (nodesType) => {
   switch (nodesType) {
     case 'electionRegions':
-      return 'Избирателни райони';
+      return 'Избирателни райони'
     case 'municipalities':
-      return 'Общини';
+      return 'Общини'
     case 'towns':
-      return 'Населени места';
+      return 'Населени места'
     case 'addresses':
-      return 'Адреси';
+      return 'Адреси'
     case 'sections':
-      return 'Секции';
+      return 'Секции'
     case 'districts':
-      return 'Райони';
+      return 'Райони'
     case 'countries':
-      return 'Държави';
+      return 'Държави'
     default:
-      return 'Подразделения';
+      return 'Подразделения'
   }
-};
+}
 
 export default (props) => {
-  const { unit } = useParams();
-  const history = useHistory();
+  const { unit } = useParams()
+  const history = useHistory()
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    window.scrollTo(0, 0)
+  }, [])
 
   const returnToMain = () => {
-    history.push('/');
-    return null;
-  };
+    history.push('/')
+    return null
+  }
 
   return (
     <>
@@ -71,5 +71,5 @@ export default (props) => {
         returnToMain()
       )}
     </>
-  );
-};
+  )
+}

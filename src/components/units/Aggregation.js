@@ -1,25 +1,25 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect } from 'react'
 
-import Helmet from 'react-helmet';
+import Helmet from 'react-helmet'
 
-import { useParams, useHistory } from 'react-router-dom';
-import axios from 'axios';
+import { useParams, useHistory } from 'react-router-dom'
+import axios from 'axios'
 
-import { ElectionContext } from '../Election';
-import ResultsTable from '../components/results_table/ResultsTable';
-import SubdivisionTable from '../components/subdivision_table/SubdivisionTable';
-import BulgariaMap from '../components/bulgaria_map/BulgariaMap';
-import LoadingScreen from '../layout/LoadingScreen';
-import Crumbs from '../components/Crumbs';
+import { ElectionContext } from '../Election'
+import ResultsTable from '../components/results_table/ResultsTable'
+import SubdivisionTable from '../components/subdivision_table/SubdivisionTable'
+import BulgariaMap from '../components/bulgaria_map/BulgariaMap'
+import LoadingScreen from '../layout/LoadingScreen'
+import Crumbs from '../components/Crumbs'
 
-import { mapNodeType, mapNodesType } from '../ResultUnit';
-import ViolationFeeds from '../ViolationFeeds';
-import Videos from '../Videos';
+import { mapNodeType, mapNodesType } from '../ResultUnit'
+import ViolationFeeds from '../ViolationFeeds'
+import Videos from '../Videos'
 
 export const aggregateData = (data) => {
   if (data.nodes) {
     for (const node of data.nodes) {
-      aggregateData(node);
+      aggregateData(node)
     }
   }
 
@@ -32,45 +32,45 @@ export const aggregateData = (data) => {
       validVotes: 0,
       violationsCount: 0,
       voters: 0,
-    };
+    }
 
     if (data.nodes) {
       for (const node of data.nodes) {
-        data.stats.invalidVotes += node.stats.invalidVotes;
-        data.stats.sectionsCount += node.stats.sectionsCount;
-        data.stats.sectionsWithProtocols += node.stats.sectionsWithProtocols;
-        data.stats.sectionsWithResults += node.stats.sectionsWithResults;
-        data.stats.validVotes += node.stats.validVotes;
-        data.stats.violationsCount += node.stats.violationsCount;
-        data.stats.voters += node.stats.voters;
-        data.stats.processedViolations += node.stats.processedViolations;
+        data.stats.invalidVotes += node.stats.invalidVotes
+        data.stats.sectionsCount += node.stats.sectionsCount
+        data.stats.sectionsWithProtocols += node.stats.sectionsWithProtocols
+        data.stats.sectionsWithResults += node.stats.sectionsWithResults
+        data.stats.validVotes += node.stats.validVotes
+        data.stats.violationsCount += node.stats.violationsCount
+        data.stats.voters += node.stats.voters
+        data.stats.processedViolations += node.stats.processedViolations
       }
     }
   }
 
   if ((!data.results || data.results.length === 0) && data.nodes) {
-    const partyResults = {};
+    const partyResults = {}
 
     for (const node of data.nodes) {
       for (let i = 0; i < node.results.length; i += 2) {
-        if (!partyResults[node.results[i]]) partyResults[node.results[i]] = 0;
-        partyResults[node.results[i]] += node.results[i + 1];
+        if (!partyResults[node.results[i]]) partyResults[node.results[i]] = 0
+        partyResults[node.results[i]] += node.results[i + 1]
       }
     }
 
-    data.results = [];
+    data.results = []
     Object.keys(partyResults).forEach((key) => {
-      data.results.push(key);
-      data.results.push(partyResults[key]);
-    });
+      data.results.push(key)
+      data.results.push(partyResults[key])
+    })
   }
 
-  return data;
-};
+  return data
+}
 
 const fakeResults = (deviation, voters, parties) => {
-  const results = [];
-  let turnout = Math.random() * 0.1 - 0.05 + 0.6;
+  const results = []
+  let turnout = Math.random() * 0.1 - 0.05 + 0.6
 
   let partyAverages = {
     0: 0.1,
@@ -84,25 +84,25 @@ const fakeResults = (deviation, voters, parties) => {
     24: 0.02,
     28: 0.25,
     29: 0.1,
-  };
-
-  let votesSum = 0;
-
-  parties.forEach((party) => {
-    results.push(party.id);
-    const multiplier = 1 - deviation + deviation * 2 * Math.random();
-    const votes = multiplier * partyAverages[party.id] * voters * turnout;
-    results.push(Math.floor(votes));
-    votesSum += Math.floor(votes);
-  });
-
-  if (votesSum > voters * turnout) {
-    turnout += (votesSum - voters * turnout) / voters;
-    turnout *= 1 + 0.05 * Math.random();
   }
 
-  return { results, voters, turnout };
-};
+  let votesSum = 0
+
+  parties.forEach((party) => {
+    results.push(party.id)
+    const multiplier = 1 - deviation + deviation * 2 * Math.random()
+    const votes = multiplier * partyAverages[party.id] * voters * turnout
+    results.push(Math.floor(votes))
+    votesSum += Math.floor(votes)
+  })
+
+  if (votesSum > voters * turnout) {
+    turnout += (votesSum - voters * turnout) / voters
+    turnout *= 1 + 0.05 * Math.random()
+  }
+
+  return { results, voters, turnout }
+}
 
 export const populateWithFakeResults = (data, parties) => {
   if (data.stats) {
@@ -111,53 +111,53 @@ export const populateWithFakeResults = (data, parties) => {
         ? 0.15
         : data.type === 'electionRegion'
         ? 0.4
-        : 0.15;
+        : 0.15
     const { results, voters, turnout } = fakeResults(
       deviation,
       10000 + 10000 * Math.random(),
       parties
-    );
-    data.results = results;
-    data.stats.voters = voters;
-    data.stats.validVotes = voters * turnout;
+    )
+    data.results = results
+    data.stats.voters = voters
+    data.stats.validVotes = voters * turnout
     data.stats.violationsCount =
-      Math.random() < 0.3 ? 0 : 10 + 1000 * Math.random();
+      Math.random() < 0.3 ? 0 : 10 + 1000 * Math.random()
   }
   if (data.nodes)
-    data.nodes.forEach((node) => populateWithFakeResults(node, parties));
-  return data;
-};
+    data.nodes.forEach((node) => populateWithFakeResults(node, parties))
+  return data
+}
 
 export default (props) => {
-  const { meta, parties, dataURL } = useContext(ElectionContext);
-  const [data, setData] = useState(null);
-  const [resultsAvailable, setResultsAvailable] = useState(false);
-  const [selectedMode, setSelectedMode] = useState('violations');
-  const { unit } = useParams();
-  const history = useHistory();
+  const { meta, parties, dataURL } = useContext(ElectionContext)
+  const [data, setData] = useState(null)
+  const [resultsAvailable, setResultsAvailable] = useState(false)
+  const [selectedMode, setSelectedMode] = useState('violations')
+  const { unit } = useParams()
+  const history = useHistory()
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    window.scrollTo(0, 0)
+  }, [])
   useEffect(() => {
-    refreshResults();
-  }, [unit]);
+    refreshResults()
+  }, [unit])
 
   const refreshResults = () => {
-    setData(null);
-    setResultsAvailable(false);
+    setData(null)
+    setResultsAvailable(false)
     axios
       .get(`${dataURL}/results/${unit ? unit : 'index'}.json`)
       .then((res) => {
         //res.data = populateWithFakeResults(res.data, parties);
-        setData(res.data);
+        setData(res.data)
         // setResultsAvailable(res.data?.results.length > 0);
       })
       .catch((err) => {
-        console.log(err);
-        if (!data) history.push('/');
-      });
-  };
+        console.log(err)
+        if (!data) history.push('/')
+      })
+  }
 
   return !data ? (
     <LoadingScreen />
@@ -237,5 +237,5 @@ export default (props) => {
         </>
       )}
     </>
-  );
-};
+  )
+}
