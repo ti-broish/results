@@ -11,6 +11,7 @@
     "build-staging": "NODE_OPTIONS=--openssl-legacy-provider webpack --env PUBLIC_URL=/results/parl20210404apitest DATA_URL=https://d1tapi.dabulgaria.bg --config webpack/build.config.js",
     "serve": "NODE_OPTIONS=--openssl-legacy-provider webpack serve --env DATA_URL=https://api.tibroish.bg --config webpack/serve.config.js",
     "serve-staging": "NODE_OPTIONS=--openssl-legacy-provider webpack serve --env DATA_URL=https://d1tapi.dabulgaria.bg --config webpack/serve.config.js",
+    "serve-local": "NODE_OPTIONS=--openssl-legacy-provider webpack serve --env DATA_URL=http://localhost:4000 --config webpack/serve.config.js",
     "lint": "prettier -w '**/*.{js,json}'",
     "lint:ci": "prettier --check '**/*.{js,json}'",
     "prepare": "husky install"
@@ -21,6 +22,7 @@
     "@babel/core": "^7.13.8",
     "@babel/preset-env": "^7.13.9",
     "@babel/preset-react": "^7.12.13",
+    "@babel/runtime": "^7.21.0",
     "@emotion/react": "^11.10.6",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-brands-svg-icons": "^5.15.4",
@@ -60,7 +62,8 @@
   "devDependencies": {
     "husky": "^8.0.0",
     "lint-staged": "^13.1.2",
-    "prettier": "2.8.4",
+    "prettier": "^2.8.4",
+    "@babel/plugin-transform-runtime": "^7.21.0",
     "webpack-cli": "^4.10.0",
     "webpack-dev-middleware": "^6.0.1",
     "webpack-dev-server": "^4.11.1"

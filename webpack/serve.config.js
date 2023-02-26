@@ -6,6 +6,7 @@ const baseConfig = require('./base.config.js');
 module.exports = env => {
     return merge(baseConfig(env), {
         mode: 'development',
+        devtool: 'eval-source-map',
         devServer: {
             devMiddleware: {
                 publicPath: '/',

@@ -20,7 +20,7 @@ import Violations from './Violations'
 import Videos from './Videos'
 
 import styled from 'styled-components'
-import ViolationForm from './ViolationForm'
+import { ViolationForm } from './ViolationForm'
 
 const NavigationTabsBackground = styled.div`
   background-color: #ddd;
