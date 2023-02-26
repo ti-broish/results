@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Това е разделът за визуализация на резултати, от публичният сайт на ТиБроиш.",
   "engines": {
-    "node": "^16 || ^17 || ^18",
-    "npm": "^7 || ^8 || ^9"
+    "node": "^18",
+    "npm": "^9"
   },
   "scripts": {
     "build": "webpack --env PUBLIC_URL=/results/parliament-2021-04-04 DATA_URL=https://api.tibroish.bg --config webpack/build.config.js",
