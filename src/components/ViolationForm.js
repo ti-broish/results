@@ -1,8 +1,8 @@
 import { useForm, FormProvider } from 'react-hook-form'
 import styled from 'styled-components'
 import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import SectionSelector from './SectionSelector'
+import api from '../utils/api'
+import { SectionSelector } from './sectionSelector/SectionSelector'
 
 const CommentFormStyle = styled.form`
   width: 100%;
@@ -49,83 +49,22 @@ const CommentFormStyle = styled.form`
   }
 `
 
-export default function ViolationForm() {
+export const ViolationForm = () => {
   const methods = useForm()
   const {
     formState: { errors },
     formState,
-    formState: { isSubmitSuccessful },
+    register,
     reset,
-    getValues,
   } = methods
-  const [electionRegions, setElectionRegions] = useState([])
-  const [countries, setCountries] = useState([])
-  const [selectedForeignCountry, setSelectedForeignCountry] = useState('')
-  const [selectedElectionRegion, setSelectedElectionRegion] = useState('')
-  const [selectedMunicipality, setSelectedMunicipality] = useState('')
-  const [selectedCountry, setSelectedCountry] = useState('')
-  const [selectedTown, setSelectedTown] = useState(0)
-  const [selectedCityRegion, setSelectedCityRegion] = useState('')
-  const [towns, setTowns] = useState([])
-  const [municipalities, setMunicipalities] = useState([])
   const [message, setMessage] = useState('')
-
-  const api_endpoint = process.env.DATA_URL
-
-  useEffect(() => {
-    setSelectedCountry(methods.getValues('countryField'))
-    axios
-      .get(`${api_endpoint}/election_regions`)
-      .then((res) => setElectionRegions(res.data))
-  }, [])
-
-  useEffect(() => {
-    if (selectedCountry == 'Bulgaria') {
-      axios
-        .get(`${api_endpoint}/election_regions`)
-        .then((res) => setElectionRegions(res.data))
-    } else if (selectedCountry == 'Foreign') {
-      axios
-        .get(`${api_endpoint}/countries`)
-        .then((res) => setCountries(res.data))
-    }
-  }, [selectedCountry])
-
-  useEffect(() => {
-    if (selectedForeignCountry) {
-      axios
-        .get(`${api_endpoint}/towns?country=${selectedForeignCountry}`)
-        .then((res) => setTowns(res.data))
-        .catch((err) => console.log(err))
-    }
-  }, [selectedForeignCountry])
-
-  useEffect(() => {
-    console.log('here')
-    if (selectedElectionRegion != '') {
-      console.log('if election region')
-      getMunicipalities(selectedElectionRegion)
-    }
-    if (selectedElectionRegion != '' && selectedMunicipality != '') {
-      console.log('if both')
-      const countryCode = selectedCountry == 'Bulgaria' ? '00' : null
-      axios
-        .get(
-          `${api_endpoint}/towns?country=${countryCode}&election_region=${selectedElectionRegion}&municipality=${selectedMunicipality}`
-        )
-        .then((res) => {
-          setTowns(res.data)
-        })
-        .catch((err) => console.log(err))
-    }
-  }, [selectedElectionRegion, selectedMunicipality])
 
   useEffect(() => {
     if (formState.isSubmitSuccessful) {
       reset({
-        countryField: '',
+        isAbroad: '',
         electionRegion: '',
-        foreignCountries: '',
+        country: '',
         municipality: '',
         town: '',
         city_region: '',
@@ -138,319 +77,30 @@ export default function ViolationForm() {
     }
   }, [formState, reset])
 
-  const getElectionRegions = () => {
-    return electionRegions.map((election_region) => {
-      return (
-        <option key={election_region.code} value={election_region.code}>
-          {election_region.code + ' ' + election_region.name}
-        </option>
-      )
-    })
-  }
-
-  const getMunicipalities = (selectedElectionRegion) => {
-    const filteredRegions = electionRegions.filter(
-      (electionRegion) => electionRegion.code == selectedElectionRegion
-    )
-    const municipalities = []
-    filteredRegions[0].municipalities.forEach((municipality) => {
-      municipalities.push(municipality)
-    })
-
-    setMunicipalities(municipalities)
-  }
-
-  const createMunicipalityOptions = () => {
-    return municipalities.map((municipality) => {
-      return (
-        <option key={municipality.code} value={municipality.code}>
-          {municipality.name}
-        </option>
-      )
-    })
-  }
-
-  const createTownOptions = () => {
-    return towns.map((town) => {
-      return (
-        <option id={town.code} key={town.code} value={town.id}>
-          {town.name}
-        </option>
-      )
-    })
-  }
-
-  const createCountriesOptions = () => {
-    return countries
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .map((country) => {
-        return (
-          <option id={country.code} key={country.code} value={country.code}>
-            {country.name}
-          </option>
-        )
-      })
-  }
-
-  const getTownById = (id) => {
-    const town = towns.filter((town) => town.id == id)
-    return town
-  }
-
-  const getCityRegions = () => {
-    const city_regions = []
-    getTownById(selectedTown)[0].cityRegions.forEach((city_region) => {
-      city_regions.push(city_region)
-    })
-    return city_regions.map((city_region) => {
-      return (
-        <option
-          id={city_region.code}
-          key={city_region.code}
-          value={city_region.code}
-        >
-          {city_region.name}
-        </option>
-      )
-    })
-  }
-
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     const body = {
       description: data.description,
-      town: Number(data.town),
+      town: parseInt(data.town, 10),
     }
     data.section ? (body['section'] = data.section) : body
-    axios
-      .post(`${api_endpoint}/violations`, body, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      })
-      .then((res) => {
-        console.log(res.data)
-        setMessage('Сигналът ви беше изпратен успешно!')
-      })
-      .catch((err) => {
-        console.log(err)
-        setMessage('Сигналът ви не беше изпратен!')
-      })
+    try {
+      void (await api.post('violations', body))
+      setMessage('Сигналът ви беше изпратен успешно!')
+    } catch (_) {
+      setMessage('Сигналът ви не беше изпратен!')
+    }
   }
 
   return (
     <FormProvider {...methods}>
       <CommentFormStyle onSubmit={methods.handleSubmit(onSubmit)}>
-        <div className="form-control">
-          <label>Секция в:</label>
-          <div>
-            <input
-              type="radio"
-              id="fieldBg"
-              value="Bulgaria"
-              name="countryField"
-              {...methods.register('countryField', { required: false })}
-              onChange={(e) => {
-                setSelectedCountry(e.target.value)
-                setSelectedTown(0)
-                setTowns([])
-                methods.resetField('town')
-                methods.resetField('section')
-                methods.resetField('foreignCountries')
-              }}
-              defaultChecked
-            />
-            <label className="radioLabel" htmlFor="fieldBg">
-              България
-            </label>
-            <input
-              type="radio"
-              id="fieldForeign"
-              value="Foreign"
-              name="countryField"
-              {...methods.register('countryField', { required: false })}
-              onChange={(e) => {
-                setSelectedCountry(e.target.value)
-                setSelectedElectionRegion('')
-                setSelectedTown(0)
-                setTowns([])
-                methods.resetField('electionRegion')
-                methods.resetField('municipality')
-                methods.resetField('town')
-                methods.resetField('city_region')
-                methods.resetField('section')
-              }}
-            />
-            <label className="radioLabel" htmlFor="fieldForeign">
-              Чужбина
-            </label>
-          </div>
-        </div>
-        <div>
-          {selectedCountry == 'Bulgaria' ? (
-            <div>
-              <div>
-                <label className="inputLabel">МИР</label>
-              </div>
-              <div>
-                <select
-                  className="form-control"
-                  name="electionRegion"
-                  {...methods.register('electionRegion', { required: true })}
-                  onChange={(e) => {
-                    setSelectedElectionRegion(e.target.value)
-                    setSelectedMunicipality('')
-                    setSelectedTown(0)
-                    setTowns([])
-                    methods.resetField('municipality')
-                    methods.resetField('town')
-                    methods.resetField('section')
-                    methods.resetField('city_region')
-                  }}
-                >
-                  <option value="" disabled selected="selected">
-                    -- МИР --
-                  </option>
-                  {getElectionRegions()}
-                </select>
-                {errors.electionRegion &&
-                  errors.electionRegion.type === 'required' && (
-                    <p className="errorMsg">Полето е задължително.</p>
-                  )}
-              </div>
-              <div>
-                <label className="inputLabel">Община</label>
-              </div>
-              <div>
-                <select
-                  className="form-control"
-                  name="municipality"
-                  {...methods.register('municipality', { required: true })}
-                  onChange={(e) => {
-                    setSelectedMunicipality(e.target.value)
-                    setSelectedTown(0)
-                    methods.resetField('town')
-                    methods.resetField('section')
-                  }}
-                  disabled={selectedElectionRegion ? false : true}
-                >
-                  <>
-                    <option value="" disabled selected="selected">
-                      -- Община --
-                    </option>
-                    {selectedElectionRegion
-                      ? createMunicipalityOptions()
-                      : null}
-                  </>
-                </select>
-                {errors.municipality &&
-                  errors.municipality.type === 'required' && (
-                    <p className="errorMsg">Полето е задължително.</p>
-                  )}
-              </div>
-            </div>
-          ) : (
-            <div>
-              {' '}
-              <div>
-                <label className="inputLabel">Държави</label>
-                <select
-                  className="form-control"
-                  name="foreignCountries"
-                  {...methods.register('foreignCountries', { required: true })}
-                  onChange={(e) => {
-                    setSelectedForeignCountry(e.target.value)
-                    setSelectedTown(0)
-                    methods.resetField('town')
-                    methods.resetField('section')
-                  }}
-                >
-                  <>
-                    <option value="" disabled selected="selected">
-                      -- Държави --
-                    </option>
-                    {countries.length != 0 ? createCountriesOptions() : null}
-                  </>
-                </select>
-                {errors.foreignCountries &&
-                  errors.foreignCountries.type === 'required' && (
-                    <p className="errorMsg">Полето е задължително.</p>
-                  )}
-              </div>
-            </div>
-          )}
-        </div>
-        <div>
-          <label className="inputLabel">Град/село</label>
-        </div>
-        <div>
-          <select
-            className="form-control"
-            name="town"
-            {...methods.register('town', { required: true })}
-            onChange={(e) => {
-              setSelectedTown(e.target.value)
-              methods.resetField('section')
-            }}
-            disabled={towns.length != 0 ? false : true}
-          >
-            <>
-              <option value="" disabled selected="selected">
-                -- Град --
-              </option>
-              {towns.length != 0 ? createTownOptions() : null}
-            </>
-          </select>
-          {errors.town && errors.town.type === 'required' && (
-            <p className="errorMsg">Полето е задължително.</p>
-          )}
-        </div>
-        <div>
-          {selectedTown && !selectedForeignCountry ? (
-            getTownById(selectedTown)[0].cityRegions.length != 0 ? (
-              <div>
-                <label className="inputLabel">Район</label>
-                <select
-                  className="form-control"
-                  name="city_region"
-                  {...methods.register('city_region', { required: true })}
-                  onChange={(e) => setSelectedCityRegion(e.target.value)}
-                >
-                  <option value="" disabled selected="selected">
-                    -- Райони --
-                  </option>
-                  {getCityRegions()}
-                </select>
-              </div>
-            ) : (
-              <div></div>
-            )
-          ) : (
-            <div></div>
-          )}
-        </div>
-        <div>
-          {selectedTown || selectedCityRegion ? (
-            <div>
-              <label className="inputLabel">Номер на секция</label>
-
-              <SectionSelector
-                name="section"
-                town={selectedTown}
-                city_region={
-                  selectedCityRegion != '' ? selectedCityRegion : undefined
-                }
-              />
-            </div>
-          ) : (
-            <div></div>
-          )}
-        </div>
+        <SectionSelector errors={errors} register={register} />
         <div className="form-control">
           <label className="inputLabel">Име</label>
           <input
             type="text"
             name="name"
-            {...methods.register('name', { required: true })}
+            {...register('name', { required: true })}
           />
           {errors.name && errors.name.type === 'required' && (
             <p className="errorMsg">Полето е задължително.</p>
@@ -461,7 +111,7 @@ export default function ViolationForm() {
           <input
             type="text"
             name="email"
-            {...methods.register('email', {
+            {...register('email', {
               required: true,
               pattern: {
                 value:
@@ -482,7 +132,7 @@ export default function ViolationForm() {
           <input
             type="text"
             name="phoneNumber"
-            {...methods.register('phoneNumber', { required: true })}
+            {...register('phoneNumber', { required: true })}
           />
           {errors.phoneNumber && errors.phoneNumber.type === 'required' && (
             <p className="errorMsg">Полето е задължително.</p>
@@ -493,7 +143,7 @@ export default function ViolationForm() {
           <textarea
             id="violationText"
             name="description"
-            {...methods.register('description', { required: true })}
+            {...register('description', { required: true })}
           />
           {errors.violationText && errors.violationText.type === 'required' && (
             <p className="errorMsg">Полето е задължително.</p>
@@ -503,7 +153,7 @@ export default function ViolationForm() {
           <label></label>
           <button type="submit">Изпрати сигнал</button>
         </div>
-        {message != '' ? (
+        {message && (
           <div>
             {!message.includes('не') ? (
               <p className="successfulMessage">{message}</p>
@@ -511,8 +161,6 @@ export default function ViolationForm() {
               <p className="unsuccessfulMessage">{message}</p>
             )}
           </div>
-        ) : (
-          <div></div>
         )}
       </CommentFormStyle>
     </FormProvider>
