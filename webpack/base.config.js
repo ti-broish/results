@@ -22,7 +22,8 @@ module.exports = env => {
                 exclude: /node_modules/,
                 options: {
                     plugins: [
-                        "@loadable/babel-plugin"
+                        "@loadable/babel-plugin",
+                        "@babel/transform-runtime"
                     ],
                     presets: [
                         "@babel/preset-env",
