@@ -13,8 +13,6 @@ import { formatDateTime } from './Util'
 
 import styled from 'styled-components'
 
-import { Fade } from 'react-reveal'
-
 const Wrapper = styled.div`
   height: 35vh;
   border-collapse: collapse;

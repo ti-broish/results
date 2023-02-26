@@ -6,6 +6,7 @@ webpack
 
 # Ignore build files
 build
+dist
 
 # Ignore data generation scripts
 data

@@ -3,16 +3,17 @@
   "version": "1.0.0",
   "description": "Това е разделът за визуализация на резултати, от публичният сайт на ТиБроиш.",
   "engines": {
-    "node": "^16 || ^17 || ^18",
-    "npm": "^7 || ^8 || ^9"
+    "node": "^18",
+    "npm": "^9"
   },
   "scripts": {
-    "build": "webpack --env PUBLIC_URL=/results/parliament-2021-04-04 DATA_URL=https://api.tibroish.bg --config webpack/build.config.js",
-    "build-staging": "webpack --env PUBLIC_URL=/results/parl20210404apitest DATA_URL=https://d1tapi.dabulgaria.bg --config webpack/build.config.js",
-    "serve": "webpack serve --env DATA_URL=https://api.tibroish.bg --config webpack/serve.config.js",
-    "serve-staging": "webpack serve --env DATA_URL=https://d1tapi.dabulgaria.bg --config webpack/serve.config.js",
-    "serve-local": "webpack serve --env DATA_URL=http://localhost:4000 --env PUBLIC_URL=http://localhost:3000/ --config webpack/serve.config.js",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider webpack --env PUBLIC_URL=/results/parliament-2021-04-04 DATA_URL=https://api.tibroish.bg --config webpack/build.config.js",
+    "build-staging": "NODE_OPTIONS=--openssl-legacy-provider webpack --env PUBLIC_URL=/results/parl20210404apitest DATA_URL=https://d1tapi.dabulgaria.bg --config webpack/build.config.js",
+    "serve": "NODE_OPTIONS=--openssl-legacy-provider webpack serve --env DATA_URL=https://api.tibroish.bg --config webpack/serve.config.js",
+    "serve-staging": "NODE_OPTIONS=--openssl-legacy-provider webpack serve --env DATA_URL=https://d1tapi.dabulgaria.bg --config webpack/serve.config.js",
+    "serve-local": "NODE_OPTIONS=--openssl-legacy-provider webpack serve --env DATA_URL=http://localhost:4000 --config webpack/serve.config.js",
     "lint": "prettier -w '**/*.{js,json}'",
+    "lint:ci": "prettier --check '**/*.{js,json}'",
     "prepare": "husky install"
   },
   "author": "",
@@ -22,6 +23,7 @@
     "@babel/preset-env": "^7.13.9",
     "@babel/preset-react": "^7.12.13",
     "@babel/runtime": "^7.21.0",
+    "@emotion/react": "^11.10.6",
     "@fortawesome/fontawesome-svg-core": "^1.2.36",
     "@fortawesome/free-brands-svg-icons": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
@@ -40,13 +42,13 @@
     "node-xlsx": "^0.16.1",
     "normalize.css": "^8.0.1",
     "react": "^17.0.1",
+    "react-awesome-reveal": "^4.2.3",
     "react-burger-menu": "^3.0.6",
     "react-dom": "^17.0.1",
     "react-helmet": "^6.1.0",
     "react-hook-form": "^7.43.1",
     "react-image-gallery": "^1.2.7",
     "react-in-viewport": "^1.0.0-alpha.16",
-    "react-reveal": "^1.2.2",
     "react-router-dom": "^5.2.0",
     "react-tooltip": "^4.2.15",
     "requirejs": "^2.3.6",
@@ -58,11 +60,12 @@
     "webpack": "^5.24.3"
   },
   "devDependencies": {
+    "husky": "^8.0.0",
     "lint-staged": "^13.1.2",
     "prettier": "^2.8.4",
     "@babel/plugin-transform-runtime": "^7.21.0",
-    "webpack-cli": "^4.5.0",
-    "webpack-dev-server": "^3.11.2",
-    "husky": "^8.0.0"
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-middleware": "^6.0.1",
+    "webpack-dev-server": "^4.11.1"
   }
 }

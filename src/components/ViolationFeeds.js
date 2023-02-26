@@ -14,7 +14,7 @@ import BulgariaMap from './components/bulgaria_map/BulgariaMap'
 
 import styled from 'styled-components'
 
-import { Fade } from 'react-reveal'
+import { Fade } from 'react-awesome-reveal'
 
 const ViolationFeed = styled.div`
   max-width: 600px;
