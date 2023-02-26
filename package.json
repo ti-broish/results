@@ -10,7 +10,7 @@
     "build": "webpack --env PUBLIC_URL=/results/parliament-2021-04-04 DATA_URL=https://api.tibroish.bg --config webpack/build.config.js",
     "build-staging": "webpack --env PUBLIC_URL=/results/parl20210404apitest DATA_URL=https://d1tapi.dabulgaria.bg --config webpack/build.config.js",
     "serve": "webpack serve --env DATA_URL=https://api.tibroish.bg --config webpack/serve.config.js",
-    "serve-staging": "webpack serve --env DATA_URL=https://d1tapi.dabulgaria.bg --config webpack/serve.config.js",
+    "serve-staging": "NODE_OPTIONS=--openssl-legacy-provider webpack serve --env DATA_URL=https://d1tapi.dabulgaria.bg --config webpack/serve.config.js",
     "lint": "prettier -w '**/*.{js,json}'",
     "prepare": "husky install"
   },
@@ -60,7 +60,8 @@
     "husky": "^8.0.0",
     "lint-staged": "^13.1.2",
     "prettier": "2.8.4",
-    "webpack-cli": "^4.5.0",
-    "webpack-dev-server": "^3.11.2"
+    "webpack-cli": "^4.10.0",
+    "webpack-dev-middleware": "^6.0.1",
+    "webpack-dev-server": "^4.11.1"
   }
 }

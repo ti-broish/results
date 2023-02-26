@@ -7,8 +7,12 @@ module.exports = env => {
     return merge(baseConfig(env), {
         mode: 'development',
         devServer: {
-            publicPath: '/',
-            contentBase: [path.join(__dirname, '../dist')],
+            devMiddleware: {
+                publicPath: '/',
+            },
+            static: {
+                directory: path.join(__dirname, '../dist'),
+            },
             historyApiFallback: true,
             port: 3000,
         },
