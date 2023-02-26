@@ -372,8 +372,8 @@ export default handleViewport((props) => {
 
                   const dynamicStyle = (key) => {
                     const style = {
-                      fill: shouldLoad ? color : "#888",
-                      transition: "fill 1.5s ease"
+                      fill: shouldLoad ? color : '#888',
+                      transition: 'fill 1.5s ease',
                     }
                     // This is specifically added for the globe path only
                     // otherwise we cannot click on the continents as
