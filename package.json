@@ -7,9 +7,9 @@
     "npm": "^9"
   },
   "scripts": {
-    "build": "webpack --env PUBLIC_URL=/results/parliament-2021-04-04 DATA_URL=https://api.tibroish.bg --config webpack/build.config.js",
-    "build-staging": "webpack --env PUBLIC_URL=/results/parl20210404apitest DATA_URL=https://d1tapi.dabulgaria.bg --config webpack/build.config.js",
-    "serve": "webpack serve --env DATA_URL=https://api.tibroish.bg --config webpack/serve.config.js",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider webpack --env PUBLIC_URL=/results/parliament-2021-04-04 DATA_URL=https://api.tibroish.bg --config webpack/build.config.js",
+    "build-staging": "NODE_OPTIONS=--openssl-legacy-provider webpack --env PUBLIC_URL=/results/parl20210404apitest DATA_URL=https://d1tapi.dabulgaria.bg --config webpack/build.config.js",
+    "serve": "NODE_OPTIONS=--openssl-legacy-provider webpack serve --env DATA_URL=https://api.tibroish.bg --config webpack/serve.config.js",
     "serve-staging": "NODE_OPTIONS=--openssl-legacy-provider webpack serve --env DATA_URL=https://d1tapi.dabulgaria.bg --config webpack/serve.config.js",
     "lint": "prettier -w '**/*.{js,json}'",
     "lint:ci": "prettier --check '**/*.{js,json}'",
