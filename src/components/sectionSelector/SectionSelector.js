@@ -112,7 +112,6 @@ export const SectionSelector = ({ register, errors }) => {
     cityRegions.length === 1 && setCityRegion(cityRegions[0].code)
   }, [town])
   useEffect(async () => {
-    console.log('town', town, 'towns', towns)
     setSections([])
     const townHasCityRegions = !!(
       town && towns.find((x) => x.id === town)?.cityRegions?.length > 0
