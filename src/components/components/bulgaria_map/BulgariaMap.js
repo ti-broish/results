@@ -370,14 +370,24 @@ export default handleViewport((props) => {
                     (region) => region.id.toString() === key.toString()
                   );
 
+                  const dynamicStyle = (key) => {
+                    const style = {
+                      fill: shouldLoad ? color : "#888",
+                      transition: "fill 1.5s ease"
+                    }
+                    // This is specifically added for the globe path only
+                    // otherwise we cannot click on the continents as
+                    // the SVG is bound by the vectors, rarger than full box
+                    if (key === '32') style.pointerEvents = 'bounding-box'
+
+                    return style
+                  }
+
                   return (
                     <path
                       key={index}
                       onClick={clickHandler}
-                      style={{
-                        fill: shouldLoad ? color : '#888',
-                        transition: 'fill 1.5s ease',
-                      }}
+                      style={dynamicStyle(key)}
                       d={regionPaths[key].path}
                       data-tip={generateTooltipContent(region, tooltipData)}
                       data-for={'bulgariaMapTooltip'}
