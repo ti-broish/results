@@ -11,6 +11,7 @@
     "build-staging": "webpack --env PUBLIC_URL=/results/parl20210404apitest DATA_URL=https://d1tapi.dabulgaria.bg --config webpack/build.config.js",
     "serve": "webpack serve --env DATA_URL=https://api.tibroish.bg --config webpack/serve.config.js",
     "serve-staging": "webpack serve --env DATA_URL=https://d1tapi.dabulgaria.bg --config webpack/serve.config.js",
+    "serve-local": "webpack serve --env DATA_URL=http://localhost:4000 --env PUBLIC_URL=http://localhost:3000/ --config webpack/serve.config.js",
     "lint": "prettier -w '**/*.{js,json}'",
     "prepare": "husky install"
   },
