@@ -12,6 +12,7 @@
     "serve": "webpack serve --env DATA_URL=https://api.tibroish.bg --config webpack/serve.config.js",
     "serve-staging": "NODE_OPTIONS=--openssl-legacy-provider webpack serve --env DATA_URL=https://d1tapi.dabulgaria.bg --config webpack/serve.config.js",
     "lint": "prettier -w '**/*.{js,json}'",
+    "lint:ci": "prettier --check '**/*.{js,json}'",
     "prepare": "husky install"
   },
   "author": "",
