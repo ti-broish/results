@@ -1,9 +1,9 @@
-import React, { useState, useContext, useRef, useEffect } from 'react';
+import React, { useState, useContext, useRef, useEffect } from 'react'
 
-import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom'
 
-import styled from 'styled-components';
-import ReactTooltip from 'react-tooltip';
+import styled from 'styled-components'
+import ReactTooltip from 'react-tooltip'
 
 const StyledTooltip = styled(ReactTooltip)`
   background-color: white !important;
@@ -12,7 +12,7 @@ const StyledTooltip = styled(ReactTooltip)`
   border: none;
   padding: 0;
   margin: 0;
-`;
+`
 
 const BulgariaMapStyle = styled.div`
   path {
@@ -29,7 +29,7 @@ const BulgariaMapStyle = styled.div`
   path.no-data:hover {
     cursor: not-allowed;
   }
-`;
+`
 
 const MapControls = styled.div`
   text-align: center;
@@ -60,7 +60,7 @@ const MapControls = styled.div`
       : `
     
     `}
-`;
+`
 
 const MapControlsSingleParty = styled.div`
   text-align: center;
@@ -94,9 +94,9 @@ const MapControlsSingleParty = styled.div`
       : `
     
     `}
-`;
+`
 
-import regionPaths from './regionPaths';
+import regionPaths from './regionPaths'
 
 import {
   generateTooltipDominant,
@@ -107,7 +107,7 @@ import {
   generateTooltipCoverage,
   generateTooltipProcessed,
   generateTooltipViolations,
-} from './generateTooltipContent';
+} from './generateTooltipContent'
 
 import {
   generateDisplayParties,
@@ -118,24 +118,24 @@ import {
   generateRegionDataCoverage,
   generateRegionDataProcessed,
   generateRegionDataViolations,
-} from './generateRegionData';
+} from './generateRegionData'
 
-import handleViewport from 'react-in-viewport';
+import handleViewport from 'react-in-viewport'
 
 export default handleViewport((props) => {
-  const { inViewport, forwardedRef } = props;
-  const alreadyLoaded = useRef(false);
-  if (inViewport) alreadyLoaded.current = true;
-  const shouldLoad = inViewport || alreadyLoaded.current;
+  const { inViewport, forwardedRef } = props
+  const alreadyLoaded = useRef(false)
+  if (inViewport) alreadyLoaded.current = true
+  const shouldLoad = inViewport || alreadyLoaded.current
 
-  const history = useHistory();
+  const history = useHistory()
   const [mode, setMode] = useState(
     props.showViolationsOnly || !props.resultsAvailable
       ? 'violations'
       : 'dominant'
-  );
-  const [singleParty, setSingleParty] = useState('');
-  const [singlePartyMode, setSinglePartyMode] = useState('percentage');
+  )
+  const [singleParty, setSingleParty] = useState('')
+  const [singlePartyMode, setSinglePartyMode] = useState('percentage')
 
   const generateRegionData = () => {
     switch (mode) {
@@ -144,7 +144,7 @@ export default handleViewport((props) => {
           props.regions,
           props.parties,
           props.results
-        );
+        )
       case 'single-party':
         return generateRegionDataSingleParty(
           singleParty,
@@ -152,57 +152,57 @@ export default handleViewport((props) => {
           props.regions,
           props.parties,
           props.results
-        );
+        )
       case 'turnout':
         return generateRegionDataTurnout(
           props.regions,
           props.parties,
           props.results
-        );
+        )
       case 'voters':
-        return generateRegionDataVoters(props.regions);
+        return generateRegionDataVoters(props.regions)
       case 'coverage':
-        return generateRegionDataCoverage(props.regions);
+        return generateRegionDataCoverage(props.regions)
       case 'sectionsWithResults':
         return generateRegionDataProcessed(
           props.regions,
           props.parties,
           props.results
-        );
+        )
       case 'violations':
         return generateRegionDataViolations(
           props.regions,
           props.parties,
           props.results
-        );
+        )
       default:
-        return generateRegionDataViolations(props.regions);
+        return generateRegionDataViolations(props.regions)
     }
-  };
+  }
 
   const generateTooltipContent = (region, tooltipData) => {
-    if (!tooltipData) return generateNullTooltip(region);
+    if (!tooltipData) return generateNullTooltip(region)
     switch (mode) {
       case 'dominant':
-        return generateTooltipDominant(region, tooltipData);
+        return generateTooltipDominant(region, tooltipData)
       case 'single-party':
-        return generateTooltipSingleParty(singleParty, region, tooltipData);
+        return generateTooltipSingleParty(singleParty, region, tooltipData)
       case 'turnout':
-        return generateTooltipTurnout(region, tooltipData);
+        return generateTooltipTurnout(region, tooltipData)
       case 'voters':
-        return generateTooltipVoters(region, tooltipData);
+        return generateTooltipVoters(region, tooltipData)
       case 'coverage':
-        return generateTooltipCoverage(region, tooltipData);
+        return generateTooltipCoverage(region, tooltipData)
       case 'sectionsWithResults':
-        return generateTooltipProcessed(region, tooltipData);
+        return generateTooltipProcessed(region, tooltipData)
       case 'violations':
-        return generateTooltipViolations(region, tooltipData);
+        return generateTooltipViolations(region, tooltipData)
       default:
-        return generateTooltipViolations(region, tooltipData);
+        return generateTooltipViolations(region, tooltipData)
     }
-  };
+  }
 
-  const regionData = generateRegionData();
+  const regionData = generateRegionData()
 
   const { displayParties, displayPartiesTotal } = generateDisplayParties(
     props.parties,
@@ -211,14 +211,14 @@ export default handleViewport((props) => {
     null,
     null,
     '0'
-  );
+  )
 
   const setSelectedMode = (mode) => {
-    setMode(mode);
-    props.selectedMode(mode);
-  };
+    setMode(mode)
+    props.selectedMode(mode)
+  }
 
-  const publicURL = process.env.PUBLIC_URL ? process.env.PUBLIC_URL : '/';
+  const publicURL = process.env.PUBLIC_URL ? process.env.PUBLIC_URL : '/'
 
   return (
     <>
@@ -342,33 +342,33 @@ export default handleViewport((props) => {
             >
               <g id="Plan_x0020_1" transform="translate(-1740.6745,-1498.0644)">
                 {Object.keys(regionPaths)?.map((key, index) => {
-                  const regionDataForKey = regionData[key];
+                  const regionDataForKey = regionData[key]
                   const tooltipData = regionDataForKey
                     ? regionDataForKey.tooltipData
-                    : null;
+                    : null
                   const regionHasNoViolations =
-                    tooltipData?.publishedViolations == 0;
+                    tooltipData?.publishedViolations == 0
 
                   const clickHandler = () => {
                     if (props.linkToMainSite) {
-                      const newHref = `https://tibroish.bg${publicURL}/${key}`;
-                      top.location.href = newHref;
+                      const newHref = `https://tibroish.bg${publicURL}/${key}`
+                      top.location.href = newHref
                     } else if (props.embed) {
-                      history.push(`/embed/mini-results/${key}`);
+                      history.push(`/embed/mini-results/${key}`)
                     } else if (props.showViolationsOnly) {
                       if (regionHasNoViolations) {
-                        return;
+                        return
                       }
-                      props.loadViolationsForRegion(key);
-                    } else history.push(`/${key}`);
-                  };
+                      props.loadViolationsForRegion(key)
+                    } else history.push(`/${key}`)
+                  }
                   const color = regionDataForKey
                     ? regionDataForKey.color
-                    : '#eee';
+                    : '#eee'
 
                   const region = props.regions.find(
                     (region) => region.id.toString() === key.toString()
-                  );
+                  )
 
                   const dynamicStyle = (key) => {
                     const style = {
@@ -392,7 +392,7 @@ export default handleViewport((props) => {
                       data-tip={generateTooltipContent(region, tooltipData)}
                       data-for={'bulgariaMapTooltip'}
                     />
-                  );
+                  )
                 })}
               </g>
             </svg>
@@ -400,5 +400,5 @@ export default handleViewport((props) => {
         </>
       )}
     </>
-  );
-});
+  )
+})

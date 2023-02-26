@@ -1,26 +1,26 @@
-import React, { useEffect, useContext, useState } from 'react';
-import Helmet from 'react-helmet';
+import React, { useEffect, useContext, useState } from 'react'
+import Helmet from 'react-helmet'
 
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios'
+import { useParams } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
-import { Link } from 'react-router-dom';
-import LoadingScreen from './layout/LoadingScreen';
-import { ElectionContext } from './Election';
-import { formatDateTime } from './Util';
-import BulgariaMap from './components/bulgaria_map/BulgariaMap';
+import { Link } from 'react-router-dom'
+import LoadingScreen from './layout/LoadingScreen'
+import { ElectionContext } from './Election'
+import { formatDateTime } from './Util'
+import BulgariaMap from './components/bulgaria_map/BulgariaMap'
 
-import styled from 'styled-components';
+import styled from 'styled-components'
 
-import { Fade } from 'react-reveal';
+import { Fade } from 'react-reveal'
 
 const ViolationFeed = styled.div`
   max-width: 600px;
   margin: 0 auto;
   padding: 10px;
-`;
+`
 
 const Violation = styled.div`
   border: 1px solid #ccc;
@@ -35,7 +35,7 @@ const Violation = styled.div`
   p {
     margin: 5px 0;
   }
-`;
+`
 
 const ShowMoreButton = styled.button`
   cursor: pointer;
@@ -67,7 +67,7 @@ const ShowMoreButton = styled.button`
     border-top: 5px solid white;
     border-bottom: 0px;
   }
-`;
+`
 
 const BackButton = styled.button`
   color: black;
@@ -85,102 +85,101 @@ const BackButton = styled.button`
         font-size: 9px;
     `
       : null}
-`;
+`
 
 const PointyArrowBase = styled.span`
   display: inline-block;
   height: 30px;
   box-sizing: border-box;
   vertical-align: top;
-`;
+`
 
 const PointyArrowMiddle = styled(PointyArrowBase)`
   background-color: #eee;
   padding: 6px;
-`;
+`
 
-const defaultRegionName = 'Последни сигнали';
+const defaultRegionName = 'Последни сигнали'
 
 export default (props) => {
-  const { meta, parties, dataURL } = useContext(ElectionContext);
-  const [resultsData, setResultsData] = useState(null);
+  const { meta, parties, dataURL } = useContext(ElectionContext)
+  const [resultsData, setResultsData] = useState(null)
 
   const [violationData, setViolationData] = useState({
     items: null,
     moreToLoad: true,
-  });
-  const [regionName, setRegionName] = useState(defaultRegionName);
-  const [loading, setLoading] = useState(false);
-  const [showBackButton, setShowBackButton] = useState(false);
+  })
+  const [regionName, setRegionName] = useState(defaultRegionName)
+  const [loading, setLoading] = useState(false)
+  const [showBackButton, setShowBackButton] = useState(false)
 
-  const { unit } = useParams();
+  const { unit } = useParams()
 
   useEffect(() => {
     axios
       .get(`${dataURL}/results/${unit ? unit : 'index'}.json`)
       .then((res) => {
         //res.data = populateWithFakeResults(res.data, parties);
-        setResultsData(res.data);
+        setResultsData(res.data)
       })
       .catch((err) => {
-        console.log(err);
-        if (!data) history.push('/');
-      });
+        console.log(err)
+        if (!data) history.push('/')
+      })
 
-    getViolationFeeds();
-  }, []);
+    getViolationFeeds()
+  }, [])
 
   const getMoreViolations = () => {
-    setLoading(true);
-    const lastViolation =
-      violationData.items[violationData.items.length - 1].id;
+    setLoading(true)
+    const lastViolation = violationData.items[violationData.items.length - 1].id
     axios
       .get(`${dataURL}/violations/feed?after=${lastViolation}`)
       .then((res) => {
         setViolationData({
           items: [...violationData.items, ...res.data],
           moreToLoad: res.data.length >= 50,
-        });
-        setLoading(false);
-      });
-  };
+        })
+        setLoading(false)
+      })
+  }
 
   const loadViolationsForRegion = (segment) => {
-    const region = resultsData.nodes.find((node) => node.segment == segment);
+    const region = resultsData.nodes.find((node) => node.segment == segment)
 
-    setLoading(true);
-    setRegionName(region ? region.name : '');
-    setShowBackButton(true);
-    getViolationFeeds(segment);
-  };
+    setLoading(true)
+    setRegionName(region ? region.name : '')
+    setShowBackButton(true)
+    getViolationFeeds(segment)
+  }
 
   const getViolationFeeds = (segment) => {
-    const baseUrl = `${dataURL}/violations/feed`;
-    const url = segment ? baseUrl + `/${segment}` : baseUrl;
+    const baseUrl = `${dataURL}/violations/feed`
+    const url = segment ? baseUrl + `/${segment}` : baseUrl
     axios.get(url).then((res) => {
       setViolationData({
         items: res.data,
         moreToLoad: res.data.length >= 50,
-      });
-      setLoading(false);
-    });
-  };
+      })
+      setLoading(false)
+    })
+  }
 
   const resetViolations = () => {
-    setShowBackButton(false);
-    setRegionName(defaultRegionName);
-    getViolationFeeds();
-  };
+    setShowBackButton(false)
+    setRegionName(defaultRegionName)
+    getViolationFeeds()
+  }
 
   const renderViolation = (violation, i) => {
-    let electionRegion = null;
+    let electionRegion = null
     if (violation.section) {
-      electionRegion = violation.section.electionRegion;
+      electionRegion = violation.section.electionRegion
     } else if (
       violation.town.electionRegions &&
       violation.town.electionRegions.length === 1
     ) {
-      electionRegion = violation.town.electionRegions[0];
+      electionRegion = violation.town.electionRegions[0]
     }
     //if section show
 
@@ -228,8 +227,8 @@ export default (props) => {
           <p style={{ margin: '20px 0 20px 0' }}>{violation.publishedText}</p>
         </Violation>
       </Fade>
-    );
-  };
+    )
+  }
 
   return !resultsData || !violationData?.items ? (
     <LoadingScreen />
@@ -268,5 +267,5 @@ export default (props) => {
         </ViolationFeed>
       )}
     </>
-  );
-};
+  )
+}

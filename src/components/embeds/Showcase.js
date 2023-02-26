@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'
 
-import Header from '../layout/Header';
-import Footer from '../layout/Footer';
+import Header from '../layout/Header'
+import Footer from '../layout/Footer'
 
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 const EmbedPage = styled.div`
   hr {
     border-top: none;
     border-bottom: 1px solid #ddd;
   }
-`;
+`
 
-import { Wrapper } from '../App';
-import EmbedCodeDisplay from './EmbedCodeDisplay';
+import { Wrapper } from '../App'
+import EmbedCodeDisplay from './EmbedCodeDisplay'
 
 export default (props) => {
-  const [selectedRegion, setSelectedRegion] = useState('01');
+  const [selectedRegion, setSelectedRegion] = useState('01')
 
   const regions = [
     { num: '01', name: 'Благоевград' },
@@ -51,13 +51,13 @@ export default (props) => {
     { num: '30', name: 'Шумен' },
     { num: '31', name: 'Ямбол' },
     { num: '32', name: 'Извън Страната' },
-  ];
+  ]
 
   const dropdownClicked = (e) => {
-    setSelectedRegion(e.target.value);
-  };
+    setSelectedRegion(e.target.value)
+  }
 
-  const publicURL = process.env.PUBLIC_URL ? process.env.PUBLIC_URL : '';
+  const publicURL = process.env.PUBLIC_URL ? process.env.PUBLIC_URL : ''
   return (
     <div>
       <Header title={'Вграждане'} />
@@ -143,5 +143,5 @@ export default (props) => {
       </Wrapper>
       <Footer />
     </div>
-  );
-};
+  )
+}

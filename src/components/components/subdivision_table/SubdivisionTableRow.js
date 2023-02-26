@@ -1,18 +1,18 @@
-import React, { useRef } from 'react';
+import React, { useRef } from 'react'
 
-import { Link } from 'react-router-dom';
-import handleViewport from 'react-in-viewport';
+import { Link } from 'react-router-dom'
+import handleViewport from 'react-in-viewport'
 
-import ResultsLine from '../ResultsLine.js';
-import SimpleLine from '../SimpleLine';
+import ResultsLine from '../ResultsLine.js'
+import SimpleLine from '../SimpleLine'
 
-import styled from 'styled-components';
-import { mapNodesType } from '../../ResultUnit.js';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
+import styled from 'styled-components'
+import { mapNodesType } from '../../ResultUnit.js'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
 
-import { formatCount } from '../../Util';
-import { rgbGradient } from '../bulgaria_map/generateRegionData.js';
+import { formatCount } from '../../Util'
+import { rgbGradient } from '../bulgaria_map/generateRegionData.js'
 
 const SubdivisionTableRowStyle = styled.tr`
   ${(props) =>
@@ -41,25 +41,25 @@ const SubdivisionTableRowStyle = styled.tr`
 
     `
       : ``}
-`;
+`
 
 export default handleViewport((props) => {
-  const { inViewport, forwardedRef } = props;
-  const alreadyLoaded = useRef(false);
-  if (inViewport) alreadyLoaded.current = true;
-  const shouldLoad = inViewport || alreadyLoaded.current;
+  const { inViewport, forwardedRef } = props
+  const alreadyLoaded = useRef(false)
+  if (inViewport) alreadyLoaded.current = true
+  const shouldLoad = inViewport || alreadyLoaded.current
 
   const renderSimpleLine = () => {
-    let percentage;
-    let tooltipField;
-    let tooltipValue;
+    let percentage
+    let tooltipField
+    let tooltipValue
 
     if (props.mode === 'turnout') {
-      let stats = props.subdivision.stats;
-      percentage = (stats.validVotes + stats.invalidVotes) / stats.voters;
-      tooltipField = 'Активност';
+      let stats = props.subdivision.stats
+      percentage = (stats.validVotes + stats.invalidVotes) / stats.voters
+      tooltipField = 'Активност'
     } else if (props.mode === 'voters') {
-      p;
+      p
     }
 
     return (
@@ -71,8 +71,8 @@ export default handleViewport((props) => {
         embed={props.embed}
         thin
       />
-    );
-  };
+    )
+  }
 
   //console.log(props.subdivision);
 
@@ -90,8 +90,8 @@ export default handleViewport((props) => {
                 </tbody>
                 </table>
             </div>
-        `;
-  };
+        `
+  }
 
   return props.type === 'middle' || props.type === 'top' ? (
     <>
@@ -217,5 +217,5 @@ export default handleViewport((props) => {
         </td>
       </SubdivisionTableRowStyle>
     </>
-  );
-});
+  )
+})

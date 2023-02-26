@@ -1,26 +1,26 @@
-import React, { useEffect, useContext, useState } from 'react';
-import Helmet from 'react-helmet';
+import React, { useEffect, useContext, useState } from 'react'
+import Helmet from 'react-helmet'
 
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios'
+import { useParams } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
-import { Link } from 'react-router-dom';
-import LoadingScreen from './layout/LoadingScreen';
-import { ElectionContext } from './Election';
-import { formatDateTime } from './Util';
-import BulgariaMap from './components/bulgaria_map/BulgariaMap';
+import { Link } from 'react-router-dom'
+import LoadingScreen from './layout/LoadingScreen'
+import { ElectionContext } from './Election'
+import { formatDateTime } from './Util'
+import BulgariaMap from './components/bulgaria_map/BulgariaMap'
 
-import styled from 'styled-components';
+import styled from 'styled-components'
 
-import { Fade } from 'react-reveal';
+import { Fade } from 'react-reveal'
 
 const ViolationFeed = styled.div`
   max-width: 600px;
   margin: 0 auto;
   padding: 10px;
-`;
+`
 
 const Violation = styled.div`
   border: 1px solid #ccc;
@@ -35,7 +35,7 @@ const Violation = styled.div`
   p {
     margin: 5px 0;
   }
-`;
+`
 
 const ShowMoreButton = styled.button`
   cursor: pointer;
@@ -67,75 +67,74 @@ const ShowMoreButton = styled.button`
     border-top: 5px solid white;
     border-bottom: 0px;
   }
-`;
+`
 
-const defaultRegionName = 'Последни сигнали';
+const defaultRegionName = 'Последни сигнали'
 
 export default (props) => {
-  const { meta, parties, dataURL } = useContext(ElectionContext);
+  const { meta, parties, dataURL } = useContext(ElectionContext)
 
   const [violationData, setViolationData] = useState({
     items: null,
     moreToLoad: true,
-  });
-  const [regionName, setRegionName] = useState(defaultRegionName);
-  const [loading, setLoading] = useState(false);
+  })
+  const [regionName, setRegionName] = useState(defaultRegionName)
+  const [loading, setLoading] = useState(false)
 
-  const { unit } = useParams();
+  const { unit } = useParams()
 
   useEffect(() => {
-    getViolationFeeds(props.unit);
-  }, []);
+    getViolationFeeds(props.unit)
+  }, [])
 
   const getMoreViolations = () => {
-    setLoading(true);
-    const lastViolation =
-      violationData.items[violationData.items.length - 1].id;
+    setLoading(true)
+    const lastViolation = violationData.items[violationData.items.length - 1].id
     axios
       .get(`${dataURL}/violations/feed?after=${lastViolation}`)
       .then((res) => {
         setViolationData({
           items: [...violationData.items, ...res.data],
           moreToLoad: res.data.length >= 50,
-        });
-        setLoading(false);
-      });
-  };
+        })
+        setLoading(false)
+      })
+  }
 
   const loadViolationsForRegion = (segment) => {
-    const region = resultsData.nodes.find((node) => node.segment == segment);
+    const region = resultsData.nodes.find((node) => node.segment == segment)
 
-    setLoading(true);
-    setRegionName(region ? region.name : '');
-    getViolationFeeds(segment);
-  };
+    setLoading(true)
+    setRegionName(region ? region.name : '')
+    getViolationFeeds(segment)
+  }
 
   const getViolationFeeds = (segment) => {
-    const baseUrl = `${dataURL}/violations/feed`;
-    const url = segment ? baseUrl + `/${segment}` : baseUrl;
+    const baseUrl = `${dataURL}/violations/feed`
+    const url = segment ? baseUrl + `/${segment}` : baseUrl
     axios.get(url).then((res) => {
       setViolationData({
         items: res.data,
         moreToLoad: res.data.length >= 50,
-      });
-      setLoading(false);
-    });
-  };
+      })
+      setLoading(false)
+    })
+  }
 
   const resetViolations = () => {
-    setRegionName(defaultRegionName);
-    getViolationFeeds();
-  };
+    setRegionName(defaultRegionName)
+    getViolationFeeds()
+  }
 
   const renderViolation = (violation, i) => {
-    let electionRegion = null;
+    let electionRegion = null
     if (violation.section) {
-      electionRegion = violation.section.electionRegion;
+      electionRegion = violation.section.electionRegion
     } else if (
       violation.town.electionRegions &&
       violation.town.electionRegions.length === 1
     ) {
-      electionRegion = violation.town.electionRegions[0];
+      electionRegion = violation.town.electionRegions[0]
     }
     //if section show
 
@@ -183,8 +182,8 @@ export default (props) => {
           <p style={{ margin: '20px 0 20px 0' }}>{violation.publishedText}</p>
         </Violation>
       </Fade>
-    );
-  };
+    )
+  }
 
   return !violationData?.items ? (
     <LoadingScreen />
@@ -205,5 +204,5 @@ export default (props) => {
         <h5>Няма публикувани сигнали</h5>
       )}
     </>
-  );
-};
+  )
+}
