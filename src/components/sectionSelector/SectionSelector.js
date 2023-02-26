@@ -42,7 +42,19 @@ export const SectionSelector = ({ register, errors }) => {
   }, [])
   useEffect(async () => {
     let ignore = false
-    !isAbroad && setCountry(DOMESTIC_COUNTRY_CODE)
+    if (!isAbroad) {
+      setCountry(DOMESTIC_COUNTRY_CODE)
+      setElectionRegion('')
+      setMunicipalities([])
+      setMunicipality('')
+      setTowns([])
+      setTown(0)
+      setCityRegions([])
+      setCityRegion('')
+      setSection('')
+      setSections([])
+    }
+    setCountries([])
     const countries = await fetchData(
       cache,
       isAbroad ? 'countries' : null,
@@ -100,14 +112,15 @@ export const SectionSelector = ({ register, errors }) => {
     cityRegions.length === 1 && setCityRegion(cityRegions[0].code)
   }, [town])
   useEffect(async () => {
-    if (town && towns.find((x) => x.id === town)?.cityRegions && !cityRegion) {
-      setSections([])
-      return
-    }
+    console.log('town', town, 'towns', towns)
+    setSections([])
+    const townHasCityRegions = !!(
+      town && towns.find((x) => x.id === town)?.cityRegions?.length > 0
+    )
     let ignore = false
     const sections = await fetchData(
       cache,
-      town && (cityRegions.length === 0 || cityRegion)
+      town && (!townHasCityRegions || cityRegion)
         ? `sections?town=${town}${
             cityRegion ? `&city_region=${cityRegion}` : ''
           }`
