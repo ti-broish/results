@@ -7,7 +7,7 @@ import {
   generateTooltipCoverage,
   generateTooltipProcessed,
   generateTooltipViolations,
-} from "../generateTooltipContent";
+} from '../generateTooltipContent'
 
 import {
   generateRegionDataDominant,
@@ -17,7 +17,7 @@ import {
   generateRegionDataCoverage,
   generateRegionDataProcessed,
   generateRegionDataViolations,
-} from "../generateRegionData";
+} from '../generateRegionData'
 
 export const generateRegionData = (
   props,
@@ -26,12 +26,12 @@ export const generateRegionData = (
   singlePartyMode,
   sectionsMode
 ) => {
-  const { regions, parties, results } = props;
+  const { regions, parties, results } = props
 
   switch (mode) {
-    case "dominant":
+    case 'dominant':
       return generateRegionDataDominant(regions, parties, results)
-    case "single-party":
+    case 'single-party':
       return generateRegionDataSingleParty(
         singleParty,
         singlePartyMode,
@@ -39,49 +39,49 @@ export const generateRegionData = (
         parties,
         results
       )
-    case "turnout":
+    case 'turnout':
       return generateRegionDataTurnout(regions, parties, results)
-    case "voters":
+    case 'voters':
       return generateRegionDataVoters(regions)
-    case "coverage":
+    case 'coverage':
       return generateRegionDataCoverage(regions)
-    case "sectionsWithResults":
+    case 'sectionsWithResults':
       return generateRegionDataProcessed(
         sectionsMode,
         regions,
         parties,
-        results,
+        results
       )
-    case "violations":
+    case 'violations':
       return generateRegionDataViolations(regions, parties, results)
     default:
       return generateRegionDataViolations(regions)
   }
-};
+}
 
 export const generateTooltipContent = (
-    singleParty,
-    region,
-    tooltipData,
-    mode
-  ) => {
+  singleParty,
+  region,
+  tooltipData,
+  mode
+) => {
   if (!tooltipData) return generateNullTooltip(region)
   switch (mode) {
-    case "dominant":
+    case 'dominant':
       return generateTooltipDominant(region, tooltipData)
-    case "single-party":
+    case 'single-party':
       return generateTooltipSingleParty(singleParty, region, tooltipData)
-    case "turnout":
+    case 'turnout':
       return generateTooltipTurnout(region, tooltipData)
-    case "voters":
+    case 'voters':
       return generateTooltipVoters(region, tooltipData)
-    case "coverage":
+    case 'coverage':
       return generateTooltipCoverage(region, tooltipData)
-    case "sectionsWithResults":
+    case 'sectionsWithResults':
       return generateTooltipProcessed(region, tooltipData)
-    case "violations":
+    case 'violations':
       return generateTooltipViolations(region, tooltipData)
     default:
       return generateTooltipViolations(region, tooltipData)
   }
-};
+}

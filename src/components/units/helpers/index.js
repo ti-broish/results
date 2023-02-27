@@ -37,9 +37,9 @@ const fakeResults = (deviation, voters, parties) => {
 export const populateWithFakeResults = (data, parties) => {
   if (data.stats) {
     const deviation =
-      data.type === "election"
+      data.type === 'election'
         ? 0.15
-        : data.type === "electionRegion"
+        : data.type === 'electionRegion'
         ? 0.4
         : 0.15
     const { results, voters, turnout } = fakeResults(
@@ -47,9 +47,12 @@ export const populateWithFakeResults = (data, parties) => {
       10000 + 10000 * Math.random(),
       parties
     )
-    data.stats.midRisk = Math.floor(Math.random() * 0.1 * data.stats.sectionsCount)
+    data.stats.midRisk = Math.floor(
+      Math.random() * 0.1 * data.stats.sectionsCount
+    )
     const highRisk =
-      Math.floor(Math.random() * 0.1 * data.stats.sectionsCount) - data.stats.midRisk
+      Math.floor(Math.random() * 0.1 * data.stats.sectionsCount) -
+      data.stats.midRisk
     data.stats.highRisk = highRisk > 0 ? highRisk : 0
     data.results = results
     data.stats.voters = voters
