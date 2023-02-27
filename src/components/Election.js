@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react'
 
 import {
   Redirect,
@@ -6,34 +6,34 @@ import {
   Switch,
   useHistory,
   useLocation,
-} from 'react-router-dom';
-import axios from 'axios';
+} from 'react-router-dom'
+import axios from 'axios'
 
-import Header from './layout/Header';
-import Footer from './layout/Footer';
-import LoadingScreen from './layout/LoadingScreen';
+import Header from './layout/Header'
+import Footer from './layout/Footer'
+import LoadingScreen from './layout/LoadingScreen'
 
-import ResultUnit from './ResultUnit.js';
+import ResultUnit from './ResultUnit.js'
 
-import { Wrapper } from './App';
-import Violations from './Violations';
-import Videos from './Videos';
+import { Wrapper } from './App'
+import Violations from './Violations'
+import Videos from './Videos'
 
-import styled from 'styled-components';
-import ViolationForm from './ViolationForm';
+import styled from 'styled-components'
+import { ViolationForm } from './ViolationForm'
 
 const NavigationTabsBackground = styled.div`
   background-color: #ddd;
   width: 100%;
   border-bottom: 1px solid #bbb;
-`;
+`
 
 const NavigationTabs = styled.nav`
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
   padding-top: 10px;
-`;
+`
 
 const NavigationTab = styled.button`
   width: calc(100% / 3);
@@ -69,40 +69,40 @@ const NavigationTab = styled.button`
     color: #aaa;
     background-color: #ccc;
   }
-`;
+`
 
-export const ElectionContext = React.createContext();
+export const ElectionContext = React.createContext()
 
 export default (props) => {
-  const [meta, setMeta] = useState(null);
+  const [meta, setMeta] = useState(null)
 
-  const dataURL = process.env.DATA_URL ? process.env.DATA_URL : '/json';
+  const dataURL = process.env.DATA_URL ? process.env.DATA_URL : '/json'
 
-  const history = useHistory();
-  const location = useLocation();
+  const history = useHistory()
+  const location = useLocation()
 
   useEffect(() => {
     axios.get(`${dataURL}/results/meta.json`).then((res) => {
-      setMeta(res.data);
-    });
-  }, []);
+      setMeta(res.data)
+    })
+  }, [])
 
   const isElectionDayOver = () => {
-    return true;
-    if (!meta) return false;
-    else return Date.now() - new Date(meta.endOfElectionDayTimestamp) > 0;
-  };
+    return true
+    if (!meta) return false
+    else return Date.now() - new Date(meta.endOfElectionDayTimestamp) > 0
+  }
 
   const showAfterElectionDate = (component) => {
-    return isElectionDayOver() ? component : <Redirect to="/violations" />;
-  };
+    return isElectionDayOver() ? component : <Redirect to="/violations" />
+  }
 
   const getLocation = () => {
-    const loc = location.pathname.split('/');
-    if (loc[1] === 'violations') return 'violations';
-    if (loc[1] === 'videos') return 'videos';
-    else return '/';
-  };
+    const loc = location.pathname.split('/')
+    if (loc[1] === 'violations') return 'violations'
+    if (loc[1] === 'videos') return 'videos'
+    else return '/'
+  }
 
   return (
     <ElectionContext.Provider
@@ -130,5 +130,5 @@ export default (props) => {
       </Wrapper>
       <Footer />
     </ElectionContext.Provider>
-  );
-};
+  )
+}

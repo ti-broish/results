@@ -1,13 +1,13 @@
-import React, { useRef,useState, useEffect } from 'react';
+import React, { useRef, useState } from 'react'
 
-import { useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom'
 
-import styled from 'styled-components';
-import ReactTooltip from 'react-tooltip';
-import { generateDisplayParties } from './generateRegionData';
-import { generateRegionData, generateTooltipContent } from './helpers';
-import regionPaths from './regionPaths';
-import handleViewport from 'react-in-viewport';
+import handleViewport from 'react-in-viewport'
+import ReactTooltip from 'react-tooltip'
+import styled from 'styled-components'
+import { generateDisplayParties } from './generateRegionData'
+import { generateRegionData, generateTooltipContent } from './helpers'
+import regionPaths from './regionPaths'
 
 // ----------------------------------------------------------------------------
 // Sub-components
@@ -20,7 +20,7 @@ const StyledTooltip = styled(ReactTooltip)`
   border: none;
   padding: 0;
   margin: 0;
-`;
+`
 
 const BulgariaMapStyle = styled.div`
   path {
@@ -37,7 +37,7 @@ const BulgariaMapStyle = styled.div`
   path.no-data:hover {
     cursor: not-allowed;
   }
-`;
+`
 
 const PrimaryMapControls = styled.div`
   text-align: center;
@@ -58,7 +58,7 @@ const PrimaryMapControls = styled.div`
     }
   }
 
-  ${({embed, homepage}) =>
+  ${({ embed, homepage }) =>
     embed && !homepage
       ? `
         font-size: 10px;
@@ -68,7 +68,7 @@ const PrimaryMapControls = styled.div`
       : `
     
     `}
-`;
+`
 
 const SecondaryMapControls = styled.div`
   text-align: center;
@@ -93,7 +93,7 @@ const SecondaryMapControls = styled.div`
     }
   }
 
-  ${({embed, homepage}) =>
+  ${({ embed, homepage }) =>
     embed && !homepage
       ? `
         font-size: 10px;
@@ -102,25 +102,25 @@ const SecondaryMapControls = styled.div`
       : `
     
     `}
-`;
+`
 
 // ----------------------------------------------------------------------------
 // Component
 // ----------------------------------------------------------------------------
 
 export default handleViewport((props) => {
-  const { inViewport, forwardedRef } = props;
-  const alreadyLoaded = useRef(false);
-  if (inViewport) alreadyLoaded.current = true;
-  const shouldLoad = inViewport || alreadyLoaded.current;
+  const { inViewport, forwardedRef } = props
+  const alreadyLoaded = useRef(false)
+  if (inViewport) alreadyLoaded.current = true
+  const shouldLoad = inViewport || alreadyLoaded.current
 
-  const history = useHistory();
-  const { mode, setMode } = props;
-  const [singleParty, setSingleParty] = useState('');
-  const [singlePartyMode, setSinglePartyMode] = useState('percentage');
+  const history = useHistory()
+  const { mode, setMode } = props
+  const [singleParty, setSingleParty] = useState('')
+  const [singlePartyMode, setSinglePartyMode] = useState('percentage')
   // We can optionally set default dynamically by checking if any sections have
   // already been processed and adding useEffect hook
-  const [sectionsMode, setSectionsMode] = useState('risk');
+  const [sectionsMode, setSectionsMode] = useState('risk')
 
   const regionData = generateRegionData(
     props,
@@ -128,7 +128,7 @@ export default handleViewport((props) => {
     singleParty,
     singlePartyMode,
     sectionsMode
-  );
+  )
 
   const { displayParties, displayPartiesTotal } = generateDisplayParties(
     props.parties,
@@ -137,9 +137,9 @@ export default handleViewport((props) => {
     null,
     null,
     '0'
-  );
+  )
 
-  const publicURL = process.env.PUBLIC_URL ? process.env.PUBLIC_URL : '/';
+  const publicURL = process.env.PUBLIC_URL ? process.env.PUBLIC_URL : '/'
 
   return (
     <>
@@ -196,10 +196,7 @@ export default handleViewport((props) => {
         <>
           {props.mapModesHidden || props.showViolationsOnly ? null : mode ===
             'single-party' ? (
-            <SecondaryMapControls
-              embed={props.embed}
-              homepage={props.homepage}
-            >
+            <SecondaryMapControls embed={props.embed} homepage={props.homepage}>
               {displayParties?.map((party, idx) => (
                 <button
                   key={idx}
@@ -226,21 +223,18 @@ export default handleViewport((props) => {
             </SecondaryMapControls>
           ) : null}
           {props.mapModesHidden || props.showViolationsOnly ? null : mode ===
-            "sectionsWithResults" ? (
-            <SecondaryMapControls
-              embed={props.embed}
-              homepage={props.homepage}
-            >
-              <div style={{ width: "100%" }}>
+            'sectionsWithResults' ? (
+            <SecondaryMapControls embed={props.embed} homepage={props.homepage}>
+              <div style={{ width: '100%' }}>
                 <button
-                  className={sectionsMode === "processed" ? "selected" : ""}
-                  onClick={() => setSectionsMode("processed")}
+                  className={sectionsMode === 'processed' ? 'selected' : ''}
+                  onClick={() => setSectionsMode('processed')}
                 >
                   Обработени
                 </button>
                 <button
-                  className={sectionsMode === "risk" ? "selected" : ""}
-                  onClick={() => setSectionsMode("risk")}
+                  className={sectionsMode === 'risk' ? 'selected' : ''}
+                  onClick={() => setSectionsMode('risk')}
                 >
                   Рискови
                 </button>
@@ -286,42 +280,52 @@ export default handleViewport((props) => {
             >
               <g id="Plan_x0020_1" transform="translate(-1740.6745,-1498.0644)">
                 {Object.keys(regionPaths)?.map((key, index) => {
-                  const regionDataForKey = regionData[key];
+                  const regionDataForKey = regionData[key]
                   const tooltipData = regionDataForKey
                     ? regionDataForKey.tooltipData
-                    : null;
+                    : null
                   const regionHasNoViolations =
-                    tooltipData?.publishedViolations == 0;
+                    tooltipData?.publishedViolations == 0
 
                   const clickHandler = () => {
                     if (props.linkToMainSite) {
-                      const newHref = `https://tibroish.bg${publicURL}/${key}`;
-                      top.location.href = newHref;
+                      const newHref = `https://tibroish.bg${publicURL}/${key}`
+                      top.location.href = newHref
                     } else if (props.embed) {
-                      history.push(`/embed/mini-results/${key}`);
+                      history.push(`/embed/mini-results/${key}`)
                     } else if (props.showViolationsOnly) {
                       if (regionHasNoViolations) {
-                        return;
+                        return
                       }
-                      props.loadViolationsForRegion(key);
-                    } else history.push(`/${key}`);
-                  };
+                      props.loadViolationsForRegion(key)
+                    } else history.push(`/${key}`)
+                  }
                   const color = regionDataForKey
                     ? regionDataForKey.color
-                    : '#eee';
+                    : '#eee'
 
                   const region = props.regions.find(
                     (region) => region.id.toString() === key.toString()
-                  );
+                  )
+
+                  const dynamicStyle = (key) => {
+                    const style = {
+                      fill: shouldLoad ? color : '#888',
+                      transition: 'fill 1.5s ease',
+                    }
+                    // This is specifically added for the globe path only
+                    // otherwise we cannot click on the continents as
+                    // the SVG is bound by the vectors, rarger than full box
+                    if (key === '32') style.pointerEvents = 'bounding-box'
+
+                    return style
+                  }
 
                   return (
                     <path
                       key={index}
                       onClick={clickHandler}
-                      style={{
-                        fill: shouldLoad ? color : '#888',
-                        transition: 'fill 1.5s ease',
-                      }}
+                      style={dynamicStyle(key)}
                       d={regionPaths[key].path}
                       data-tip={generateTooltipContent(
                         singleParty,
@@ -331,7 +335,7 @@ export default handleViewport((props) => {
                       )}
                       data-for={'bulgariaMapTooltip'}
                     />
-                  );
+                  )
                 })}
               </g>
             </svg>
@@ -339,5 +343,5 @@ export default handleViewport((props) => {
         </>
       )}
     </>
-  );
-});
+  )
+})

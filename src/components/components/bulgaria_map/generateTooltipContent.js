@@ -1,4 +1,4 @@
-import { formatCount, formatPercentage } from '../../Util';
+import { formatCount, formatPercentage } from '../../Util'
 
 export const generateNullTooltip = (region) => {
   return `
@@ -8,11 +8,11 @@ export const generateNullTooltip = (region) => {
             <p>Няма данни (все още)</p>
             </table>
         </div>
-    `;
-};
+    `
+}
 
 export const generateTooltipDominant = (region, tooltipData) => {
-  const { displayParties, displayPartiesTotal } = tooltipData;
+  const { displayParties, displayPartiesTotal } = tooltipData
 
   return `
         <div>
@@ -67,8 +67,8 @@ export const generateTooltipDominant = (region, tooltipData) => {
             </tbody>
             </table>
         </div>
-    `;
-};
+    `
+}
 
 export const generateTooltipSingleParty = (
   singleParty,
@@ -82,11 +82,11 @@ export const generateTooltipSingleParty = (
                 <hr style="border-color: #aaa; border-top: none;"/>
                 <p>Моля изберете партия</p>
             </div>
-        `;
+        `
   } else {
     const partyResult = tooltipData.displayParties.find(
       (party) => party.number === singleParty
-    );
+    )
     return `
             <div>
                 <h2 style="margin: 5px;">${region.name}</h2>
@@ -128,9 +128,9 @@ export const generateTooltipSingleParty = (
                 </tbody>
                 </table>
             </div>
-        `;
+        `
   }
-};
+}
 
 export const generateTooltipTurnout = (region, tooltipData) => {
   return `
@@ -156,8 +156,8 @@ export const generateTooltipTurnout = (region, tooltipData) => {
             </tbody>
             </table>
         </div>   
-    `;
-};
+    `
+}
 
 export const generateTooltipVoters = (region, tooltipData) => {
   /**
@@ -202,8 +202,8 @@ export const generateTooltipVoters = (region, tooltipData) => {
             </tbody>
             </table>
         </div>  
-    `;
-};
+    `
+}
 
 export const generateTooltipCoverage = (region, tooltipData) => {
   return `
@@ -240,8 +240,8 @@ export const generateTooltipCoverage = (region, tooltipData) => {
             </tbody>
             </table>
         </div>  
-    `;
-};
+    `
+}
 
 export const generateTooltipProcessed = (region, tooltipData) => {
   /**
@@ -295,7 +295,7 @@ export const generateTooltipProcessed = (region, tooltipData) => {
             </table>
         </div>  
     `
-};
+}
 
 export const generateTooltipViolations = (region, tooltipData) => {
   return `
@@ -338,5 +338,5 @@ export const generateTooltipViolations = (region, tooltipData) => {
             </tbody>
             </table>
         </div>  
-    `;
-};
+    `
+}

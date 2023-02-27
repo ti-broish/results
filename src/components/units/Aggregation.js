@@ -1,26 +1,25 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react'
 
-import Helmet from 'react-helmet';
+import Helmet from 'react-helmet'
 
-import { useParams, useHistory } from 'react-router-dom';
-import axios from 'axios';
+import axios from 'axios'
+import { useHistory, useParams } from 'react-router-dom'
 
-import { ElectionContext } from '../Election';
-import ResultsTable from '../components/results_table/ResultsTable';
-import SubdivisionTable from '../components/subdivision_table/SubdivisionTable';
-import BulgariaMap from '../components/bulgaria_map/BulgariaMap';
-import LoadingScreen from '../layout/LoadingScreen';
-import Crumbs from '../components/Crumbs';
+import BulgariaMap from '../components/bulgaria_map/BulgariaMap'
+import Crumbs from '../components/Crumbs'
+import ResultsTable from '../components/results_table/ResultsTable'
+import SubdivisionTable from '../components/subdivision_table/SubdivisionTable'
+import { ElectionContext } from '../Election'
+import LoadingScreen from '../layout/LoadingScreen'
 
-import { mapNodeType, mapNodesType } from '../ResultUnit';
-import ViolationFeeds from '../ViolationFeeds';
-import Videos from '../Videos';
-import { populateWithFakeResults } from './helpers';
+import { mapNodesType, mapNodeType } from '../ResultUnit'
+import Videos from '../Videos'
+import ViolationFeeds from '../ViolationFeeds'
 
 export const aggregateData = (data) => {
   if (data.nodes) {
     for (const node of data.nodes) {
-      aggregateData(node);
+      aggregateData(node)
     }
   }
 
@@ -33,88 +32,87 @@ export const aggregateData = (data) => {
       validVotes: 0,
       violationsCount: 0,
       voters: 0,
-    };
+    }
 
     if (data.nodes) {
       for (const node of data.nodes) {
-        data.stats.invalidVotes += node.stats.invalidVotes;
-        data.stats.sectionsCount += node.stats.sectionsCount;
-        data.stats.sectionsWithProtocols += node.stats.sectionsWithProtocols;
-        data.stats.sectionsWithResults += node.stats.sectionsWithResults;
-        data.stats.validVotes += node.stats.validVotes;
-        data.stats.violationsCount += node.stats.violationsCount;
-        data.stats.voters += node.stats.voters;
-        data.stats.processedViolations += node.stats.processedViolations;
+        data.stats.invalidVotes += node.stats.invalidVotes
+        data.stats.sectionsCount += node.stats.sectionsCount
+        data.stats.sectionsWithProtocols += node.stats.sectionsWithProtocols
+        data.stats.sectionsWithResults += node.stats.sectionsWithResults
+        data.stats.validVotes += node.stats.validVotes
+        data.stats.violationsCount += node.stats.violationsCount
+        data.stats.voters += node.stats.voters
+        data.stats.processedViolations += node.stats.processedViolations
       }
     }
   }
 
   if ((!data.results || data.results.length === 0) && data.nodes) {
-    const partyResults = {};
+    const partyResults = {}
 
     for (const node of data.nodes) {
       for (let i = 0; i < node.results.length; i += 2) {
-        if (!partyResults[node.results[i]]) partyResults[node.results[i]] = 0;
-        partyResults[node.results[i]] += node.results[i + 1];
+        if (!partyResults[node.results[i]]) partyResults[node.results[i]] = 0
+        partyResults[node.results[i]] += node.results[i + 1]
       }
     }
 
-    data.results = [];
+    data.results = []
     Object.keys(partyResults).forEach((key) => {
-      data.results.push(key);
-      data.results.push(partyResults[key]);
-    });
+      data.results.push(key)
+      data.results.push(partyResults[key])
+    })
   }
 
-  return data;
-};
-
+  return data
+}
 
 export default (props) => {
   const chooseModeBasedOnApiResponse = () => {
     if (!resultsAvailable) {
       if (violationsReported) {
-        return "violations"
+        return 'violations'
       }
-      return "sectionsWithResults"
+      return 'sectionsWithResults'
     }
-    return "dominant"
+    return 'dominant'
   }
 
-  const { meta, parties, dataURL } = useContext(ElectionContext);
-  const [data, setData] = useState(null);
-  const [resultsAvailable, setResultsAvailable] = useState(false);
-  const [selectedMode, setSelectedMode] = useState('violations');
-  const [violationsReported, setViolationsReported] = useState(false);
-  const { unit } = useParams();
-  const history = useHistory();
+  const { meta, parties, dataURL } = useContext(ElectionContext)
+  const [data, setData] = useState(null)
+  const [resultsAvailable, setResultsAvailable] = useState(false)
+  const [selectedMode, setSelectedMode] = useState('violations')
+  const [violationsReported, setViolationsReported] = useState(false)
+  const { unit } = useParams()
+  const history = useHistory()
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
+    window.scrollTo(0, 0)
+  }, [])
   useEffect(() => {
-    refreshResults();
-  }, [unit]);
+    refreshResults()
+  }, [unit])
   useEffect(() => {
-    setSelectedMode(chooseModeBasedOnApiResponse());
-  }, [resultsAvailable, violationsReported]);
+    setSelectedMode(chooseModeBasedOnApiResponse())
+  }, [resultsAvailable, violationsReported])
 
   const refreshResults = () => {
-    setData(null);
-    setResultsAvailable(false);
+    setData(null)
+    setResultsAvailable(false)
     axios
       .get(`${dataURL}/results/${unit ? unit : 'index'}.json`)
       .then((res) => {
-        res.data = populateWithFakeResults(res.data, parties);
-        setData(res.data);
-        setResultsAvailable(res.data?.results.length > 0);
-        setViolationsReported(res.data?.stats.violationsCount > 0);
+        // res.data = populateWithFakeResults(res.data, parties);
+        setData(res.data)
+        setResultsAvailable(res.data?.results.length > 0)
+        setViolationsReported(res.data?.stats.violationsCount > 0)
       })
       .catch((err) => {
-        console.log(err);
-        if (!data) history.push('/');
-      });
-  };
+        console.log(err)
+        if (!data) history.push('/')
+      })
+  }
 
   return !data ? (
     <LoadingScreen />
@@ -123,7 +121,7 @@ export default (props) => {
       <Helmet>
         <title>{meta.name}</title>
       </Helmet>
-      {data.type !== "election" && <Crumbs data={data} embed={props.embed} />}
+      {data.type !== 'election' && <Crumbs data={data} embed={props.embed} />}
       {/* <ProgressBar
         percentage={data.stats.sectionsWithResults / data.stats.sectionsCount}
         color={'#5a5aff'}
@@ -193,5 +191,5 @@ export default (props) => {
         </>
       )}
     </>
-  );
-};
+  )
+}

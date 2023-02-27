@@ -1,10 +1,10 @@
-import React from 'react';
+import React from 'react'
 
-import { Link, useParams, useHistory } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { Link, useParams, useHistory } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 const CrumbLink = styled(Link)`
   color: #666;
@@ -18,7 +18,7 @@ const CrumbLink = styled(Link)`
         font-size: 9px;
     `
       : null}
-`;
+`
 
 const CrumbButton = styled.button`
   color: #666;
@@ -36,10 +36,10 @@ const CrumbButton = styled.button`
         font-size: 9px;
     `
       : null}
-`;
+`
 
-const pointyArrowHeightEmbed = 24;
-const pointyArrowHeight = 30;
+const pointyArrowHeightEmbed = 24
+const pointyArrowHeight = 30
 
 const PointyArrowBase = styled.span`
   display: inline-block;
@@ -47,7 +47,7 @@ const PointyArrowBase = styled.span`
     props.embed ? pointyArrowHeightEmbed : pointyArrowHeight}px;
   box-sizing: border-box;
   vertical-align: top;
-`;
+`
 
 const PointyArrowBack = styled(PointyArrowBase)`
   border-left: ${(props) =>
@@ -60,12 +60,12 @@ const PointyArrowBack = styled(PointyArrowBase)`
       (props.embed ? pointyArrowHeightEmbed : pointyArrowHeight) / 2}px
     solid #eee;
   margin-left: -11px;
-`;
+`
 
 const PointyArrowMiddle = styled(PointyArrowBase)`
   background-color: #eee;
   padding: 6px;
-`;
+`
 
 const PointyArrow = styled(PointyArrowBase)`
   border-left: ${(props) =>
@@ -77,11 +77,11 @@ const PointyArrow = styled(PointyArrowBase)`
   border-bottom: ${(props) =>
       (props.embed ? pointyArrowHeightEmbed : pointyArrowHeight) / 2}px
     solid #0000;
-`;
+`
 
 export default (props) => {
-  const { unit } = useParams();
-  const history = useHistory();
+  const { unit } = useParams()
+  const history = useHistory()
 
   return (
     <div>
@@ -123,5 +123,5 @@ export default (props) => {
         <PointyArrow embed={props.embed} />
       </CrumbLink>
     </div>
-  );
-};
+  )
+}
