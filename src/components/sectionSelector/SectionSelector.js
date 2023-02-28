@@ -74,7 +74,6 @@ export const SectionSelector = ({ register, errors }) => {
       : []
     setMunicipality('')
     setMunicipalities(municipalities)
-    municipalities.length === 0 && setMunicipality('')
     municipalities.length === 1 && setMunicipality(municipalities[0].code)
   }, [electionRegion])
   useEffect(async () => {
