@@ -77,7 +77,7 @@ export const SectionSelector = ({ register, errors }) => {
     municipalities.length === 1 && setMunicipality(municipalities[0].code)
   }, [electionRegion])
   useEffect(async () => {
-    setTown()
+    setTown(0)
     setTowns([])
     let ignore = false
     const towns = await fetchData(
