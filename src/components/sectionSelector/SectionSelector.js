@@ -151,7 +151,7 @@ export const SectionSelector = ({ register, errors }) => {
             label="МИР"
             options={electionRegions.map((region) => ({
               value: region.code,
-              label: region.name,
+              label: `${region.code} ${region.name}`,
             }))}
             value={electionRegion}
             onChange={setElectionRegion}
