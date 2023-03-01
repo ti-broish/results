@@ -74,11 +74,37 @@ export const ViolationForm = () => {
         email: '',
         phoneNumber: '',
         description: '',
+        file: '',
       })
     }
   }, [formState, reset])
 
-  const [image, setImage] = useState('')
+  const saveImages = async (images) => {
+    let imageIds = []
+    for (const base64Image in images) {
+      try {
+        let savedImage = await api
+          .post('pictures', { image: images[base64Image] })
+          .catch((error) => console.log(error))
+        imageIds.push(savedImage.id)
+        console.log('Снимката беше запазена')
+      } catch (_) {
+        console.log('Снимката не беше запазена!')
+      }
+    }
+
+    return imageIds
+  }
+
+  const convertImagesToBase64 = async (images) => {
+    let convertedImages = []
+    for (let i = 0; i < images.length; i++) {
+      let convertedImage = await convertToBase64(images[i])
+      convertedImages.push(convertedImage)
+    }
+
+    return convertedImages
+  }
 
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -94,19 +120,14 @@ export const ViolationForm = () => {
   }
 
   const onSubmit = async (data) => {
-    console.log('Data', data)
-    console.log('File', data.file)
-    console.log('Type', typeof data.file)
-    console.log(URL.createObjectURL(data.file[0]))
-    const base64 = convertToBase64(data.file[0]).then((res) =>
-      console.log('Res', res)
-    )
-    console.log('Image', image)
+    const convertedImages = await convertImagesToBase64(data.file)
+    const savedImageIds = await saveImages(convertedImages)
     const body = {
       description: data.description,
       town: parseInt(data.town, 10),
     }
     data.section ? (body['section'] = data.section) : body
+    savedImageIds ? (body['pictures'] = savedImageIds) : body
     try {
       void (await api.post('violations', body))
       setMessage('Сигналът ви беше изпратен успешно!')
