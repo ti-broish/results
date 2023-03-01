@@ -9,6 +9,7 @@ export default function UploadPhotos() {
       <input
         name="photoUpload"
         type="file"
+        accept="image/*"
         multiple
         {...methods.register('file')}
       />
