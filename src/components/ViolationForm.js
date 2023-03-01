@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import React, { useEffect, useState } from 'react'
 import api from '../utils/api'
 import { SectionSelector } from './sectionSelector/SectionSelector'
+import UploadPhotos from './UploadPhotos'
 
 const CommentFormStyle = styled.form`
   width: 100%;
@@ -77,7 +78,30 @@ export const ViolationForm = () => {
     }
   }, [formState, reset])
 
+  const [image, setImage] = useState('')
+
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const fileReader = new FileReader()
+      fileReader.readAsDataURL(file)
+      fileReader.onload = () => {
+        resolve(fileReader.result)
+      }
+      fileReader.onerror = (error) => {
+        reject(error)
+      }
+    })
+  }
+
   const onSubmit = async (data) => {
+    console.log('Data', data)
+    console.log('File', data.file)
+    console.log('Type', typeof data.file)
+    console.log(URL.createObjectURL(data.file[0]))
+    const base64 = convertToBase64(data.file[0]).then((res) =>
+      console.log('Res', res)
+    )
+    console.log('Image', image)
     const body = {
       description: data.description,
       town: parseInt(data.town, 10),
@@ -149,6 +173,7 @@ export const ViolationForm = () => {
             <p className="errorMsg">Полето е задължително.</p>
           )}
         </div>
+        <UploadPhotos name="photoUpload"></UploadPhotos>
         <div className="form-control">
           <label></label>
           <button type="submit">Изпрати сигнал</button>
