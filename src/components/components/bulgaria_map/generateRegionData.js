@@ -312,7 +312,7 @@ export const generateRegionDataProcessed = (sectionsMode, regions) => {
           136,
           8,
           8,
-          percentage
+          percentage * 10
         )
       } else if (midRisk > 0) {
         const percentage = midRisk / sectionsCount
@@ -341,7 +341,7 @@ export const generateRegionDataProcessed = (sectionsMode, regions) => {
         10,
         116,
         253,
-        percentage
+        percentage * 10
       )
     }
 
