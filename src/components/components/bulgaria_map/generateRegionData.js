@@ -289,6 +289,15 @@ export const generateRegionDataCoverage = (regions) => {
 
 export const generateRegionDataProcessed = (sectionsMode, regions) => {
   const regionData = {}
+  const maxHighRiskSections = Object.entries(regions).reduce(
+    (acc, [_, region]) => Math.max(acc, region.stats.highRisk),
+    0
+  )
+  const maxMidRiskSections = Object.entries(regions).reduce(
+    (acc, [_, region]) => Math.max(acc, region.stats.midRisk),
+    0
+  )
+  console.log(maxHighRiskSections)
 
   for (const region of regions) {
     const {
@@ -303,19 +312,20 @@ export const generateRegionDataProcessed = (sectionsMode, regions) => {
 
     if (sectionsMode === 'risk') {
       if (highRisk > 0) {
-        const percentage = highRisk / sectionsCount
+        const percentage =
+          (highRisk + midRisk) / (maxHighRiskSections + maxMidRiskSections)
         regionData[region.id] = {}
         regionData[region.id].color = rgbGradient(
-          255,
-          204,
-          203,
-          136,
-          8,
-          8,
-          percentage * 8
+          201,
+          159,
+          159,
+          156,
+          20,
+          20,
+          percentage * 1.5
         )
       } else if (midRisk > 0) {
-        const percentage = midRisk / sectionsCount
+        const percentage = midRisk / maxMidRiskSections
         regionData[region.id] = {}
         regionData[region.id].color = rgbGradient(
           253,
@@ -324,7 +334,7 @@ export const generateRegionDataProcessed = (sectionsMode, regions) => {
           247,
           176,
           13,
-          percentage * 8
+          percentage * 1.5
         )
       } else {
         regionData[region.id] = {}
