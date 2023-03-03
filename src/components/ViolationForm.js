@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react'
 import api from '../utils/api'
 import { SectionSelector } from './sectionSelector/SectionSelector'
 import UploadPhotos from './UploadPhotos'
+import { saveImages, convertImagesToBase64 } from '../utils/uploadPhotosHelper'
 
 const CommentFormStyle = styled.form`
   width: 100%;
@@ -78,46 +79,6 @@ export const ViolationForm = () => {
       })
     }
   }, [formState, reset])
-
-  const saveImages = async (images) => {
-    let imageIds = []
-    for (const base64Image in images) {
-      try {
-        let savedImage = await api
-          .post('pictures', { image: images[base64Image] })
-          .catch((error) => console.log(error))
-        imageIds.push(savedImage.id)
-        console.log('Снимката беше запазена')
-      } catch (_) {
-        console.log('Снимката не беше запазена!')
-      }
-    }
-
-    return imageIds
-  }
-
-  const convertImagesToBase64 = async (images) => {
-    let convertedImages = []
-    for (let i = 0; i < images.length; i++) {
-      let convertedImage = await convertToBase64(images[i])
-      convertedImages.push(convertedImage)
-    }
-
-    return convertedImages
-  }
-
-  const convertToBase64 = (file) => {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader()
-      fileReader.readAsDataURL(file)
-      fileReader.onload = () => {
-        resolve(fileReader.result)
-      }
-      fileReader.onerror = (error) => {
-        reject(error)
-      }
-    })
-  }
 
   const onSubmit = async (data) => {
     const convertedImages = await convertImagesToBase64(data.file)
