@@ -287,25 +287,84 @@ export const generateRegionDataCoverage = (regions) => {
   return regionData
 }
 
-export const generateRegionDataProcessed = (regions) => {
+export const generateRegionDataProcessed = (sectionsMode, regions) => {
   const regionData = {}
 
   for (const region of regions) {
-    const percentage =
-      region.stats.sectionsWithResults / region.stats.sectionsCount
-    regionData[region.id] = {}
-    regionData[region.id].color = rgbGradient(
-      237,
-      237,
-      255,
-      10,
-      116,
-      253,
-      percentage
-    )
+    const {
+      stats: {
+        highRisk,
+        midRisk,
+        sectionsCount,
+        sectionsWithResults,
+        populated,
+      },
+    } = region
+
+    if (sectionsMode === 'risk') {
+      if (highRisk > 0) {
+        const percentage = highRisk / sectionsCount
+        regionData[region.id] = {}
+        regionData[region.id].color = rgbGradient(
+          255,
+          204,
+          203,
+          136,
+          8,
+          8,
+          percentage * 10
+        )
+      } else if (midRisk > 0) {
+        const percentage = midRisk / sectionsCount
+        regionData[region.id] = {}
+        regionData[region.id].color = rgbGradient(
+          253,
+          235,
+          195,
+          247,
+          176,
+          13,
+          percentage
+        )
+      } else {
+        regionData[region.id] = {}
+        regionData[region.id].color = `rgb(237, 237, 255)`
+      }
+    }
+    if (sectionsMode === 'processed') {
+      const percentage = sectionsWithResults / sectionsCount
+      regionData[region.id] = {}
+      regionData[region.id].color = rgbGradient(
+        227,
+        167,
+        0,
+        227,
+        201,
+        129,
+        percentage * 10
+      )
+    }
+
+    if (sectionsMode === 'populated') {
+      const percentage = populated / sectionsCount
+      regionData[region.id] = {}
+      regionData[region.id].color = rgbGradient(
+        237,
+        237,
+        255,
+        10,
+        116,
+        253,
+        percentage
+      )
+    }
+
     regionData[region.id].tooltipData = {
-      sections: region.stats.sectionsCount,
-      sectionsWithResults: region.stats.sectionsWithResults,
+      sections: sectionsCount,
+      sectionsWithResults: sectionsWithResults,
+      highRiskSections: highRisk,
+      midRiskSections: midRisk,
+      populatedSections: populated,
     }
   }
 

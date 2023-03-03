@@ -1,16 +1,16 @@
-import React, { useEffect, useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import Helmet from 'react-helmet'
 
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
 import { Link } from 'react-router-dom'
-import LoadingScreen from './layout/LoadingScreen'
-import { ElectionContext } from './Election'
-import { formatDateTime } from './Util'
 import BulgariaMap from './components/bulgaria_map/BulgariaMap'
+import { ElectionContext } from './Election'
+import LoadingScreen from './layout/LoadingScreen'
+import { formatDateTime } from './Util'
 
 import styled from 'styled-components'
 
@@ -109,6 +109,7 @@ export default (props) => {
     items: null,
     moreToLoad: true,
   })
+  const [mode, setMode] = useState('violations')
   const [regionName, setRegionName] = useState(defaultRegionName)
   const [loading, setLoading] = useState(false)
   const [showBackButton, setShowBackButton] = useState(false)
@@ -241,6 +242,8 @@ export default (props) => {
         regions={resultsData.nodes}
         parties={parties}
         results={resultsData.results}
+        mode={mode}
+        setMode={(mode) => setMode(mode)}
         showViolationsOnly={true}
         loadViolationsForRegion={(key) => loadViolationsForRegion(key)}
       />

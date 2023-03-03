@@ -1,16 +1,12 @@
-import React, { useEffect, useContext, useState } from 'react'
-import Helmet from 'react-helmet'
+import React, { useContext, useEffect, useState } from 'react'
 
 import axios from 'axios'
 import { useParams } from 'react-router-dom'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons'
 
 import { Link } from 'react-router-dom'
-import LoadingScreen from './layout/LoadingScreen'
 import { ElectionContext } from './Election'
+import LoadingScreen from './layout/LoadingScreen'
 import { formatDateTime } from './Util'
-import BulgariaMap from './components/bulgaria_map/BulgariaMap'
 
 import styled from 'styled-components'
 

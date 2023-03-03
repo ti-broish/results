@@ -9,7 +9,10 @@ import SimpleLine from '../SimpleLine'
 import styled from 'styled-components'
 import { mapNodesType } from '../../ResultUnit.js'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons'
+import {
+  faExclamationTriangle,
+  faExclamationCircle,
+} from '@fortawesome/free-solid-svg-icons'
 
 import { formatCount } from '../../Util'
 import { rgbGradient } from '../bulgaria_map/generateRegionData.js'
@@ -74,17 +77,15 @@ export default handleViewport((props) => {
     )
   }
 
-  //console.log(props.subdivision);
-
-  const generateViolationTooltip = (region) => {
+  const generateTooltip = (text, count) => {
     return `
             <div>
                 <table style="width: 100%;">
                 <tbody>
                     <tr>
-                        <td>Сигнали</td>
+                        <td>${text}</td>
                         <td style="text-align: right; padding-left: 20px;">${formatCount(
-                          region.stats.violationsCount
+                          count
                         )}</td> 
                     </tr>
                 </tbody>
@@ -159,6 +160,36 @@ export default handleViewport((props) => {
             props.subdivision.name
           ) : (
             <>
+              {props.subdivision.stats.highRisk > 0 && (
+                <span
+                  style={{
+                    color: `rgb(255, 0, 0)`,
+                  }}
+                  data-tip={generateTooltip(
+                    `Високорискови секции`,
+                    props.subdivision.stats.highRisk
+                  )}
+                  data-for={`subdivisionTableTooltip`}
+                >
+                  <FontAwesomeIcon icon={faExclamationCircle} />{' '}
+                </span>
+              )}
+
+              {props.subdivision.stats.midRisk > 0 && (
+                <span
+                  style={{
+                    color: `rgb(255, 157, 0)`,
+                  }}
+                  data-tip={generateTooltip(
+                    `Среднорискови секции`,
+                    props.subdivision.stats.midRisk
+                  )}
+                  data-for={`subdivisionTableTooltip`}
+                >
+                  <FontAwesomeIcon icon={faExclamationCircle} />{' '}
+                </span>
+              )}
+
               {props.subdivision.stats.violationsCount < 1 ? null : (
                 <span
                   style={{
@@ -172,7 +203,10 @@ export default handleViewport((props) => {
                       props.subdivision.violationPercentage
                     ),
                   }}
-                  data-tip={generateViolationTooltip(props.subdivision)}
+                  data-tip={generateTooltip(
+                    `Сигнали`,
+                    props.subdivision.stats.violationsCount
+                  )}
                   data-for={`subdivisionTableTooltip`}
                 >
                   <FontAwesomeIcon icon={faExclamationTriangle} />{' '}

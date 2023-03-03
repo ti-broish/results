@@ -1,21 +1,21 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
-import { useLocation } from 'react-router-dom'
 import axios from 'axios'
+import { useLocation } from 'react-router-dom'
 
 import BulgariaMap from '../components/bulgaria_map/BulgariaMap'
 import ResultsTable from '../components/results_table/ResultsTable'
 import SubdivisionTable from '../components/subdivision_table/SubdivisionTable'
 import Source from './Source'
 
-import styled from 'styled-components'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
   faChartBar,
   faCity,
   faLayerGroup,
   faMap,
 } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import styled from 'styled-components'
 
 const EmbedButton = styled.button`
   border: none;
@@ -33,21 +33,33 @@ const EmbedButton = styled.button`
 `
 
 import { aggregateData } from '../units/Aggregation'
-import { populateWithFakeResults } from '../units/Aggregation'
 
 const useQuery = () => {
   return new URLSearchParams(useLocation().search)
 }
 
+import ProgressBar from '../components/ProgressBar'
 import { ElectionContext } from '../Election'
 import LoadingScreen from '../layout/LoadingScreen'
-import ProgressBar from '../components/ProgressBar'
 
 export default (props) => {
+  const chooseModeBasedOnApiResponse = () => {
+    if (!resultsAvailable) {
+      if (violationsReported) {
+        return 'violations'
+      }
+      return 'sectionsWithResults'
+    }
+    return 'dominant'
+  }
+
   const { meta, parties, dataURL } = useContext(ElectionContext)
   const [embedMode, setEmbedMode] = useState('map')
   const [mapModesOpen, setMapModesOpen] = useState(false)
   const [subdivisionModesOpen, setSubdivisionModesOpen] = useState(false)
+  const [mode, setMode] = useState('violations')
+  const [resultsAvailable, setResultsAvailable] = useState(false)
+  const [violationsReported, setViolationsReported] = useState(false)
 
   const query = useQuery()
   const mapOnly = query.get('mapOnly') ? true : false
@@ -62,14 +74,20 @@ export default (props) => {
     axios
       .get(`${dataURL}/results/index.json`)
       .then((res) => {
-        //res.data = populateWithFakeResults(res.data, parties);
+        // res.data = populateWithFakeResults(res.data, parties);
         setData(res.data)
+        setResultsAvailable(res.data?.results.length > 0)
+        setViolationsReported(res.data?.stats.violationsCount > 0)
       })
       .catch((err) => {
         console.log(err)
         if (!data) history.push('/')
       })
   }, [])
+
+  useEffect(() => {
+    setMode(chooseModeBasedOnApiResponse())
+  }, [resultsAvailable, violationsReported])
 
   return !data ? (
     <LoadingScreen />
@@ -153,6 +171,8 @@ export default (props) => {
             results={data.results}
             mapModesHidden={!mapModesOpen}
             linkToMainSite={linkToMainSite}
+            mode={mode}
+            setMode={setMode}
             homepage={homepage}
             embed
           />,

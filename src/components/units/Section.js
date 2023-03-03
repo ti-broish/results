@@ -17,6 +17,17 @@ import Player from '../embeds/Player'
 import styled from 'styled-components'
 import ViolationFeeds from '../ViolationFeeds'
 
+const renderRiskLevelText = (riskLevel) => {
+  switch (riskLevel) {
+    case 'high':
+      return `Висок`
+    case 'mid':
+      return `Среден`
+    default:
+      return `Нисък`
+  }
+}
+
 const SectionDetailsTable = styled.table`
   margin: 20px 0;
   width: 100%;
@@ -142,7 +153,11 @@ export default (props) => {
           </tr>
           <tr>
             <td>Сигнали</td>
-            <td>{data.stats.violations}</td>
+            <td>{data.stats.violationsCount}</td>
+          </tr>
+          <tr>
+            <td>Риск</td>
+            <td>{renderRiskLevelText(data.riskLevel)}</td>
           </tr>
         </tbody>
       </SectionDetailsTable>
