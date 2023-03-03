@@ -63,6 +63,8 @@ export default (props) => {
 
   // Election regions are two digit units - i.e. 01, 02
   // Municipalities are four digit units - i.e. 0140, 0102
+  // Countries are four digit units - i.e. 3201, 3202
+  // City regions are six digit units - i.e. 234602, 244601
   // Sections are nine digit units - i.e. 014000037, 014000046
 
   return (
