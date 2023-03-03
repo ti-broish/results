@@ -3,9 +3,6 @@ name: Continuous Integration
 on:
   pull_request:
     types: [opened, synchronize]
-  push:
-    branches:
-      - main
 
 jobs:
   build:
@@ -19,13 +16,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: '18'
-          cache: 'npm'
+          cache: npm
 
       - name: Clean install of dependencies
         run: npm ci
 
       - name: Build
-        run: npm run-script build
+        run: npm run build
 
       - name: Lint
-        run: npm run-script lint:ci
+        run: npm run lint:ci

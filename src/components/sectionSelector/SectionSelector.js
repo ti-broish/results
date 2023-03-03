@@ -74,11 +74,10 @@ export const SectionSelector = ({ register, errors }) => {
       : []
     setMunicipality('')
     setMunicipalities(municipalities)
-    municipalities.length === 0 && setMunicipality('')
     municipalities.length === 1 && setMunicipality(municipalities[0].code)
   }, [electionRegion])
   useEffect(async () => {
-    setTown()
+    setTown(0)
     setTowns([])
     let ignore = false
     const towns = await fetchData(
@@ -112,7 +111,6 @@ export const SectionSelector = ({ register, errors }) => {
     cityRegions.length === 1 && setCityRegion(cityRegions[0].code)
   }, [town])
   useEffect(async () => {
-    console.log('town', town, 'towns', towns)
     setSections([])
     const townHasCityRegions = !!(
       town && towns.find((x) => x.id === town)?.cityRegions?.length > 0
@@ -153,7 +151,7 @@ export const SectionSelector = ({ register, errors }) => {
             label="МИР"
             options={electionRegions.map((region) => ({
               value: region.code,
-              label: region.name,
+              label: `${region.code} ${region.name}`,
             }))}
             value={electionRegion}
             onChange={setElectionRegion}

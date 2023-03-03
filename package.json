@@ -7,11 +7,9 @@
     "npm": "^9"
   },
   "scripts": {
-    "build": "NODE_OPTIONS=--openssl-legacy-provider webpack --env PUBLIC_URL=/results/parliament-2021-04-04 DATA_URL=https://api.tibroish.bg --config webpack/build.config.js",
-    "build-staging": "NODE_OPTIONS=--openssl-legacy-provider webpack --env PUBLIC_URL=/results/parl20210404apitest DATA_URL=https://d1tapi.dabulgaria.bg --config webpack/build.config.js",
-    "serve": "NODE_OPTIONS=--openssl-legacy-provider webpack serve --env DATA_URL=https://api.tibroish.bg --config webpack/serve.config.js",
-    "serve-staging": "NODE_OPTIONS=--openssl-legacy-provider webpack serve --env DATA_URL=https://d1tapi.dabulgaria.bg --config webpack/serve.config.js",
-    "serve-local": "NODE_OPTIONS=--openssl-legacy-provider webpack serve --env DATA_URL=http://localhost:4000 --config webpack/serve.config.js",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider node -r dotenv/config node_modules/.bin/webpack --config webpack/build.config.js",
+    "serve": "NODE_OPTIONS=--openssl-legacy-provider node -r dotenv/config node_modules/.bin/webpack serve --env DATA_URL=https://d1tapi.dabulgaria.bg --config webpack/serve.config.js",
+    "serve-local": "NODE_OPTIONS=--openssl-legacy-provider DATA_URL=http://localhost:4000 node -r dotenv/config node_modules/.bin/webpack serve --config webpack/serve.config.js",
     "lint": "prettier -w '**/*.{js,json}'",
     "lint:ci": "prettier --check '**/*.{js,json}'",
     "prepare": "husky install"
@@ -56,14 +54,15 @@
     "styled-components": "^5.2.1",
     "url-loader": "^4.1.1",
     "video.js": "^7.13.3",
-    "videojs-playlist": "^4.3.1",
-    "webpack": "^5.24.3"
+    "videojs-playlist": "^4.3.1"
   },
   "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.21.0",
+    "dotenv": "^16.0.3",
     "husky": "^8.0.0",
     "lint-staged": "^13.1.2",
     "prettier": "^2.8.4",
-    "@babel/plugin-transform-runtime": "^7.21.0",
+    "webpack": "^5.75.0",
     "webpack-cli": "^4.10.0",
     "webpack-dev-middleware": "^6.0.1",
     "webpack-dev-server": "^4.11.1"

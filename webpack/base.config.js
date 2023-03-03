@@ -53,7 +53,14 @@ module.exports = env => {
             new HtmlWebpackPlugin({
                 title: 'Ти Броиш',
                 template: 'src/index.ejs',
-                publicPath: env['PUBLIC_URL']? env['PUBLIC_URL'] : '/'
+                publicPath: process.env.PUBLIC_URL || '/',
+            }),
+            new webpack.DefinePlugin({
+                'process.env': {
+                    'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+                    'PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL),
+                    'DATA_URL': JSON.stringify(process.env.DATA_URL),
+                },
             }),
         ],
     }

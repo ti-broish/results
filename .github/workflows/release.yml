@@ -1,0 +1,41 @@
+name: Deployment to Production
+
+on:
+  push:
+    tags:
+      - '**'
+
+jobs:
+  build:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v3
+
+      - name: Set up node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: npm
+
+      - name: Clean install of dependencies
+        run: npm ci
+
+      - name: Build
+        run: node --openssl-legacy-provider node_modules/.bin/webpack --config webpack/build.config.js
+        env:
+          DATA_URL: ${{ secrets.PRODUCTION_DATA_URL }}
+          PUBLIC_URL: ${{ secrets.PRODUCTION_PUBLIC_URL }}
+          NODE_ENV: production
+
+      - name: Minio Deploy
+        uses: hkdobrev/minio-deploy-action@v1
+        with:
+          endpoint: ${{ secrets.MINIO_PRODUCTION_ENDPOINT }}
+          access_key: ${{ secrets.MINIO_PRODUCTION_ACCESS_KEY }}
+          secret_key: ${{ secrets.MINIO_PRODUCTION_SECRET_KEY }}
+          bucket: ${{ secrets.MINIO_PRODUCTION_BUCKET }}
+          source_dir: 'dist'
+          target_dir: ${{ secrets.MINIO_PRODUCTION_DIR }}
+          insecure: 'true'
