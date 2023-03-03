@@ -292,7 +292,13 @@ export const generateRegionDataProcessed = (sectionsMode, regions) => {
 
   for (const region of regions) {
     const {
-      stats: { highRisk, midRisk, sectionsCount, sectionsWithResults },
+      stats: {
+        highRisk,
+        midRisk,
+        sectionsCount,
+        sectionsWithResults,
+        populated,
+      },
     } = region
 
     if (sectionsMode === 'risk') {
@@ -339,11 +345,26 @@ export const generateRegionDataProcessed = (sectionsMode, regions) => {
       )
     }
 
+    if (sectionsMode === 'populated') {
+      const percentage = populated / sectionsCount
+      regionData[region.id] = {}
+      regionData[region.id].color = rgbGradient(
+        237,
+        237,
+        255,
+        10,
+        116,
+        253,
+        percentage
+      )
+    }
+
     regionData[region.id].tooltipData = {
       sections: sectionsCount,
       sectionsWithResults: sectionsWithResults,
       highRiskSections: highRisk,
       midRiskSections: midRisk,
+      populatedSections: populated,
     }
   }
 

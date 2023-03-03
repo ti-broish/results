@@ -47,13 +47,14 @@ export const populateWithFakeResults = (data, parties) => {
       10000 + 10000 * Math.random(),
       parties
     )
-    data.stats.midRisk = Math.floor(
-      Math.random() * 0.1 * data.stats.sectionsCount
-    )
+    data.stats.midRisk = Math.floor(Math.random() * data.stats.sectionsCount)
     const highRisk =
-      Math.floor(Math.random() * 0.1 * data.stats.sectionsCount) -
-      data.stats.midRisk
+      Math.floor(Math.random() * data.stats.sectionsCount) - data.stats.midRisk
     data.stats.highRisk = highRisk > 0 ? highRisk : 0
+    data.stats.populated = Math.floor(Math.random() * data.stats.sectionsCount)
+    data.stats.sectionsWithResults = Math.floor(
+      Math.random() * data.stats.sectionsCount
+    )
     data.results = results
     data.stats.voters = voters
     data.stats.validVotes = voters * turnout

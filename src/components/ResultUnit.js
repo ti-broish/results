@@ -61,6 +61,10 @@ export default (props) => {
     return null
   }
 
+  // Election regions are two digit units - i.e. 01, 02
+  // Municipalities are four digit units - i.e. 0140, 0102
+  // Sections are nine digit units - i.e. 014000037, 014000046
+
   return (
     <>
       {!unit || unit.length < 9 ? (

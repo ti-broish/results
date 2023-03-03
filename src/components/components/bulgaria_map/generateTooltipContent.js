@@ -279,15 +279,21 @@ export const generateTooltipProcessed = (region, tooltipData) => {
                     )}</td>
                 </tr>
                 <tr>
-                    <td style="padding-right: 20px;">Рискови секции (висок)</td>
+                    <td style="padding-right: 20px;">Високорискови секции</td>
                     <td style="text-align: right;">${formatCount(
                       tooltipData.highRiskSections
                     )}</td>
                 </tr>
                 <tr>
-                    <td style="padding-right: 20px;">Рискови секции (среден)</td>
+                    <td style="padding-right: 20px;">Среднорискови секции</td>
                     <td style="text-align: right;">${formatCount(
                       tooltipData.midRiskSections
+                    )}</td>
+                </tr>
+                <tr>
+                    <td style="padding-right: 20px;">Запълнени секции</td>
+                    <td style="text-align: right;">${formatCount(
+                      tooltipData.populatedSections || 0
                     )}</td>
                 </tr>
           

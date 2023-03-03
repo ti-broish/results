@@ -145,7 +145,7 @@ export default handleViewport((props) => {
     <>
       {props.mapModesHidden || props.showViolationsOnly ? null : (
         <PrimaryMapControls embed={props.embed} homepage={props.homepage}>
-          {props.resultsAvailable ? (
+          {props.resultsAvailable && (
             <>
               <button
                 className={mode === 'dominant' ? 'selected' : ''}
@@ -159,23 +159,23 @@ export default handleViewport((props) => {
               >
                 Отделна партия
               </button>
+              <button
+                className={mode === 'turnout' ? 'selected' : ''}
+                onClick={() => setMode('turnout')}
+              >
+                Активност
+              </button>
             </>
-          ) : null}
-          {/*<button className={mode === 'turnout'? 'selected' : ''} onClick={()=>setMode('turnout')}>Активност</button>*/}
-          <button
-            disabled={!props.violationsReported}
-            className={mode === 'violations' ? 'selected' : ''}
-            onClick={() => setMode('violations')}
-          >
-            Сигнали
-          </button>
-          <button
-            className={mode === 'voters' ? 'selected' : ''}
-            onClick={() => setMode('voters')}
-          >
-            Избиратели
-          </button>
-          {/*<button className={mode === 'coverage'? 'selected' : ''} onClick={()=>setMode('coverage')}>Покритие</button>*/}
+          )}
+
+          {props.violationsReported && (
+            <button
+              className={mode === 'violations' ? 'selected' : ''}
+              onClick={() => setMode('violations')}
+            >
+              Сигнали
+            </button>
+          )}
           <button
             className={mode === 'sectionsWithResults' ? 'selected' : ''}
             onClick={() => setMode('sectionsWithResults')}
@@ -183,12 +183,19 @@ export default handleViewport((props) => {
             Секции
           </button>
           <button
-            disabled={true}
-            className={mode === 'video' ? 'selected' : ''}
-            onClick={() => setMode('video')}
+            className={mode === 'voters' ? 'selected' : ''}
+            onClick={() => setMode('voters')}
           >
-            Видео
+            Избиратели
           </button>
+          {props.streamsAvailable && (
+            <button
+              className={mode === 'video' ? 'selected' : ''}
+              onClick={() => setMode('video')}
+            >
+              Видео
+            </button>
+          )}
         </PrimaryMapControls>
       )}
 
@@ -226,18 +233,28 @@ export default handleViewport((props) => {
             'sectionsWithResults' ? (
             <SecondaryMapControls embed={props.embed} homepage={props.homepage}>
               <div style={{ width: '100%' }}>
-                <button
-                  className={sectionsMode === 'processed' ? 'selected' : ''}
-                  onClick={() => setSectionsMode('processed')}
-                >
-                  Обработени
-                </button>
+                {props.sectionsWithResults && (
+                  <button
+                    className={sectionsMode === 'processed' ? 'selected' : ''}
+                    onClick={() => setSectionsMode('processed')}
+                  >
+                    Обработени
+                  </button>
+                )}
                 <button
                   className={sectionsMode === 'risk' ? 'selected' : ''}
                   onClick={() => setSectionsMode('risk')}
                 >
                   Рискови
                 </button>
+                {props.populatedSections && (
+                  <button
+                    className={sectionsMode === 'populated' ? 'selected' : ''}
+                    onClick={() => setSectionsMode('populated')}
+                  >
+                    Запълнени
+                  </button>
+                )}
               </div>
             </SecondaryMapControls>
           ) : null}
@@ -340,6 +357,9 @@ export default handleViewport((props) => {
               </g>
             </svg>
           </BulgariaMapStyle>
+          {mode === 'sectionsWithResults' && sectionsMode === 'risk' && (
+            <p>* Данни за рискови секции от ОЧИ</p>
+          )}
         </>
       )}
     </>

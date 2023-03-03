@@ -48,6 +48,26 @@ export const sortTableDistribution = (subdivisions, singleParty) => {
   return sortSignals(subdivisions)
 }
 
+export const sortTableSections = (subdivisions) => {
+  let highestCount = 0
+  for (const subdivision of subdivisions) {
+    const currentCount = subdivision.stats.highRisk
+
+    if (currentCount > highestCount) highestCount = currentCount
+  }
+
+  for (const subdivision of subdivisions) {
+    const currentCount = subdivision.stats.highRisk
+    subdivision.percentage = currentCount / highestCount
+    subdivision.tooltipField = 'Високорискови секции'
+    subdivision.tooltipValue = formatCount(subdivision.stats.highRisk)
+  }
+
+  subdivisions.sort((s1, s2) => s2.percentage - s1.percentage)
+
+  return sortSignals(subdivisions)
+}
+
 export const sortTableVoters = (subdivisions) => {
   let highestCount = 0
   for (const subdivision of subdivisions) {

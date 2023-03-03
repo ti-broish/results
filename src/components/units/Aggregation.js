@@ -15,6 +15,7 @@ import LoadingScreen from '../layout/LoadingScreen'
 import { mapNodesType, mapNodeType } from '../ResultUnit'
 import Videos from '../Videos'
 import ViolationFeeds from '../ViolationFeeds'
+import { populateWithFakeResults } from './helpers'
 
 export const aggregateData = (data) => {
   if (data.nodes) {
@@ -84,6 +85,9 @@ export default (props) => {
   const [resultsAvailable, setResultsAvailable] = useState(false)
   const [selectedMode, setSelectedMode] = useState('violations')
   const [violationsReported, setViolationsReported] = useState(false)
+  const [streamsAvailable, setStreamsAvailable] = useState(false)
+  const [sectionsWithResults, setSectionsWithResults] = useState(false)
+  const [populatedSections, setPopulatedSections] = useState(false)
   const { unit } = useParams()
   const history = useHistory()
 
@@ -98,15 +102,24 @@ export default (props) => {
   }, [resultsAvailable, violationsReported])
 
   const refreshResults = () => {
+    // Set to true, to populate with fake data
+    const devMode = false
+
     setData(null)
     setResultsAvailable(false)
     axios
       .get(`${dataURL}/results/${unit ? unit : 'index'}.json`)
       .then((res) => {
-        // res.data = populateWithFakeResults(res.data, parties);
+        if (devMode) {
+          res.data = populateWithFakeResults(res.data, parties)
+        }
+
         setData(res.data)
         setResultsAvailable(res.data?.results.length > 0)
         setViolationsReported(res.data?.stats.violationsCount > 0)
+        setStreamsAvailable(res.data?.stats.streamsCount > 0)
+        setSectionsWithResults(res.data?.stats.sectionsWithResults > 0)
+        setPopulatedSections(res.data?.stats.populated > 0)
       })
       .catch((err) => {
         console.log(err)
@@ -121,24 +134,16 @@ export default (props) => {
       <Helmet>
         <title>{meta.name}</title>
       </Helmet>
-      {data.type !== 'election' && <Crumbs data={data} embed={props.embed} />}
-      {/* <ProgressBar
-        percentage={data.stats.sectionsWithResults / data.stats.sectionsCount}
-        color={'#5a5aff'}
-        emptyColor={'rgb(189, 189, 249)'}
-        title={'Обработени секции'}
-        description={
-          'Тази линия показва процента от секциите, които влизат в резултатите ни към момента'
-        }
-        embed={props.embed}
-      /> */}
-      <h1 style={props.embed ? { fontSize: '15px' } : {}}>
-        {data.type === 'election'
-          ? null
-          : data.type === 'electionRegion'
-          ? `${data.id}. ${data.name}`
-          : `${mapNodeType(data.type)} ${data.name}`}
-      </h1>
+      {data.type !== 'election' && (
+        <>
+          <Crumbs data={data} embed={props.embed} />
+          <h1 style={props.embed ? { fontSize: '15px' } : {}}>
+            {data.type === 'electionRegion'
+              ? `${data.id}. ${data.name}`
+              : `${mapNodeType(data.type)} ${data.name}`}
+          </h1>
+        </>
+      )}
 
       {data.type === 'election' && (
         <BulgariaMap
@@ -147,6 +152,9 @@ export default (props) => {
           results={data.results}
           resultsAvailable={resultsAvailable}
           violationsReported={violationsReported}
+          streamsAvailable={streamsAvailable}
+          sectionsWithResults={sectionsWithResults}
+          populatedSections={populatedSections}
           mode={selectedMode}
           setMode={(mode) => setSelectedMode(mode)}
         />
@@ -167,11 +175,9 @@ export default (props) => {
             />
           )}
 
-          {selectedMode != 'sectionsWithResults' && (
-            <h1 style={props.embed ? { fontSize: '15px' } : {}}>
-              {mapNodesType(data.nodesType)}
-            </h1>
-          )}
+          <h1 style={props.embed ? { fontSize: '15px' } : {}}>
+            {mapNodesType(data.nodesType)}
+          </h1>
           <SubdivisionTable
             parties={parties}
             results={data.results}
@@ -182,12 +188,12 @@ export default (props) => {
             selectedMode={selectedMode}
           />
 
-          {selectedMode == 'violations' ? (
+          {selectedMode == 'violations' && (
             <>
               <h1 style={props.embed ? { fontSize: '15px' } : {}}>Сигнали</h1>
               <ViolationFeeds unit={unit}></ViolationFeeds>
             </>
-          ) : null}
+          )}
         </>
       )}
     </>
