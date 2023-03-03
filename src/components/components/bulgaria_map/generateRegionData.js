@@ -335,12 +335,12 @@ export const generateRegionDataProcessed = (sectionsMode, regions) => {
       const percentage = sectionsWithResults / sectionsCount
       regionData[region.id] = {}
       regionData[region.id].color = rgbGradient(
-        237,
-        237,
-        255,
-        10,
-        116,
-        253,
+        227,
+        167,
+        0,
+        227,
+        201,
+        129,
         percentage * 10
       )
     }
