@@ -144,9 +144,9 @@ export default (props) => {
         }}
       >
         <MobileNavMenu>
-          <Link to="/" onClick={() => setMenuOpen(false)}>
+          <a href="/" onClick={() => setMenuOpen(false)}>
             Начало
-          </Link>
+          </a>
           <a href="/about" onClick={() => setMenuOpen(false)}>
             Kампанията
           </a>
