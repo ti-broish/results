@@ -128,7 +128,6 @@ export default (props) => {
           <a href="/about">Kампанията</a>
           <a href="/instructions">Инструкции</a>
           <a href="/videos">Видео</a>
-          <Link to="/">Сигнали</Link>
           <a href="/ti-glasuvash">Ти Гласуваш</a>
         </Navigation>
         <MobileMenuButton onClick={() => setMenuOpen(!menuOpen)}>
