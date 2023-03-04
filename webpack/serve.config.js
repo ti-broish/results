@@ -14,7 +14,7 @@ module.exports = env => {
                 directory: path.join(__dirname, '../dist'),
             },
             historyApiFallback: true,
-            port: 3000,
+            port: 2000,
         },
     });
 };
