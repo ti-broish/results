@@ -125,6 +125,7 @@ export default (props) => {
           <LogoImage src="/brand/logo_horizontal_white.png?v=2" />
         </a>
         <Navigation>
+          <a href="/signup">Запиши се</a>
           <a href="/about">Kампанията</a>
           <a href="/instructions">Инструкции</a>
           <a href="/videos">Видео</a>
@@ -146,6 +147,9 @@ export default (props) => {
         <MobileNavMenu>
           <a href="/" onClick={() => setMenuOpen(false)}>
             Начало
+          </a>
+          <a href="/signup" onClick={() => setMenuOpen(false)}>
+            Запиши се
           </a>
           <a href="/about" onClick={() => setMenuOpen(false)}>
             Kампанията
