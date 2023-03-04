@@ -162,9 +162,6 @@ export default (props) => {
           <a href="/privacy-notice" onClick={() => setMenuOpen(false)}>
             Декларация за поверителност
           </a>
-          <Link to="/" onClick={() => setMenuOpen(false)}>
-            Сигнали
-          </Link>
           <a href="/ti-glasuvash" onClick={() => setMenuOpen(false)}>
             Ти Гласуваш!
           </a>
