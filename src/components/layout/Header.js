@@ -121,9 +121,9 @@ export default (props) => {
     <HeaderCompensator />,
     <HeaderStyle>
       <Wrapper>
-        <Link to="/">
+        <a href="/">
           <LogoImage src="/brand/logo_horizontal_white.png?v=2" />
-        </Link>
+        </a>
         <Navigation>
           <a href="/about">Kампанията</a>
           <a href="/instructions">Инструкции</a>
