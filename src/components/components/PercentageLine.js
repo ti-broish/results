@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { formatCount, formatPercentage } from '../Util'
 
 // ----------------------------------------------------------------------------
-// Utils
+// Const
 // ----------------------------------------------------------------------------
 
 const RISKS = [
@@ -58,6 +58,27 @@ const generateTooltip = (color, riskName, percentage, count) => {
     `
 }
 
+const riskWithPercentages = ({ highRisk, midRisk, sectionsCount }) => {
+  const percentage = {
+    High: highRisk / sectionsCount,
+    Medium: midRisk / sectionsCount,
+    Low: (sectionsCount - (highRisk + midRisk)) / sectionsCount,
+  }
+
+  const count = {
+    High: highRisk,
+    Medium: midRisk,
+    Low: sectionsCount - (highRisk + midRisk),
+  }
+
+  return RISKS.map((risk) => {
+    risk.percentage = percentage[risk.name]
+    risk.count = count[risk.name]
+
+    return risk
+  })
+}
+
 // ----------------------------------------------------------------------------
 // Sub-components
 // ----------------------------------------------------------------------------
@@ -93,27 +114,6 @@ export default handleViewport((props) => {
   const { inViewport, forwardedRef } = props
   const alreadyLoaded = useRef(false)
   if (inViewport) alreadyLoaded.current = true
-
-  const riskWithPercentages = ({ highRisk, midRisk, sectionsCount }) => {
-    const percentage = {
-      High: highRisk / sectionsCount,
-      Medium: midRisk / sectionsCount,
-      Low: (sectionsCount - (highRisk + midRisk)) / sectionsCount,
-    }
-
-    const count = {
-      High: highRisk,
-      Medium: midRisk,
-      Low: sectionsCount - (highRisk + midRisk),
-    }
-
-    return RISKS.map((risk) => {
-      risk.percentage = percentage[risk.name]
-      risk.count = count[risk.name]
-
-      return risk
-    })
-  }
 
   return (
     <div className="results-line" ref={forwardedRef}>
