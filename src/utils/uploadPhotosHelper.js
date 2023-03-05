@@ -5,13 +5,12 @@ const saveImages = async function (images) {
   let imageIds = []
   for (const base64Image in images) {
     try {
-      let savedImage = await api
-        .post('pictures', { image: images[base64Image] })
-        .catch((error) => console.log(error))
+      let savedImage = await api.post('pictures', {
+        image: images[base64Image],
+      })
       imageIds.push(savedImage.id)
-      console.log('Снимката беше запазена')
     } catch (_) {
-      console.log('Снимката не беше запазена!')
+      console.error(error)
     }
   }
 
