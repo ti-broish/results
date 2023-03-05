@@ -103,7 +103,7 @@ export default (props) => {
 
   const refreshResults = () => {
     // Set to true, to populate with fake data
-    const devMode = false
+    const devMode = true
 
     setData(null)
     setResultsAvailable(false)
@@ -150,11 +150,13 @@ export default (props) => {
           regions={data.nodes}
           parties={parties}
           results={data.results}
-          resultsAvailable={resultsAvailable}
-          violationsReported={violationsReported}
-          streamsAvailable={streamsAvailable}
-          sectionsWithResults={sectionsWithResults}
-          populatedSections={populatedSections}
+          filters={{
+            resultsAvailable,
+            violationsReported,
+            streamsAvailable,
+            sectionsWithResults,
+            populatedSections,
+          }}
           mode={selectedMode}
           setMode={(mode) => setSelectedMode(mode)}
         />
