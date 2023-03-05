@@ -19,13 +19,11 @@ const saveImages = async function (images) {
 }
 
 const convertImagesToBase64 = async function (images) {
-  let convertedImages = []
-  for (let i = 0; i < images.length; i++) {
-    let convertedImage = await convertToBase64(images[i])
-    convertedImages.push(convertedImage)
-  }
-
-  return convertedImages
+  return await Promise.all(
+    images.map(async (image) => {
+      return await convertToBase64(image)
+    })
+  )
 }
 
 export { convertImagesToBase64, saveImages }
