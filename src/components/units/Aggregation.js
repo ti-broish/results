@@ -103,7 +103,7 @@ export default (props) => {
 
   const refreshResults = () => {
     // Set to true, to populate with fake data
-    const devMode = true
+    const devMode = false
 
     setData(null)
     setResultsAvailable(false)
