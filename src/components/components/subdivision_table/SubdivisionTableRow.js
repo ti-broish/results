@@ -1,18 +1,18 @@
 import React, { useRef } from 'react'
 
-import { Link } from 'react-router-dom'
 import handleViewport from 'react-in-viewport'
+import { Link } from 'react-router-dom'
 
+import PercentageLine from '../PercentageLine.js'
 import ResultsLine from '../ResultsLine.js'
 import SimpleLine from '../SimpleLine'
 
-import styled from 'styled-components'
-import { mapNodesType } from '../../ResultUnit.js'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {
-  faExclamationTriangle,
   faExclamationCircle,
+  faExclamationTriangle,
 } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import styled from 'styled-components'
 
 import { formatCount } from '../../Util'
 import { rgbGradient } from '../bulgaria_map/generateRegionData.js'
@@ -52,44 +52,19 @@ export default handleViewport((props) => {
   if (inViewport) alreadyLoaded.current = true
   const shouldLoad = inViewport || alreadyLoaded.current
 
-  const renderSimpleLine = () => {
-    let percentage
-    let tooltipField
-    let tooltipValue
-
-    if (props.mode === 'turnout') {
-      let stats = props.subdivision.stats
-      percentage = (stats.validVotes + stats.invalidVotes) / stats.voters
-      tooltipField = 'Активност'
-    } else if (props.mode === 'voters') {
-      p
-    }
-
-    return (
-      <SimpleLine
-        percentage={percentage}
-        tooltipTitle={props.subdivision.name}
-        tooltipField={tooltipField}
-        tooltipValue={tooltipValue}
-        embed={props.embed}
-        thin
-      />
-    )
-  }
-
   const generateTooltip = (text, count) => {
     return `
             <div>
-                <table style="width: 100%;">
-                <tbody>
-                    <tr>
-                        <td>${text}</td>
-                        <td style="text-align: right; padding-left: 20px;">${formatCount(
-                          count
-                        )}</td> 
-                    </tr>
-                </tbody>
-                </table>
+              <table style="width: 100%;">
+              <tbody>
+                <tr>
+                  <td>${text}</td>
+                  <td style="text-align: right; padding-left: 20px;">
+                    ${formatCount(count)}
+                  </td> 
+                </tr>
+              </tbody>
+              </table>
             </div>
         `
   }
@@ -116,37 +91,6 @@ export default handleViewport((props) => {
           )}
         </td>
       </SubdivisionTableRowStyle>
-      {/*,
-            props.subdivision.nodes.length <= 1? null :
-            <SubdivisionTableRowStyle ref={forwardedRef} style={{opacity: shouldLoad? 1 : 0, transition: 'opacity 1s ease'}} 
-                type={props.type === 'top' ? 'middle' : 'bottom'}
-            >
-                <td style={props.type === 'top'? {fontSize: '28px'} : {}}>
-                    <b>Общо ({props.subdivision.nodes.length} {mapNodesType(props.subdivision.nodesType)})</b>
-                </td>
-                <td style={{borderBottom: '1px solid #ccc', paddingBottom: '10px'}}>
-                {
-                    props.mode === 'distribution'?
-                        <ResultsLine
-                            results={props.subdivision.results} 
-                            parties={props.parties}
-                            totalValid={props.subdivision.totalValid} 
-                            totalInvalid={props.subdivision.totalInvalid}
-                            firstParty={props.singleParty === ''? null : props.singleParty}
-                            embed={props.embed}
-                            thin
-                        /> :
-                        <SimpleLine
-                            percentage={props.subdivision.percentage}
-                            tooltipTitle={props.subdivision.name}
-                            tooltipField={props.subdivision.tooltipField}
-                            tooltipValue={props.subdivision.tooltipValue}
-                            embed={props.embed}
-                            thin
-                        />
-                }
-                </td>
-            </SubdivisionTableRowStyle>,*/}
     </>
   ) : (
     <>
@@ -190,7 +134,7 @@ export default handleViewport((props) => {
                 </span>
               )}
 
-              {props.subdivision.stats.violationsCount < 1 ? null : (
+              {props.subdivision.stats.violationsCount > 0 && (
                 <span
                   style={{
                     color: rgbGradient(
@@ -227,7 +171,7 @@ export default handleViewport((props) => {
           )}
         </td>
         <td>
-          {props.mode === 'distribution' ? (
+          {props.mode === 'distribution' && (
             <ResultsLine
               name={props.subdivision.name}
               results={props.subdivision.results}
@@ -238,16 +182,27 @@ export default handleViewport((props) => {
               embed={props.embed}
               thin
             />
-          ) : (
-            <SimpleLine
-              percentage={props.subdivision.percentage}
-              tooltipTitle={props.subdivision.name}
-              tooltipField={props.subdivision.tooltipField}
-              tooltipValue={props.subdivision.tooltipValue}
+          )}
+          {props.mode === 'sectionsWithResults' && (
+            <PercentageLine
               embed={props.embed}
+              highRisk={props.subdivision.stats.highRisk}
+              midRisk={props.subdivision.stats.midRisk}
+              sectionsCount={props.subdivision.stats.sectionsCount}
               thin
             />
           )}
+          {props.mode !== 'distribution' &&
+            props.mode !== 'sectionsWithResults' && (
+              <SimpleLine
+                percentage={props.subdivision.percentage}
+                tooltipTitle={props.subdivision.name}
+                tooltipField={props.subdivision.tooltipField}
+                tooltipValue={props.subdivision.tooltipValue}
+                embed={props.embed}
+                thin
+              />
+            )}
         </td>
       </SubdivisionTableRowStyle>
     </>
