@@ -35,7 +35,7 @@ export default function UploadPhotos() {
 
   return (
     <StyledDiv>
-      <label class="label">
+      <label className="label">
         {' '}
         <input
           name="photoUpload"
