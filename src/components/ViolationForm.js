@@ -3,14 +3,14 @@ import styled from 'styled-components'
 import React, { useEffect, useState } from 'react'
 import api from '../utils/api'
 import { SectionSelector } from './sectionSelector/SectionSelector'
+import UploadPhotos from './UploadPhotos'
+import { saveImages, convertImagesToBase64 } from '../utils/uploadPhotosHelper'
 
 const CommentFormStyle = styled.form`
   width: 100%;
-
   .errorMsg {
     color: red;
   }
-
   textarea {
     width: 80%;
     height: 50px;
@@ -18,34 +18,38 @@ const CommentFormStyle = styled.form`
     margin-left: 5px;
     margin-bottom: 10px;
   }
-
   input[type='radio'] {
     margin: 5px;
     vertical-align: middle;
   }
-
   .inputLabel {
     display: block;
+    margin-top: 10px;
     margin-left: 5px;
     padding: 5px;
   }
-
   input[type='text'] {
     width: 80%;
     font-size: 18px;
-    padding: 20px;
+    padding: 10px;
     border: 1px solid #eee;
-    margin: 20px 0;
+    margin-bottom: 10px;
     box-sizing: border-box;
     margin-left: 5px;
   }
-
+  select {
+    margin-left: 5px;
+    padding: 5px;
+  }
   .successfulMessage {
     color: green;
   }
-
   .unsuccessfulMessage {
     color: red;
+  }
+  button {
+    padding: 10px;
+    margin: 20px 5px;
   }
 `
 
@@ -73,16 +77,20 @@ export const ViolationForm = () => {
         email: '',
         phoneNumber: '',
         description: '',
+        file: '',
       })
     }
   }, [formState, reset])
 
   const onSubmit = async (data) => {
+    const convertedImages = await convertImagesToBase64(data.file)
+    const savedImageIds = await saveImages(convertedImages)
     const body = {
       description: data.description,
       town: parseInt(data.town, 10),
     }
     data.section ? (body['section'] = data.section) : body
+    savedImageIds ? (body['pictures'] = savedImageIds) : body
     try {
       void (await api.post('violations', body))
       setMessage('Сигналът ви беше изпратен успешно!')
@@ -149,6 +157,7 @@ export const ViolationForm = () => {
             <p className="errorMsg">Полето е задължително.</p>
           )}
         </div>
+        <UploadPhotos name="photoUpload"></UploadPhotos>
         <div className="form-control">
           <label></label>
           <button type="submit">Изпрати сигнал</button>

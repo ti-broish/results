@@ -12,6 +12,7 @@ const fetchData = async (cache, url, callback) => {
   }
 
   const fetched = url ? callback(await api.get(url)) : []
+  console.log('Fetched', fetched)
   cache.current[url] = fetched
 
   return fetched
