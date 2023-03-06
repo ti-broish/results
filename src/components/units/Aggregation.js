@@ -150,11 +150,13 @@ export default (props) => {
           regions={data.nodes}
           parties={parties}
           results={data.results}
-          resultsAvailable={resultsAvailable}
-          violationsReported={violationsReported}
-          streamsAvailable={streamsAvailable}
-          sectionsWithResults={sectionsWithResults}
-          populatedSections={populatedSections}
+          filters={{
+            resultsAvailable,
+            violationsReported,
+            streamsAvailable,
+            sectionsWithResults,
+            populatedSections,
+          }}
           mode={selectedMode}
           setMode={(mode) => setSelectedMode(mode)}
         />

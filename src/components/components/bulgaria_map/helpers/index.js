@@ -20,18 +20,18 @@ import {
 } from '../generateRegionData'
 
 export const generateRegionData = (
-  props,
+  regions,
+  parties,
+  results,
   mode,
   singleParty,
   singlePartyMode,
   sectionsMode
 ) => {
-  const { regions, parties, results } = props
-
   switch (mode) {
     case 'dominant':
       return generateRegionDataDominant(regions, parties, results)
-    case 'single-party':
+    case 'singleParty':
       return generateRegionDataSingleParty(
         singleParty,
         singlePartyMode,
@@ -69,7 +69,7 @@ export const generateTooltipContent = (
   switch (mode) {
     case 'dominant':
       return generateTooltipDominant(region, tooltipData)
-    case 'single-party':
+    case 'singleParty':
       return generateTooltipSingleParty(singleParty, region, tooltipData)
     case 'turnout':
       return generateTooltipTurnout(region, tooltipData)
