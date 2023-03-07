@@ -21,6 +21,7 @@ import Videos from './Videos'
 
 import styled from 'styled-components'
 import { ViolationForm } from './ViolationForm'
+import { ProtocolForm } from './ProtocolForm'
 
 const NavigationTabsBackground = styled.div`
   background-color: #ddd;
@@ -118,6 +119,7 @@ export default (props) => {
               path="/videos"
               render={() => showAfterElectionDate(<Videos />)}
             />
+            <Route path="/protocol_form" component={ProtocolForm} />
             <Route path="/violation_form" component={ViolationForm} />
             <Route path="/violations" component={Violations} />
             <Route
