@@ -65,6 +65,11 @@ export const ViolationForm = () => {
   } = methods
   const [message, setMessage] = useState('')
   const [key, setKey] = useState(0)
+  const [files, setFiles] = useState([])
+
+  const handlePhotoUpload = (files) => {
+    setFiles(files)
+  }
 
   useEffect(() => {
     if (isSubmitSuccessful) {
@@ -74,8 +79,7 @@ export const ViolationForm = () => {
   }, [formState, reset])
 
   const onSubmit = async (data) => {
-    const convertedImages = await convertImagesToBase64(data.file)
-    const savedImageIds = await saveImages(convertedImages)
+    const savedImageIds = await saveImages(files)
     const body = {
       description: data.description,
       town: parseInt(data.town, 10),
@@ -148,7 +152,11 @@ export const ViolationForm = () => {
             <p className="errorMsg">Полето е задължително.</p>
           )}
         </div>
-        <UploadPhotos name="photoUpload"></UploadPhotos>
+        <UploadPhotos
+          name="photoUpload"
+          callback={handlePhotoUpload}
+          isRequired={false}
+        ></UploadPhotos>
         <div className="form-control">
           <label></label>
           <button type="submit">Изпрати сигнал</button>
