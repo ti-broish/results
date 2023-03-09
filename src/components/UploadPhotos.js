@@ -19,6 +19,7 @@ export default function UploadPhotos({ callback }) {
     <div>
       {' '}
       <FilePond
+        required={true}
         onupdatefiles={callback}
         acceptedFileTypes={['image/png', 'image/jpeg']}
         allowMultiple={true}

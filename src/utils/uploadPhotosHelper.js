@@ -7,10 +7,11 @@ const saveImages = async function (images) {
   for (const image in images) {
     const base64image = images[image].getFileEncodeDataURL()
     const imageMB = byteSize(base64image) / Math.pow(1024, 2)
+
+    if (Math.round(imageMB) > 50) {
+      throw new Error('Размерът на файла е твърде голям')
+    }
     try {
-      if (Math.round(imageMB) > 50) {
-        throw new Error('Размерът на файла е твърде голям')
-      }
       let savedImage = await api.post('pictures', {
         image: base64image,
       })

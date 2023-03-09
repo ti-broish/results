@@ -57,19 +57,20 @@ export const ProtocolForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    const savedImageIds = await saveImages(files)
-    const body = {
-      pictures: savedImageIds,
-    }
+
     try {
+      const savedImageIds = await saveImages(files)
+      const body = {
+        pictures: savedImageIds,
+      }
       if (savedImageIds.length < 4) {
-        throw new Error('Качете поне 4 снимки')
+        return setMessage('Качете поне 4 снимки')
       }
       void (await api.post('protocols', body))
       setMessage('Протоколът ви беше изпратен успешно!')
     } catch (error) {
       console.error(error)
-      setMessage('Протоколът ви не беше изпратен!')
+      setMessage(`Протоколът Ви не беше изпратен: ${error.message}`)
     }
   }
 
