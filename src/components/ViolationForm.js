@@ -79,18 +79,18 @@ export const ViolationForm = () => {
   }, [formState, reset])
 
   const onSubmit = async (data) => {
-    const savedImageIds = await saveImages(files)
-    const body = {
-      description: data.description,
-      town: parseInt(data.town, 10),
-    }
-    data.section ? (body['section'] = data.section) : body
-    savedImageIds ? (body['pictures'] = savedImageIds) : body
     try {
+      const savedImageIds = await saveImages(files)
+      const body = {
+        description: data.description,
+        town: parseInt(data.town, 10),
+      }
+      data.section ? (body['section'] = data.section) : body
+      savedImageIds ? (body['pictures'] = savedImageIds) : body
       void (await api.post('violations', body))
-      setMessage('Сигналът ви беше изпратен успешно!')
-    } catch (_) {
-      setMessage('Сигналът ви не беше изпратен!')
+      setMessage('Сигналът Ви беше изпратен успешно!')
+    } catch (error) {
+      setMessage(`Сигналът Ви не беше изпратен!: ${error.message}`)
     }
   }
 
