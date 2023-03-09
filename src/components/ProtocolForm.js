@@ -79,7 +79,10 @@ export const ProtocolForm = () => {
       {' '}
       <div>
         <h1>Изпрати протокол</h1>
-        <UploadPhotos callback={handlePhotoUpload}></UploadPhotos>
+        <UploadPhotos
+          callback={handlePhotoUpload}
+          isRequired={true}
+        ></UploadPhotos>
         <div className="form-control">
           <label></label>
           <button type="submit">Изпрати протокол</button>

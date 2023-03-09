@@ -14,12 +14,12 @@ registerPlugin(
   FilePondPluginFileValidateType
 )
 
-export default function UploadPhotos({ callback }) {
+export default function UploadPhotos({ callback, isRequired }) {
   return (
     <div>
       {' '}
       <FilePond
-        required={true}
+        required={isRequired}
         onupdatefiles={callback}
         acceptedFileTypes={['image/png', 'image/jpeg']}
         allowMultiple={true}
