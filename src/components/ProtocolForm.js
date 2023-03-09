@@ -1,13 +1,10 @@
-import { useForm, FormProvider } from 'react-hook-form'
 import styled from 'styled-components'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import api from '../utils/api'
 import UploadPhotos from './UploadPhotos'
-import { saveImages, convertImagesToBase64 } from '../utils/uploadPhotosHelper'
+import { saveImages } from '../utils/uploadPhotosHelper'
 
 const ProtocolFormStyle = styled.form`
-  width: 100%;
-
   .errorMsg {
     color: red;
   }
@@ -51,12 +48,16 @@ const ProtocolFormStyle = styled.form`
 `
 
 export const ProtocolForm = () => {
-  const methods = useForm()
+  const [files, setFiles] = useState([])
   const [message, setMessage] = useState('')
 
-  const onSubmit = async (data) => {
-    const convertedImages = await convertImagesToBase64(data.file)
-    const savedImageIds = await saveImages(convertedImages)
+  const handlePhotoUpload = (files) => {
+    setFiles(files)
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    const savedImageIds = await saveImages(files)
     const body = {
       pictures: savedImageIds,
     }
@@ -73,27 +74,25 @@ export const ProtocolForm = () => {
   }
 
   return (
-    <FormProvider {...methods}>
-      <ProtocolFormStyle onSubmit={methods.handleSubmit(onSubmit)}>
-        {' '}
-        <div>
-          <h1>Изпрати протокол</h1>
-          <UploadPhotos></UploadPhotos>
-          <div className="form-control">
-            <label></label>
-            <button type="submit">Изпрати протокол</button>
-          </div>
+    <ProtocolFormStyle onSubmit={handleSubmit}>
+      {' '}
+      <div>
+        <h1>Изпрати протокол</h1>
+        <UploadPhotos callback={handlePhotoUpload}></UploadPhotos>
+        <div className="form-control">
+          <label></label>
+          <button type="submit">Изпрати протокол</button>
         </div>
-        {message && (
-          <div>
-            {!message.includes('не') ? (
-              <p className="successfulMessage">{message}</p>
-            ) : (
-              <p className="unsuccessfulMessage">{message}</p>
-            )}
-          </div>
-        )}
-      </ProtocolFormStyle>
-    </FormProvider>
+      </div>
+      {message && (
+        <div>
+          {!message.includes('не') ? (
+            <p className="successfulMessage">{message}</p>
+          ) : (
+            <p className="unsuccessfulMessage">{message}</p>
+          )}
+        </div>
+      )}
+    </ProtocolFormStyle>
   )
 }
