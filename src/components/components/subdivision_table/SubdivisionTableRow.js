@@ -183,15 +183,27 @@ export default handleViewport((props) => {
               thin
             />
           )}
-          {props.mode === 'sectionsWithResults' && (
-            <PercentageLine
-              embed={props.embed}
-              highRisk={props.subdivision.stats.highRisk}
-              midRisk={props.subdivision.stats.midRisk}
-              sectionsCount={props.subdivision.stats.sectionsCount}
-              thin
-            />
-          )}
+          {props.mode === 'sectionsWithResults' &&
+            props.sectionsMode === 'risk' && (
+              <PercentageLine
+                embed={props.embed}
+                highRisk={props.subdivision.stats.highRisk}
+                midRisk={props.subdivision.stats.midRisk}
+                sectionsCount={props.subdivision.stats.sectionsCount}
+                thin
+              />
+            )}
+          {props.mode === 'sectionsWithResults' &&
+            props.sectionsMode === 'populated' && (
+              <SimpleLine
+                percentage={props.subdivision.percentage}
+                tooltipTitle={props.subdivision.name}
+                tooltipField={props.subdivision.tooltipField}
+                tooltipValue={props.subdivision.tooltipValue}
+                embed={props.embed}
+                thin
+              />
+            )}
           {props.mode !== 'distribution' &&
             props.mode !== 'sectionsWithResults' && (
               <SimpleLine

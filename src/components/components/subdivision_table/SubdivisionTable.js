@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import ReactTooltip from 'react-tooltip'
-import SubdivisionTableRow from './SubdivisionTableRow'
 import { mapNodeType } from '../../ResultUnit'
+import SubdivisionTableRow from './SubdivisionTableRow'
 
 import { useParams } from 'react-router-dom'
 
@@ -10,10 +10,11 @@ import styled from 'styled-components'
 import { generateDisplayParties } from '../bulgaria_map/generateRegionData'
 import {
   sortTableDistribution,
-  sortTableVoters,
+  sortTablePopulated,
+  sortTableSections,
   sortTableTurnout,
   sortTableViolations,
-  sortTableSections,
+  sortTableVoters,
 } from './sortSubdivisionTable'
 
 const StyledTooltip = styled(ReactTooltip)`
@@ -133,6 +134,7 @@ export default (props) => {
     props.resultsAvailable ? 'distribution' : 'violations'
   )
   const [singleParty, setSingleParty] = useState('')
+  const { sectionsMode } = props
 
   useEffect(() => {
     ReactTooltip.rebuild()
@@ -140,6 +142,7 @@ export default (props) => {
   useEffect(() => {
     ReactTooltip.rebuild()
   }, [singleParty])
+
   useEffect(() => {
     ReactTooltip.rebuild()
   }, [depthMode])
@@ -147,6 +150,9 @@ export default (props) => {
     ReactTooltip.rebuild()
     setMode(getSelectedMode())
   }, [props?.selectedMode])
+  useEffect(() => {
+    ReactTooltip.rebuild()
+  }, [sectionsMode])
 
   const getSelectedMode = () => {
     const mode = props?.selectedMode
@@ -200,7 +206,12 @@ export default (props) => {
       case 'turnout':
         return sortTableTurnout(subdivisions)
       case 'sectionsWithResults':
-        return sortTableSections(subdivisions)
+        if (sectionsMode === 'risk') {
+          return sortTableSections(subdivisions)
+        }
+        if (sectionsMode === 'populated') {
+          return sortTablePopulated(subdivisions)
+        }
       case 'violations':
         return sortTableViolations(subdivisions)
     }
@@ -247,6 +258,7 @@ export default (props) => {
         unit={unit}
         parties={props.parties}
         mode={mode}
+        sectionsMode={sectionsMode}
         embed={props.embed}
         type={type}
       />
