@@ -56,17 +56,18 @@ const CommentFormStyle = styled.form`
 export const ViolationForm = () => {
   const methods = useForm()
   const {
-    formState: { errors },
+    formState: { errors, isSubmitSuccessful },
     formState,
     register,
     setValue,
+    handleSubmit,
     reset,
   } = methods
   const [message, setMessage] = useState('')
   const [key, setKey] = useState(0)
 
   useEffect(() => {
-    if (formState.isSubmitSuccessful) {
+    if (isSubmitSuccessful) {
       reset()
       setKey(key + 1)
     }
@@ -91,7 +92,7 @@ export const ViolationForm = () => {
 
   return (
     <FormProvider {...methods}>
-      <CommentFormStyle onSubmit={methods.handleSubmit(onSubmit)}>
+      <CommentFormStyle onSubmit={handleSubmit(onSubmit)}>
         <SectionSelector
           key={key}
           errors={errors}
