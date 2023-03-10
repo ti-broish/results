@@ -63,23 +63,12 @@ export const ViolationForm = () => {
     reset,
   } = methods
   const [message, setMessage] = useState('')
+  const [key, setKey] = useState(0)
 
   useEffect(() => {
     if (formState.isSubmitSuccessful) {
-      reset({
-        isAbroad: '',
-        electionRegion: '',
-        country: '',
-        municipality: '',
-        town: '',
-        city_region: '',
-        section: '',
-        name: '',
-        email: '',
-        phoneNumber: '',
-        description: '',
-        file: '',
-      })
+      reset()
+      setKey(key + 1)
     }
   }, [formState, reset])
 
@@ -104,6 +93,7 @@ export const ViolationForm = () => {
     <FormProvider {...methods}>
       <CommentFormStyle onSubmit={methods.handleSubmit(onSubmit)}>
         <SectionSelector
+          key={key}
           errors={errors}
           register={register}
           setValue={setValue}
