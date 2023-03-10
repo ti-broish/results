@@ -8,9 +8,10 @@ const saveImages = async function (images) {
   for (const image in images) {
     const base64image = images[image].getFileEncodeDataURL()
     const imageMB = byteSize(base64image) / Math.pow(1024, 2)
-
     if (Math.round(imageMB) > 50) {
-      throw new ValidationError('Размерът на файла е твърде голям')
+      throw new ValidationError(
+        `Размерът на файла ${images[image].file.name}  е твърде голям`
+      )
     }
     let savedImage
     try {
