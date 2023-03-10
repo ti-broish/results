@@ -232,7 +232,6 @@ export default handleViewport(
     const history = useHistory()
     const [singleParty, setSingleParty] = useState('')
     const [singlePartyMode, setSinglePartyMode] = useState('percentage')
-    // const [sectionsMode, setSectionsMode] = useState('risk')
 
     const regionData = generateRegionData(
       regions,

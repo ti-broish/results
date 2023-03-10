@@ -138,22 +138,11 @@ export default (props) => {
 
   useEffect(() => {
     ReactTooltip.rebuild()
-  }, [mode])
-  useEffect(() => {
-    ReactTooltip.rebuild()
-  }, [singleParty])
-
-  useEffect(() => {
-    ReactTooltip.rebuild()
-  }, [depthMode])
+  }, [mode, singleParty, depthMode, sectionsMode])
   useEffect(() => {
     ReactTooltip.rebuild()
     setMode(getSelectedMode())
   }, [props?.selectedMode])
-  useEffect(() => {
-    ReactTooltip.rebuild()
-  }, [sectionsMode])
-
   const getSelectedMode = () => {
     const mode = props?.selectedMode
     switch (mode) {
