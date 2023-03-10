@@ -80,6 +80,7 @@ export const ProtocolForm = () => {
       <div>
         <h1>Изпрати протокол</h1>
         <UploadPhotos
+          files={files}
           callback={handlePhotoUpload}
           isRequired={true}
         ></UploadPhotos>
