@@ -1,3 +1,4 @@
+import { ValidationError } from './ValidationError'
 import api from './api'
 import convertToBase64 from './fileToBase64'
 
@@ -9,16 +10,17 @@ const saveImages = async function (images) {
     const imageMB = byteSize(base64image) / Math.pow(1024, 2)
 
     if (Math.round(imageMB) > 50) {
-      throw new Error('Размерът на файла е твърде голям')
+      throw new ValidationError('Размерът на файла е твърде голям')
     }
+    let savedImage
     try {
-      let savedImage = await api.post('pictures', {
+      savedImage = await api.post('pictures', {
         image: base64image,
       })
-      imageIds.push(savedImage.id)
-    } catch (error) {
-      console.error(error)
+    } catch (e) {
+      throw new ValidationError('Възникна грешка при качването на снимките')
     }
+    imageIds.push(savedImage.id)
   }
 
   return imageIds

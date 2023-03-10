@@ -14,17 +14,20 @@ registerPlugin(
   FilePondPluginFileValidateType
 )
 
-export default function UploadPhotos({ callback, isRequired }) {
+export default function UploadPhotos({ files, callback, isRequired }) {
   return (
     <div>
       {' '}
       <FilePond
+        files={files}
+        labelFileTypeNotAllowed="Невалиден тип файл"
+        fileValidateTypeLabelExpectedTypes="Очаквани файлове: {allButLastType} или {lastType}"
         required={isRequired}
         onupdatefiles={callback}
         acceptedFileTypes={['image/png', 'image/jpeg']}
         allowMultiple={true}
         name="files"
-        labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+        labelIdle='<span class="filepond--label-action">Качи снимки</span>'
       />
     </div>
   )

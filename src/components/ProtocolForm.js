@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import api from '../utils/api'
 import UploadPhotos from './UploadPhotos'
 import { saveImages } from '../utils/uploadPhotosHelper'
+import { ValidationError } from '../utils/ValidationError'
 
 const ProtocolFormStyle = styled.form`
   .errorMsg {
@@ -46,32 +47,45 @@ const ProtocolFormStyle = styled.form`
     color: red;
   }
 `
-
 export const ProtocolForm = () => {
   const [files, setFiles] = useState([])
-  const [message, setMessage] = useState('')
+  const [error, setError] = useState(null)
+  const [isSubmitted, setIsSubmitted] = useState(false)
 
   const handlePhotoUpload = (files) => {
     setFiles(files)
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-
+  const handleSubmit = async (event) => {
+    event.preventDefault()
     try {
+      if (files.length < 4) {
+        throw new ValidationError('Качете поне 4 снимки')
+      }
       const savedImageIds = await saveImages(files)
       const body = {
         pictures: savedImageIds,
       }
-      if (savedImageIds.length < 4) {
-        return setMessage('Качете поне 4 снимки')
-      }
       void (await api.post('protocols', body))
-      setMessage('Протоколът ви беше изпратен успешно!')
-    } catch (error) {
-      console.error(error)
-      setMessage(`Протоколът Ви не беше изпратен: ${error.message}`)
+      setError(null)
+      setFiles([])
+    } catch (e) {
+      let err = e
+      if (
+        err.response &&
+        err.response.status >= 400 &&
+        err.response.status < 500
+      ) {
+        err = new ValidationError(err.response.data.message)
+      } else if (!(err instanceof ValidationError)) {
+        err = new Error(
+          'Възникна неочаквана грешка. Моля опитайте отново по-късно.'
+        )
+      }
+
+      setError(err)
     }
+    setIsSubmitted(true)
   }
 
   return (
@@ -89,12 +103,14 @@ export const ProtocolForm = () => {
           <button type="submit">Изпрати протокол</button>
         </div>
       </div>
-      {message && (
+      {isSubmitted && (
         <div>
-          {!message.includes('не') ? (
-            <p className="successfulMessage">{message}</p>
+          {error === null ? (
+            <p className="successfulMessage">
+              Протоколът ви беше изпратен успешно!
+            </p>
           ) : (
-            <p className="unsuccessfulMessage">{message}</p>
+            <p className="unsuccessfulMessage">{error.message}</p>
           )}
         </div>
       )}
