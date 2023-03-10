@@ -59,6 +59,7 @@ export const ViolationForm = () => {
     formState: { errors },
     formState,
     register,
+    setValue,
     reset,
   } = methods
   const [message, setMessage] = useState('')
@@ -102,7 +103,11 @@ export const ViolationForm = () => {
   return (
     <FormProvider {...methods}>
       <CommentFormStyle onSubmit={methods.handleSubmit(onSubmit)}>
-        <SectionSelector errors={errors} register={register} />
+        <SectionSelector
+          errors={errors}
+          register={register}
+          setValue={setValue}
+        />
         <div className="form-control">
           <label className="inputLabel">Име</label>
           <input
