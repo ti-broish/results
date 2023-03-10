@@ -122,15 +122,10 @@ export const ViolationForm = () => {
         <div className="form-control">
           <label className="inputLabel">Имейл</label>
           <input
-            type="text"
+            type="email"
             name="email"
             {...register('email', {
               required: true,
-              pattern: {
-                value:
-                  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                message: 'Въведете валиден имейл',
-              },
             })}
           />
           {errors.email && errors.email.type === 'required' && (
