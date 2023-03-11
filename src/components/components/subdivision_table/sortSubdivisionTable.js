@@ -68,6 +68,26 @@ export const sortTableSections = (subdivisions) => {
   return sortSignals(subdivisions)
 }
 
+export const sortTablePopulated = (subdivisions) => {
+  let highestCount = 0
+  for (const subdivision of subdivisions) {
+    const currentCount = subdivision.stats.populated
+
+    if (currentCount > highestCount) highestCount = currentCount
+  }
+
+  for (const subdivision of subdivisions) {
+    const currentCount = subdivision.stats.populated
+    subdivision.percentage = currentCount / highestCount
+    subdivision.tooltipField = 'Запълнени секции'
+    subdivision.tooltipValue = formatCount(subdivision.stats.populated)
+  }
+
+  subdivisions.sort((s1, s2) => s2.percentage - s1.percentage)
+
+  return sortSignals(subdivisions)
+}
+
 export const sortTableVoters = (subdivisions) => {
   let highestCount = 0
   for (const subdivision of subdivisions) {

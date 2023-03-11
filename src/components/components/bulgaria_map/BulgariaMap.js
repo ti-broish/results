@@ -222,6 +222,8 @@ export default handleViewport(
     linkToMainSite,
     loadViolationsForRegion,
     filters,
+    sectionsMode,
+    setSectionsMode,
   }) => {
     const alreadyLoaded = useRef(false)
     if (inViewport) alreadyLoaded.current = true
@@ -230,7 +232,6 @@ export default handleViewport(
     const history = useHistory()
     const [singleParty, setSingleParty] = useState('')
     const [singlePartyMode, setSinglePartyMode] = useState('percentage')
-    const [sectionsMode, setSectionsMode] = useState('risk')
 
     const regionData = generateRegionData(
       regions,

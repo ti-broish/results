@@ -88,6 +88,7 @@ export default (props) => {
   const [streamsAvailable, setStreamsAvailable] = useState(false)
   const [sectionsWithResults, setSectionsWithResults] = useState(false)
   const [populatedSections, setPopulatedSections] = useState(false)
+  const [sectionsMode, setSectionsMode] = useState('risk')
   const { unit } = useParams()
   const history = useHistory()
 
@@ -159,6 +160,8 @@ export default (props) => {
           }}
           mode={selectedMode}
           setMode={(mode) => setSelectedMode(mode)}
+          sectionsMode={sectionsMode}
+          setSectionsMode={(sectionsMode) => setSectionsMode(sectionsMode)}
         />
       )}
 
@@ -188,6 +191,7 @@ export default (props) => {
             subdivisions={data.nodes.map(aggregateData)}
             embed={props.embed}
             selectedMode={selectedMode}
+            sectionsMode={sectionsMode}
           />
 
           {selectedMode == 'violations' && (
