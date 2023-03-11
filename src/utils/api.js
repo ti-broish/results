@@ -9,7 +9,10 @@ const api = axios.create({
 
 api.interceptors.response.use(
   (res) => (res.data !== undefined ? res.data : res),
-  (error) => console.error('API error: ', error)
+  (error) => {
+    console.error('API error: ', error)
+    return Promise.reject(error)
+  }
 )
 
 export default api
