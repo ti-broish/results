@@ -15,10 +15,10 @@ export default ({
     {label && <label className="inputLabel">{label}</label>}
     <div>
       <select
+        {...register(name, { required })}
         className="form-control"
         name={name}
         value={value}
-        {...register(name, { required })}
         onChange={(e) => onChange(e.target.value)}
         disabled={options.length === 0}
       >

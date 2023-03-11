@@ -56,29 +56,20 @@ const CommentFormStyle = styled.form`
 export const ViolationForm = () => {
   const methods = useForm()
   const {
-    formState: { errors },
+    formState: { errors, isSubmitSuccessful },
     formState,
     register,
+    setValue,
+    handleSubmit,
     reset,
   } = methods
   const [message, setMessage] = useState('')
+  const [key, setKey] = useState(0)
 
   useEffect(() => {
-    if (formState.isSubmitSuccessful) {
-      reset({
-        isAbroad: '',
-        electionRegion: '',
-        country: '',
-        municipality: '',
-        town: '',
-        city_region: '',
-        section: '',
-        name: '',
-        email: '',
-        phoneNumber: '',
-        description: '',
-        file: '',
-      })
+    if (isSubmitSuccessful) {
+      reset()
+      setKey(key + 1)
     }
   }, [formState, reset])
 
@@ -101,8 +92,13 @@ export const ViolationForm = () => {
 
   return (
     <FormProvider {...methods}>
-      <CommentFormStyle onSubmit={methods.handleSubmit(onSubmit)}>
-        <SectionSelector errors={errors} register={register} />
+      <CommentFormStyle onSubmit={handleSubmit(onSubmit)}>
+        <SectionSelector
+          key={key}
+          errors={errors}
+          register={register}
+          setValue={setValue}
+        />
         <div className="form-control">
           <label className="inputLabel">Име</label>
           <input
@@ -117,15 +113,10 @@ export const ViolationForm = () => {
         <div className="form-control">
           <label className="inputLabel">Имейл</label>
           <input
-            type="text"
+            type="email"
             name="email"
             {...register('email', {
               required: true,
-              pattern: {
-                value:
-                  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                message: 'Въведете валиден имейл',
-              },
             })}
           />
           {errors.email && errors.email.type === 'required' && (

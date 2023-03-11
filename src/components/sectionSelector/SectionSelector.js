@@ -18,7 +18,7 @@ const fetchData = async (cache, url, callback) => {
   return fetched
 }
 
-export const SectionSelector = ({ register, errors }) => {
+export const SectionSelector = ({ register, errors, setValue }) => {
   const cache = useRef({})
   const [isAbroad, setAbroad] = useState(false)
   const [country, setCountry] = useState(isAbroad ? '' : DOMESTIC_COUNTRY_CODE)
@@ -75,7 +75,9 @@ export const SectionSelector = ({ register, errors }) => {
       : []
     setMunicipality('')
     setMunicipalities(municipalities)
-    municipalities.length === 1 && setMunicipality(municipalities[0].code)
+    municipalities.length === 1 &&
+      (setMunicipality(municipalities[0].code),
+      setValue('municipality', municipalities[0].code))
   }, [electionRegion])
   useEffect(async () => {
     setTown(0)
@@ -95,7 +97,8 @@ export const SectionSelector = ({ register, errors }) => {
     if (!ignore) {
       setTowns(towns)
       towns.length === 0 && setTown(0)
-      towns.length === 1 && setTown(towns[0].id)
+      towns.length === 1 &&
+        (setTown(towns[0].id), setValue('town', towns[0].id))
     }
     return () => {
       ignore = true
@@ -109,7 +112,9 @@ export const SectionSelector = ({ register, errors }) => {
         : []
     setCityRegions(cityRegions)
     cityRegions.length === 0 && setCityRegion('')
-    cityRegions.length === 1 && setCityRegion(cityRegions[0].code)
+    cityRegions.length === 1 &&
+      (setCityRegion(cityRegions[0].code),
+      setValue('cityRegion', cityRegions[0].code))
   }, [town])
   useEffect(async () => {
     setSections([])
