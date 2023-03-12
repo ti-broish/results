@@ -66,6 +66,9 @@ const schema = yup
     phoneNumber: yup.string().required(requiredMessage),
     description: yup.string().required(requiredMessage),
     electionRegion: yup.string().required(requiredMessage),
+    municipality: yup.string().required(requiredMessage),
+    town: yup.string().required(requiredMessage),
+    section: yup.string(),
   })
   .required()
 
@@ -130,17 +133,7 @@ export const ViolationForm = () => {
         </div>
         <div className="form-control">
           <label className="inputLabel">Имейл</label>
-          <input
-            type="email"
-            name="email"
-            {...register('email', {
-              pattern: {
-                value:
-                  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-                message: 'Въведете валиден имейл',
-              },
-            })}
-          />
+          <input type="email" name="email" {...register('email')} />
           <p className="errorMsg">{errors.email?.message}</p>
         </div>
         <div className="form-control">

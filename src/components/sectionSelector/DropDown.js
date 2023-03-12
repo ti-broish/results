@@ -15,7 +15,7 @@ export default ({
     {label && <label className="inputLabel">{label}</label>}
     <div>
       <select
-        {...register(name, { required })}
+        {...register(name)}
         className="form-control"
         name={name}
         value={value}
@@ -31,8 +31,7 @@ export default ({
           </option>
         ))}
       </select>
-      {console.log(errors)}
-      <p>{errors?.message}</p>
+      <p style={{ color: 'red' }}>{errors?.message}</p>
     </div>
   </div>
 )

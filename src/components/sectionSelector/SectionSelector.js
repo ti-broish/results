@@ -126,7 +126,7 @@ export const SectionSelector = ({ register, errors, setValue }) => {
       cache,
       town && (!townHasCityRegions || cityRegion)
         ? `sections?town=${town}${
-            cityRegion ? `&city_region=${cityRegion}` : ''
+            cityRegion ? `&cityRegion=${cityRegion}` : ''
           }`
         : null,
       (list) => list.sort(abcSorter('code'))
@@ -206,7 +206,7 @@ export const SectionSelector = ({ register, errors, setValue }) => {
       />
       {cityRegions.length > 0 && (
         <DropDown
-          name="city_region"
+          name="cityRegion"
           label="Район"
           value={cityRegion}
           options={cityRegions.map((cityRegion) => ({
@@ -215,7 +215,7 @@ export const SectionSelector = ({ register, errors, setValue }) => {
           }))}
           onChange={setCityRegion}
           register={register}
-          errors={errors.city_region}
+          errors={errors.cityRegion}
           required={true}
         />
       )}
