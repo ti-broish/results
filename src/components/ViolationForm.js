@@ -6,6 +6,8 @@ import { SectionSelector } from './sectionSelector/SectionSelector'
 import UploadPhotos from './UploadPhotos'
 import { saveImages, convertImagesToBase64 } from '../utils/uploadPhotosHelper'
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
+import { yupResolver } from '@hookform/resolvers/yup'
+import * as yup from 'yup'
 
 const CommentFormStyle = styled.form`
   width: 100%;
@@ -53,10 +55,23 @@ const CommentFormStyle = styled.form`
     margin: 20px 5px;
   }
 `
+const requiredMessage = 'Полето е задължително.'
+const schema = yup
+  .object({
+    name: yup.string().required(requiredMessage),
+    email: yup
+      .string()
+      .email('Въведете валиден имейл')
+      .required(requiredMessage),
+    phoneNumber: yup.string().required(requiredMessage),
+    description: yup.string().required(requiredMessage),
+    electionRegion: yup.string().required(requiredMessage),
+  })
+  .required()
 
 export const ViolationForm = () => {
-  const methods = useForm()
   const { executeRecaptcha } = useGoogleReCaptcha()
+  const methods = useForm({ resolver: yupResolver(schema) })
   const {
     formState: { errors, isSubmitSuccessful },
     formState,
@@ -110,14 +125,8 @@ export const ViolationForm = () => {
         />
         <div className="form-control">
           <label className="inputLabel">Име</label>
-          <input
-            type="text"
-            name="name"
-            {...register('name', { required: true })}
-          />
-          {errors.name && errors.name.type === 'required' && (
-            <p className="errorMsg">Полето е задължително.</p>
-          )}
+          <input type="text" name="name" {...register('name')} />
+          <p className="errorMsg">{errors.name?.message}</p>
         </div>
         <div className="form-control">
           <label className="inputLabel">Имейл</label>
@@ -125,37 +134,28 @@ export const ViolationForm = () => {
             type="email"
             name="email"
             {...register('email', {
-              required: true,
+              pattern: {
+                value:
+                  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                message: 'Въведете валиден имейл',
+              },
             })}
           />
-          {errors.email && errors.email.type === 'required' && (
-            <p className="errorMsg">Полето е задължително.</p>
-          )}
-          {errors.email && errors.email.message && (
-            <p className="errorMsg">{errors.email.message}</p>
-          )}
+          <p className="errorMsg">{errors.email?.message}</p>
         </div>
         <div className="form-control">
           <label className="inputLabel">Телефон</label>
-          <input
-            type="text"
-            name="phoneNumber"
-            {...register('phoneNumber', { required: true })}
-          />
-          {errors.phoneNumber && errors.phoneNumber.type === 'required' && (
-            <p className="errorMsg">Полето е задължително.</p>
-          )}
+          <input type="text" name="phoneNumber" {...register('phoneNumber')} />
+          <p className="errorMsg">{errors.phoneNumber?.message}</p>
         </div>
         <div className="form-control">
           <label className="inputLabel">Описание на нарушението</label>
           <textarea
             id="violationText"
             name="description"
-            {...register('description', { required: true })}
+            {...register('description')}
           />
-          {errors.violationText && errors.violationText.type === 'required' && (
-            <p className="errorMsg">Полето е задължително.</p>
-          )}
+          <p className="errorMsg">{errors.description?.message}</p>
         </div>
         <UploadPhotos
           name="photoUpload"

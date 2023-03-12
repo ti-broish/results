@@ -31,9 +31,8 @@ export default ({
           </option>
         ))}
       </select>
-      {errors && errors.type === 'required' && (
-        <p className="errorMsg">Полето е задължително.</p>
-      )}
+      {console.log(errors)}
+      <p>{errors?.message}</p>
     </div>
   </div>
 )

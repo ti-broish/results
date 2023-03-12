@@ -26,6 +26,7 @@
     "@fortawesome/free-brands-svg-icons": "^5.15.4",
     "@fortawesome/free-solid-svg-icons": "^5.15.4",
     "@fortawesome/react-fontawesome": "^0.1.16",
+    "@hookform/resolvers": "^2.9.11",
     "@loadable/babel-plugin": "^5.13.2",
     "@loadable/webpack-plugin": "^5.14.2",
     "@videojs/plugin-concat": "^1.0.0",
@@ -61,7 +62,8 @@
     "styled-components": "^5.2.1",
     "url-loader": "^4.1.1",
     "video.js": "^7.13.3",
-    "videojs-playlist": "^4.3.1"
+    "videojs-playlist": "^4.3.1",
+    "yup": "^1.0.2"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.21.0",
