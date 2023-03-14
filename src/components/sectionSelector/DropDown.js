@@ -31,7 +31,7 @@ export default ({
           </option>
         ))}
       </select>
-      <p style={{ color: 'red' }}>{errors?.message}</p>
+      {errors && <p style={{ color: 'red' }}>{errors.message}</p>}
     </div>
   </div>
 )
