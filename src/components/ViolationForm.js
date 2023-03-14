@@ -69,6 +69,11 @@ const schema = yup
     municipality: yup.string().required(requiredMessage),
     town: yup.string().required(requiredMessage),
     section: yup.string(),
+    isAbroad: yup.boolean(),
+    country: yup.string().when('isAbroad', {
+      is: true,
+      then: yup.string().required(requiredMessage),
+    }),
   })
   .required()
 
