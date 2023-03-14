@@ -129,17 +129,19 @@ export const ViolationForm = () => {
         <div className="form-control">
           <label className="inputLabel">Име</label>
           <input type="text" name="name" {...register('name')} />
-          <p className="errorMsg">{errors.name?.message}</p>
+          {errors.name && <p className="errorMsg">{errors.name.message}</p>}
         </div>
         <div className="form-control">
           <label className="inputLabel">Имейл</label>
           <input type="email" name="email" {...register('email')} />
-          <p className="errorMsg">{errors.email?.message}</p>
+          {errors.email && <p className="errorMsg">{errors.email.message}</p>}
         </div>
         <div className="form-control">
           <label className="inputLabel">Телефон</label>
           <input type="text" name="phoneNumber" {...register('phoneNumber')} />
-          <p className="errorMsg">{errors.phoneNumber?.message}</p>
+          {errors.phoneNumber && (
+            <p className="errorMsg">{errors.phoneNumber.message}</p>
+          )}
         </div>
         <div className="form-control">
           <label className="inputLabel">Описание на нарушението</label>
@@ -148,7 +150,9 @@ export const ViolationForm = () => {
             name="description"
             {...register('description')}
           />
-          <p className="errorMsg">{errors.description?.message}</p>
+          {errors.description && (
+            <p className="errorMsg">{errors.description.message}</p>
+          )}
         </div>
         <UploadPhotos
           name="photoUpload"
