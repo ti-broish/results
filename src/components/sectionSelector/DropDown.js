@@ -12,7 +12,10 @@ export default ({
   required,
 }) => (
   <div>
-    {label && <label className="inputLabel">{label}</label>}
+    {label && <label className="inputLabel">
+    	{label}
+	    {required && <span style={{ color: 'red' }}>"*"</span>}
+    </label>}
     <div>
       <select
         {...register(name)}
