@@ -33,12 +33,10 @@ const GlobalCSS = styled.div`
 
 export default (props) => {
   const publicURL = process.env.PUBLIC_URL ? process.env.PUBLIC_URL : '/'
+  const reCaptchaKey = process.env.GOOGLE_RECAPTCHA_KEY
 
   return (
-    <GoogleReCaptchaProvider
-      reCaptchaKey="6LfqhYUkAAAAAAp-KRpwLPTROD1jrAQlQQV_L8R8"
-      language="bg"
-    >
+    <GoogleReCaptchaProvider reCaptchaKey={reCaptchaKey} language="bg">
       <GlobalCSS>
         <BrowserRouter basename={publicURL}>
           <Switch>
