@@ -5,6 +5,7 @@ import api from '../utils/api'
 import { SectionSelector } from './sectionSelector/SectionSelector'
 import UploadPhotos from './UploadPhotos'
 import { saveImages, convertImagesToBase64 } from '../utils/uploadPhotosHelper'
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 
 const CommentFormStyle = styled.form`
   width: 100%;
@@ -55,6 +56,7 @@ const CommentFormStyle = styled.form`
 
 export const ViolationForm = () => {
   const methods = useForm()
+  const { executeRecaptcha } = useGoogleReCaptcha()
   const {
     formState: { errors, isSubmitSuccessful },
     formState,
@@ -87,7 +89,10 @@ export const ViolationForm = () => {
       }
       data.section ? (body['section'] = data.section) : body
       savedImageIds ? (body['pictures'] = savedImageIds) : body
-      void (await api.post('violations', body))
+      const recaptchaToken = await executeRecaptcha('sendViolation')
+      void (await api.post('violations', body, {
+        headers: { 'x-recaptcha-token': recaptchaToken },
+      }))
       setMessage('Сигналът Ви беше изпратен успешно!')
     } catch (error) {
       setMessage(`Сигналът Ви не беше изпратен!: ${error.message}`)

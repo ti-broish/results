@@ -4,6 +4,7 @@ import api from '../utils/api'
 import UploadPhotos from './UploadPhotos'
 import { saveImages } from '../utils/uploadPhotosHelper'
 import { ValidationError } from '../utils/ValidationError'
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 
 const ProtocolFormStyle = styled.form`
   .errorMsg {
@@ -50,12 +51,12 @@ const ProtocolFormStyle = styled.form`
 export const ProtocolForm = () => {
   const [files, setFiles] = useState([])
   const [error, setError] = useState(null)
+  const { executeRecaptcha } = useGoogleReCaptcha()
   const [isSubmitted, setIsSubmitted] = useState(false)
 
   const handlePhotoUpload = (files) => {
     setFiles(files)
   }
-
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
@@ -66,7 +67,10 @@ export const ProtocolForm = () => {
       const body = {
         pictures: savedImageIds,
       }
-      void (await api.post('protocols', body))
+      const recaptchaToken = await executeRecaptcha('sendProtocol')
+      void (await api.post('protocols', body, {
+        headers: { 'x-recaptcha-token': recaptchaToken },
+      }))
       setError(null)
       setFiles([])
     } catch (e) {

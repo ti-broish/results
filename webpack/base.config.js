@@ -49,7 +49,7 @@ module.exports = env => {
         plugins: [
             new CleanWebpackPlugin(),
             new LoadablePlugin(),
-            new CopyWebpackPlugin({ patterns: [ { from: './static/' } ]}),
+            new CopyWebpackPlugin({ patterns: [{ from: './static/' }] }),
             new HtmlWebpackPlugin({
                 title: 'Ти Броиш',
                 template: 'src/index.ejs',
@@ -60,6 +60,7 @@ module.exports = env => {
                     'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
                     'PUBLIC_URL': JSON.stringify(process.env.PUBLIC_URL),
                     'DATA_URL': JSON.stringify(process.env.DATA_URL),
+                    'GOOGLE_RECAPTCHA_KEY': JSON.stringify(process.env.GOOGLE_RECAPTCHA_KEY),
                 },
             }),
         ],

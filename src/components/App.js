@@ -6,6 +6,7 @@ import Election from './Election'
 
 import styled from 'styled-components'
 import Embed from './Embed'
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3'
 
 export const Wrapper = styled.div`
   max-width: 900px;
@@ -32,16 +33,19 @@ const GlobalCSS = styled.div`
 
 export default (props) => {
   const publicURL = process.env.PUBLIC_URL ? process.env.PUBLIC_URL : '/'
+  const reCaptchaKey = process.env.GOOGLE_RECAPTCHA_KEY
 
   return (
-    <GlobalCSS>
-      <BrowserRouter basename={publicURL}>
-        <Switch>
-          <Route path="/embed" component={Embed} />
-          <Route path="/" component={Election} />
-          <Redirect to="/" />
-        </Switch>
-      </BrowserRouter>
-    </GlobalCSS>
+    <GoogleReCaptchaProvider reCaptchaKey={reCaptchaKey} language="bg">
+      <GlobalCSS>
+        <BrowserRouter basename={publicURL}>
+          <Switch>
+            <Route path="/embed" component={Embed} />
+            <Route path="/" component={Election} />
+            <Redirect to="/" />
+          </Switch>
+        </BrowserRouter>
+      </GlobalCSS>
+    </GoogleReCaptchaProvider>
   )
 }
