@@ -27,7 +27,7 @@ jobs:
         env:
           DATA_URL: ${{ secrets.PRODUCTION_DATA_URL }}
           PUBLIC_URL: ${{ secrets.PRODUCTION_PUBLIC_URL }}
-          GOOGLE_RECAPTCHA_KEY: ${{ secrets.GOOGLE_RECAPTCHA_KEY }}
+          GOOGLE_RECAPTCHA_KEY: ${{ secrets.PRODUCTION_GOOGLE_RECAPTCHA_KEY }}
           NODE_ENV: production
 
       - name: Minio Deploy
