@@ -4,7 +4,7 @@ import api from '../utils/api'
 import UploadPhotos from './UploadPhotos'
 import { saveImages } from '../utils/uploadPhotosHelper'
 import { ValidationError } from '../utils/ValidationError'
-import { GoogleReCaptcha } from 'react-google-recaptcha-v3'
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 
 const ProtocolFormStyle = styled.form`
   .errorMsg {
@@ -51,13 +51,12 @@ const ProtocolFormStyle = styled.form`
 export const ProtocolForm = () => {
   const [files, setFiles] = useState([])
   const [error, setError] = useState(null)
-  const [recaptchaToken, setRecaptchaToken] = useState(null)
+  const { executeRecaptcha } = useGoogleReCaptcha()
   const [isSubmitted, setIsSubmitted] = useState(false)
 
   const handlePhotoUpload = (files) => {
     setFiles(files)
   }
-  const handleVerify = (token) => setRecaptchaToken(token)
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
@@ -68,6 +67,7 @@ export const ProtocolForm = () => {
       const body = {
         pictures: savedImageIds,
       }
+      const recaptchaToken = await executeRecaptcha('sendProtocol')
       void (await api.post('protocols', body, {
         headers: { 'x-recaptcha-token': recaptchaToken },
       }))
@@ -102,7 +102,6 @@ export const ProtocolForm = () => {
           callback={handlePhotoUpload}
           isRequired={true}
         ></UploadPhotos>
-        <GoogleReCaptcha onVerify={handleVerify} />
         <div className="form-control">
           <label></label>
           <button type="submit">Изпрати протокол</button>
