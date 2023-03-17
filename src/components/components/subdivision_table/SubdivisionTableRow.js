@@ -4,6 +4,7 @@ import handleViewport from 'react-in-viewport'
 import { Link } from 'react-router-dom'
 
 import PercentageLine from '../PercentageLine.js'
+import PopulatedLine from '../PopulatedLine.js'
 import ResultsLine from '../ResultsLine.js'
 import SimpleLine from '../SimpleLine'
 
@@ -195,12 +196,10 @@ export default handleViewport((props) => {
             )}
           {props.mode === 'sectionsWithResults' &&
             props.sectionsMode === 'populated' && (
-              <SimpleLine
-                percentage={props.subdivision.percentage}
-                tooltipTitle={props.subdivision.name}
-                tooltipField={props.subdivision.tooltipField}
-                tooltipValue={props.subdivision.tooltipValue}
+              <PopulatedLine
                 embed={props.embed}
+                populated={props.subdivision.stats.populated}
+                sectionsCount={props.subdivision.stats.sectionsCount}
                 thin
               />
             )}

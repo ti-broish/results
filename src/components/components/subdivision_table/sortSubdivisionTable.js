@@ -79,7 +79,7 @@ export const sortTablePopulated = (subdivisions) => {
   for (const subdivision of subdivisions) {
     const currentCount = subdivision.stats.populated
     subdivision.percentage = currentCount / highestCount
-    subdivision.tooltipField = 'Запълнени секции'
+    subdivision.tooltipField = 'Покрити секции'
     subdivision.tooltipValue = formatCount(subdivision.stats.populated)
   }
 

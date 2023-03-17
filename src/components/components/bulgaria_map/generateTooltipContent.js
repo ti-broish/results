@@ -291,7 +291,7 @@ export const generateTooltipProcessed = (region, tooltipData) => {
                     )}</td>
                 </tr>
                 <tr>
-                    <td style="padding-right: 20px;">Запълнени секции</td>
+                    <td style="padding-right: 20px;">Покрити секции</td>
                     <td style="text-align: right;">${formatCount(
                       tooltipData.populatedSections || 0
                     )}</td>
