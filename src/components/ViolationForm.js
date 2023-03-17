@@ -67,7 +67,7 @@ const schema = yup
     description: yup.string().required(requiredMessage),
     electionRegion: yup.string().required(requiredMessage),
     municipality: yup.string().required(requiredMessage),
-    town: yup.string().required(requiredMessage),
+    town: yup.number().required(requiredMessage),
     section: yup.string(),
     isAbroad: yup.boolean(),
     country: yup.string().when('isAbroad', {
