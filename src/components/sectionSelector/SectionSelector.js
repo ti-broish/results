@@ -54,7 +54,9 @@ export const SectionSelector = ({ register, errors, setValue }) => {
       setCityRegion('')
       setSection('')
       setSections([])
+      return
     }
+    setCountry('')
     setCountries([])
     const countries = await fetchData(
       cache,
@@ -126,7 +128,7 @@ export const SectionSelector = ({ register, errors, setValue }) => {
       cache,
       town && (!townHasCityRegions || cityRegion)
         ? `sections?town=${town}${
-            cityRegion ? `&city_region=${cityRegion}` : ''
+            cityRegion ? `&cityRegion=${cityRegion}` : ''
           }`
         : null,
       (list) => list.sort(abcSorter('code'))
@@ -149,6 +151,7 @@ export const SectionSelector = ({ register, errors, setValue }) => {
           { value: true, label: 'Чужбина' },
         ]}
         value={isAbroad}
+        register={register}
       />
       {!isAbroad ? (
         <>
@@ -161,7 +164,7 @@ export const SectionSelector = ({ register, errors, setValue }) => {
             }))}
             value={electionRegion}
             onChange={setElectionRegion}
-            errors={errors.election_region}
+            errors={errors.electionRegion}
             register={register}
             required={true}
           />
@@ -190,7 +193,7 @@ export const SectionSelector = ({ register, errors, setValue }) => {
           }))}
           onChange={setCountry}
           register={register}
-          error={errors.country}
+          errors={errors.country}
           required={true}
         />
       )}
@@ -206,7 +209,7 @@ export const SectionSelector = ({ register, errors, setValue }) => {
       />
       {cityRegions.length > 0 && (
         <DropDown
-          name="city_region"
+          name="cityRegion"
           label="Район"
           value={cityRegion}
           options={cityRegions.map((cityRegion) => ({
@@ -215,7 +218,7 @@ export const SectionSelector = ({ register, errors, setValue }) => {
           }))}
           onChange={setCityRegion}
           register={register}
-          errors={errors.city_region}
+          errors={errors.cityRegion}
           required={true}
         />
       )}

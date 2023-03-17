@@ -12,10 +12,15 @@ export default ({
   required,
 }) => (
   <div>
-    {label && <label className="inputLabel">{label}</label>}
+    {label && (
+      <label className="inputLabel">
+        {label}
+        {required && <span style={{ color: 'red', marginLeft: '2px' }}>*</span>}
+      </label>
+    )}
     <div>
       <select
-        {...register(name, { required })}
+        {...register(name)}
         className="form-control"
         name={name}
         value={value}
@@ -31,9 +36,7 @@ export default ({
           </option>
         ))}
       </select>
-      {errors && errors.type === 'required' && (
-        <p className="errorMsg">Полето е задължително.</p>
-      )}
+      {errors && <p style={{ color: 'red' }}>{errors.message}</p>}
     </div>
   </div>
 )
