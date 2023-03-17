@@ -4,7 +4,6 @@ import handleViewport from 'react-in-viewport'
 import { Link } from 'react-router-dom'
 
 import PercentageLine from '../PercentageLine.js'
-import PopulatedLine from '../PopulatedLine.js'
 import ResultsLine from '../ResultsLine.js'
 import SimpleLine from '../SimpleLine'
 
@@ -184,25 +183,15 @@ export default handleViewport((props) => {
               thin
             />
           )}
-          {props.mode === 'sectionsWithResults' &&
-            props.sectionsMode === 'risk' && (
-              <PercentageLine
-                embed={props.embed}
-                highRisk={props.subdivision.stats.highRisk}
-                midRisk={props.subdivision.stats.midRisk}
-                sectionsCount={props.subdivision.stats.sectionsCount}
-                thin
-              />
-            )}
-          {props.mode === 'sectionsWithResults' &&
-            props.sectionsMode === 'populated' && (
-              <PopulatedLine
-                embed={props.embed}
-                populated={props.subdivision.stats.populated}
-                sectionsCount={props.subdivision.stats.sectionsCount}
-                thin
-              />
-            )}
+          {props.mode === 'sectionsWithResults' && (
+            <PercentageLine
+              embed={props.embed}
+              stats={props.subdivision.stats}
+              sectionsMode={props.sectionsMode}
+              sectionsCount={props.subdivision.stats.sectionsCount}
+              thin
+            />
+          )}
           {props.mode !== 'distribution' &&
             props.mode !== 'sectionsWithResults' && (
               <SimpleLine
