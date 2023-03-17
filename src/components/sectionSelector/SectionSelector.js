@@ -190,7 +190,7 @@ export const SectionSelector = ({ register, errors, setValue }) => {
           }))}
           onChange={setCountry}
           register={register}
-          error={errors.country}
+          errors={errors.country}
           required={true}
         />
       )}
