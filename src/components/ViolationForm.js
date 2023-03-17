@@ -72,7 +72,7 @@ const schema = yup
     isAbroad: yup.boolean(),
     country: yup.string().when('isAbroad', {
       is: true,
-      then: yup.string().required(requiredMessage),
+      then: (x) => x.required(requiredMessage),
     }),
   })
   .required()

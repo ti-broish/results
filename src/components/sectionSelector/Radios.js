@@ -1,12 +1,13 @@
 import React from 'react'
 
-export default ({ name, label, value, options, onChange }) => (
+export default ({ name, label, value, options, onChange, register }) => (
   <div className="form-control">
     <label>{label}</label>
     <div>
       {options.map((option) => (
         <label key={option.value} className="radioLabel">
           <input
+            {...register(name)}
             type="radio"
             name={name}
             value={option.value}

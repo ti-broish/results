@@ -149,6 +149,7 @@ export const SectionSelector = ({ register, errors, setValue }) => {
           { value: true, label: 'Чужбина' },
         ]}
         value={isAbroad}
+        register={register}
       />
       {!isAbroad ? (
         <>
