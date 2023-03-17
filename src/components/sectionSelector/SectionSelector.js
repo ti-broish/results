@@ -54,7 +54,9 @@ export const SectionSelector = ({ register, errors, setValue }) => {
       setCityRegion('')
       setSection('')
       setSections([])
+      return
     }
+    setCountry('')
     setCountries([])
     const countries = await fetchData(
       cache,
