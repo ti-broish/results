@@ -50,6 +50,15 @@ const PROCESSED_CATEGORIES = [
 // Helpers
 // ----------------------------------------------------------------------------
 
+const mapCountAndPercentage = (items, percentage, count) => {
+  return items.map((item) => {
+    item.percentage = percentage[item.name]
+    item.count = count[item.name]
+
+    return item
+  })
+}
+
 export const generateRisks = ({ highRisk, midRisk, sectionsCount }) => {
   const percentage = {
     High: highRisk / sectionsCount,
@@ -63,12 +72,7 @@ export const generateRisks = ({ highRisk, midRisk, sectionsCount }) => {
     Low: sectionsCount - (highRisk + midRisk),
   }
 
-  return RISKS.map((risk) => {
-    risk.percentage = percentage[risk.name]
-    risk.count = count[risk.name]
-
-    return risk
-  })
+  return mapCountAndPercentage(RISKS, percentage, count)
 }
 
 export const generatePopulated = ({ populated, sectionsCount }) => {
@@ -82,12 +86,7 @@ export const generatePopulated = ({ populated, sectionsCount }) => {
     nonPopulated: sectionsCount - populated,
   }
 
-  return POPULATED_CATEGORIES.map((category) => {
-    category.percentage = percentage[category.name]
-    category.count = count[category.name]
-
-    return category
-  })
+  return mapCountAndPercentage(POPULATED_CATEGORIES, percentage, count)
 }
 
 export const generateProcessed = ({ sectionsWithResults, sectionsCount }) => {
@@ -101,10 +100,5 @@ export const generateProcessed = ({ sectionsWithResults, sectionsCount }) => {
     unProcessed: sectionsCount - sectionsWithResults,
   }
 
-  return PROCESSED_CATEGORIES.map((category) => {
-    category.percentage = percentage[category.name]
-    category.count = count[category.name]
-
-    return category
-  })
+  return mapCountAndPercentage(PROCESSED_CATEGORIES, percentage, count)
 }
