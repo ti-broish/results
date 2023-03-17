@@ -29,7 +29,7 @@ const PRIMARY_CONTROLS = [
 const SECTION_CONTROLS = [
   { title: `Обработени`, mode: `processed`, showIf: `sectionsWithResults` },
   { title: `Рискови`, mode: `risk`, showIf: `always` },
-  { title: `Запълнени`, mode: `populated`, showIf: `populatedSections` },
+  { title: `Покритие`, mode: `populated`, showIf: `populatedSections` },
 ]
 
 const SINGLE_PARTY_SUBCONTROLS = [
