@@ -77,7 +77,7 @@ export default (props) => {
         // res.data = populateWithFakeResults(res.data, parties);
         setData(res.data)
         setResultsAvailable(res.data?.results.length > 0)
-        setViolationsReported(res.data?.stats.violationsCount > 0)
+        setViolationsReported(false && res.data?.stats.violationsCount > 0)
       })
       .catch((err) => {
         console.log(err)
