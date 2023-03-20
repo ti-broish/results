@@ -19,9 +19,24 @@ const PREVIEW_MAX_WIDTH = 150
 const PREVIEW_MAX_HEIGHT = 350
 
 const FilePondContainer = styled.div`
+  .filepond--image-preview {
+    background-color: #fff;
+  }
+  .filepond--image-preview-wrapper,
+  .filepond--item-panel {
+    border-radius: 0 !important;
+  }
+  .filepond--image-preview-overlay,
+  .filepond--file-info-main,
+  .filepond--file-info-sub {
+    display: none;
+  }
   /* Style the individual items */
   .filepond--item {
     width: calc(50% - 0.5em);
+  }
+  .filepond--label-action {
+    padding: 30px 100px;
   }
 `
 
@@ -31,14 +46,17 @@ export default function UploadPhotos({ files, callback, isRequired }) {
       {' '}
       <FilePond
         files={files}
-        stylePanelLayout="compact"
+        stylePanelLayout="intergrated"
         styleLoadIndicatorPosition="center bottom"
         styleProgressIndicatorPosition="center bottom"
-        imagePreviewTransparencyIndicator="grid"
+        imagePreviewTransparencyIndicator="#fff"
         imagePreviewMaxHeight={PREVIEW_MAX_HEIGHT}
         imagePreviewMaxWidth={PREVIEW_MAX_WIDTH}
         imagePreviewMarkupShow={false}
         labelFileTypeNotAllowed="Невалиден тип файл"
+        labelTapToCancel="Отказ"
+        labelButtonRemoveItem="Премахни"
+        labelFileLoading="Зареждане..."
         fileValidateTypeLabelExpectedTypes="Очаквани файлове: {allButLastType} или {lastType}"
         required={isRequired}
         onupdatefiles={callback}
@@ -47,12 +65,6 @@ export default function UploadPhotos({ files, callback, isRequired }) {
         name="files"
         labelIdle='<span class="filepond--label-action">Качи снимки</span>'
         credits={false}
-        onaddfilestart={(file) => {
-          file.setMetadata('resize', {
-            maxHeight: PREVIEW_MAX_HEIGHT,
-            maxWidth: PREVIEW_MAX_WIDTH,
-          })
-        }}
       />
     </FilePondContainer>
   )
