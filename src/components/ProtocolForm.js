@@ -57,6 +57,11 @@ export const ProtocolForm = () => {
   const handlePhotoUpload = (files) => {
     setFiles(files)
   }
+  const reset = () => {
+    setFiles([])
+    setError(null)
+    setIsSubmitted(false)
+  }
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
@@ -96,28 +101,30 @@ export const ProtocolForm = () => {
     <ProtocolFormStyle onSubmit={handleSubmit}>
       {' '}
       <div>
-        <h1>Изпрати протокол</h1>
-        <UploadPhotos
-          files={files}
-          callback={handlePhotoUpload}
-          isRequired={true}
-        ></UploadPhotos>
-        <div className="form-control">
-          <label></label>
-          <button type="submit">Изпрати протокол</button>
-        </div>
-      </div>
-      {isSubmitted && (
-        <div>
-          {error === null ? (
+        {!isSubmitted ? (
+          <>
+            <h1>Изпрати протокол</h1>
+            <UploadPhotos
+              files={files}
+              callback={handlePhotoUpload}
+              isRequired={true}
+            ></UploadPhotos>
+            <div className="form-control">
+              <label></label>
+              <button type="submit">Изпрати протокол</button>
+            </div>
+          </>
+        ) : error === null ? (
+          <>
             <p className="successfulMessage">
               Протоколът ви беше изпратен успешно!
             </p>
-          ) : (
-            <p className="unsuccessfulMessage">{error.message}</p>
-          )}
-        </div>
-      )}
+            <button onClick={reset}>Изпрати друг протокол</button>
+          </>
+        ) : (
+          <p className="unsuccessfulMessage">{error.message}</p>
+        )}
+      </div>
     </ProtocolFormStyle>
   )
 }
