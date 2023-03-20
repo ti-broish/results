@@ -113,7 +113,7 @@ export const ProtocolForm = () => {
     }
     void (await api.patch(
       `protocols/${protocol.id}/contact`,
-      { email },
+      { email, secret: protocol.secret },
       {
         headers: {
           'x-recaptcha-token': await executeRecaptcha('sendProtocolEmail'),
