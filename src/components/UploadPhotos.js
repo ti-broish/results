@@ -28,6 +28,7 @@ export default function UploadPhotos({ files, callback, isRequired }) {
         allowMultiple={true}
         name="files"
         labelIdle='<span class="filepond--label-action">Качи снимки</span>'
+        credits={false}
       />
     </div>
   )
