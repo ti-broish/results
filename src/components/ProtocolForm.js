@@ -6,6 +6,8 @@ import { saveImages } from '../utils/uploadPhotosHelper'
 import { ValidationError } from '../utils/ValidationError'
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 
+const IMAGES_MIN_COUNT = 4
+
 const ProtocolFormStyle = styled.div`
   .errorMsg {
     color: red;
@@ -70,7 +72,7 @@ export const ProtocolForm = () => {
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
-      if (files.length < 4) {
+      if (files.length < IMAGES_MIN_COUNT) {
         throw new ValidationError('Качете поне 4 снимки')
       }
       const savedImageIds = await saveImages(files)
@@ -136,9 +138,11 @@ export const ProtocolForm = () => {
                 callback={handlePhotoUpload}
                 isRequired={true}
               ></UploadPhotos>
-              <div className="form-control">
-                <button type="submit">Изпрати протокол</button>
-              </div>
+              {files.length >= IMAGES_MIN_COUNT && (
+                <div className="form-control">
+                  <button type="submit">Изпрати протокол</button>
+                </div>
+              )}
             </form>
           </>
         ) : error === null ? (
