@@ -156,7 +156,7 @@ export const ProtocolForm = () => {
                         type="email"
                         required={true}
                         value={email}
-                        pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/"
+                        pattern="^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
                         title="Въведете валиден имейл адрес"
                         placeholder="Въведете имейл, за да можем да ви известим при проблем със снимките"
                         onChange={(e) => setEmail(e.target.value)}
