@@ -9,6 +9,8 @@ import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 const IMAGES_MIN_COUNT = 4
 
 const ProtocolFormStyle = styled.div`
+  min-height: 50vh;
+
   .errorMsg {
     color: red;
   }
