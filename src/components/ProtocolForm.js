@@ -70,6 +70,7 @@ export const ProtocolForm = () => {
     setEmail('')
     setIsSubmitted(false)
     setIsEmailSent(false)
+    setProtocol(null)
   }
   const handleSubmit = async (event) => {
     event.preventDefault()
