@@ -6,7 +6,7 @@ import { saveImages } from '../utils/uploadPhotosHelper'
 import { ValidationError } from '../utils/ValidationError'
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 
-const ProtocolFormStyle = styled.form`
+const ProtocolFormStyle = styled.div`
   .errorMsg {
     color: red;
   }
@@ -52,7 +52,10 @@ export const ProtocolForm = () => {
   const [files, setFiles] = useState([])
   const [error, setError] = useState(null)
   const { executeRecaptcha } = useGoogleReCaptcha()
+  const [protocol, setProtocol] = useState(null)
+  const [email, setEmail] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isEmailSent, setIsEmailSent] = useState(false)
 
   const handlePhotoUpload = (files) => {
     setFiles(files)
@@ -60,7 +63,9 @@ export const ProtocolForm = () => {
   const reset = () => {
     setFiles([])
     setError(null)
+    setEmail('')
     setIsSubmitted(false)
+    setIsEmailSent(false)
   }
   const handleSubmit = async (event) => {
     event.preventDefault()
@@ -72,10 +77,13 @@ export const ProtocolForm = () => {
       const body = {
         pictures: savedImageIds,
       }
-      const recaptchaToken = await executeRecaptcha('sendProtocol')
-      void (await api.post('protocols', body, {
-        headers: { 'x-recaptcha-token': recaptchaToken },
-      }))
+      setProtocol(
+        await api.post('protocols', body, {
+          headers: {
+            'x-recaptcha-token': await executeRecaptcha('sendProtocol'),
+          },
+        })
+      )
       setError(null)
       setFiles([])
     } catch (e) {
@@ -97,29 +105,73 @@ export const ProtocolForm = () => {
     setIsSubmitted(true)
   }
 
+  const sendProtocolEmail = async (event) => {
+    console.log(event)
+    event.preventDefault()
+    if (!protocol?.id || !email) {
+      throw new Error('Няма протокол или имейл')
+    }
+    void (await api.patch(
+      `protocols/${protocol.id}/contact`,
+      { email },
+      {
+        headers: {
+          'x-recaptcha-token': await executeRecaptcha('sendProtocolEmail'),
+        },
+      }
+    ))
+    setIsEmailSent(true)
+  }
+
   return (
-    <ProtocolFormStyle onSubmit={handleSubmit}>
+    <ProtocolFormStyle>
       {' '}
       <div>
         {!isSubmitted ? (
           <>
             <h1>Изпрати протокол</h1>
-            <UploadPhotos
-              files={files}
-              callback={handlePhotoUpload}
-              isRequired={true}
-            ></UploadPhotos>
-            <div className="form-control">
-              <label></label>
-              <button type="submit">Изпрати протокол</button>
-            </div>
+            <form onSubmit={handleSubmit}>
+              <UploadPhotos
+                files={files}
+                callback={handlePhotoUpload}
+                isRequired={true}
+              ></UploadPhotos>
+              <div className="form-control">
+                <button type="submit">Изпрати протокол</button>
+              </div>
+            </form>
           </>
         ) : error === null ? (
           <>
             <p className="successfulMessage">
               Протоколът ви беше изпратен успешно!
             </p>
-            <button onClick={reset}>Изпрати друг протокол</button>
+            {!isEmailSent && (
+              <div>
+                <form onSubmit={sendProtocolEmail}>
+                  <div className="form-control">
+                    <label>
+                      <span className="inputLabel">Имейл</span>
+                      <input
+                        type="email"
+                        required={true}
+                        value={email}
+                        pattern="/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/"
+                        title="Въведете валиден имейл адрес"
+                        placeholder="Въведете имейл, за да можем да ви известим при проблем със снимките"
+                        onChange={(e) => setEmail(e.target.value)}
+                      />
+                    </label>
+                  </div>
+                  <div className="form-control">
+                    <button type="submit">Изпрати имейл</button>
+                  </div>
+                </form>
+              </div>
+            )}
+            <div className="form-control">
+              <button onClick={reset}>Изпрати друг протокол</button>
+            </div>
           </>
         ) : (
           <p className="unsuccessfulMessage">{error.message}</p>
