@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 import { FilePond, registerPlugin } from 'react-filepond'
 import 'filepond/dist/filepond.min.css'
 import FilePondPluginFileEncode from 'filepond-plugin-file-encode'
@@ -14,12 +15,29 @@ registerPlugin(
   FilePondPluginFileValidateType
 )
 
+const PREVIEW_MAX_WIDTH = 150
+const PREVIEW_MAX_HEIGHT = 350
+
+const FilePondContainer = styled.div`
+  /* Style the individual items */
+  .filepond--item {
+    width: calc(50% - 0.5em);
+  }
+`
+
 export default function UploadPhotos({ files, callback, isRequired }) {
   return (
-    <div>
+    <FilePondContainer>
       {' '}
       <FilePond
         files={files}
+        stylePanelLayout="compact"
+        styleLoadIndicatorPosition="center bottom"
+        styleProgressIndicatorPosition="center bottom"
+        imagePreviewTransparencyIndicator="grid"
+        imagePreviewMaxHeight={PREVIEW_MAX_HEIGHT}
+        imagePreviewMaxWidth={PREVIEW_MAX_WIDTH}
+        imagePreviewMarkupShow={false}
         labelFileTypeNotAllowed="Невалиден тип файл"
         fileValidateTypeLabelExpectedTypes="Очаквани файлове: {allButLastType} или {lastType}"
         required={isRequired}
@@ -29,7 +47,13 @@ export default function UploadPhotos({ files, callback, isRequired }) {
         name="files"
         labelIdle='<span class="filepond--label-action">Качи снимки</span>'
         credits={false}
+        onaddfilestart={(file) => {
+          file.setMetadata('resize', {
+            maxHeight: PREVIEW_MAX_HEIGHT,
+            maxWidth: PREVIEW_MAX_WIDTH,
+          })
+        }}
       />
-    </div>
+    </FilePondContainer>
   )
 }
