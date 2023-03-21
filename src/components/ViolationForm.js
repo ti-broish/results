@@ -92,6 +92,7 @@ export const ViolationForm = () => {
   const [message, setMessage] = useState('')
   const [key, setKey] = useState(0)
   const [files, setFiles] = useState([])
+  const [violation, setViolation] = useState(null)
 
   const handlePhotoUpload = (files) => {
     setFiles(files)
@@ -104,6 +105,24 @@ export const ViolationForm = () => {
     }
   }, [formState, reset])
 
+  useEffect(() => {
+    if (!violation) {
+      return
+    }
+    try {
+      const violations = JSON.parse(localStorage.getItem('violations')) || []
+      violations.push({
+        id: violation.id,
+        secret: violation.secret,
+        timestamp: new Date().getTime(),
+      })
+      localStorage.setItem('violations', violations)
+    } catch (e) {
+      // disallowed cookies prevent access to local storage in some browsers
+      return
+    }
+  }, [violation])
+
   const onSubmit = async (data) => {
     try {
       const savedImageIds = await saveImages(files)
@@ -114,9 +133,11 @@ export const ViolationForm = () => {
       data.section ? (body['section'] = data.section) : body
       savedImageIds ? (body['pictures'] = savedImageIds) : body
       const recaptchaToken = await executeRecaptcha('sendViolation')
-      void (await api.post('violations', body, {
-        headers: { 'x-recaptcha-token': recaptchaToken },
-      }))
+      setViolation(
+        await api.post('violations', body, {
+          headers: { 'x-recaptcha-token': recaptchaToken },
+        })
+      )
       setMessage('Сигналът Ви беше изпратен успешно!')
     } catch (error) {
       setMessage(`Сигналът Ви не беше изпратен!: ${error.message}`)
