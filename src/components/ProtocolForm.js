@@ -1,10 +1,12 @@
 import styled from 'styled-components'
 import React, { useEffect, useState } from 'react'
-import api from '../utils/api'
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
+import { Link } from 'react-router-dom'
 import UploadPhotos from './UploadPhotos'
+import api from '../utils/api'
 import { saveImages } from '../utils/uploadPhotosHelper'
 import { ValidationError } from '../utils/ValidationError'
-import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
+import { ROUTES } from './routes'
 
 const IMAGES_MIN_COUNT = 4
 
@@ -153,6 +155,9 @@ export const ProtocolForm = () => {
       <div>
         {!isSubmitted ? (
           <>
+            <Link to={ROUTES.submit}>
+              <small>⟵ обратно</small>
+            </Link>
             <h1>Изпрати протокол</h1>
             <form onSubmit={handleSubmit}>
               <UploadPhotos

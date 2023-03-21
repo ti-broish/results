@@ -48,7 +48,7 @@ export const mapNodesType = (nodesType) => {
   }
 }
 
-export default (props) => {
+export const ResultUnit = (props) => {
   const { unit } = useParams()
   const history = useHistory()
 

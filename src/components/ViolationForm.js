@@ -1,13 +1,15 @@
 import { useForm, FormProvider } from 'react-hook-form'
 import styled from 'styled-components'
 import React, { useEffect, useState } from 'react'
-import api from '../utils/api'
-import { SectionSelector } from './sectionSelector/SectionSelector'
-import UploadPhotos from './UploadPhotos'
-import { saveImages, convertImagesToBase64 } from '../utils/uploadPhotosHelper'
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
+import { Link } from 'react-router-dom'
+import UploadPhotos from './UploadPhotos'
+import { SectionSelector } from './sectionSelector/SectionSelector'
+import api from '../utils/api'
+import { saveImages } from '../utils/uploadPhotosHelper'
+import { ROUTES } from './routes'
 
 const CommentFormStyle = styled.form`
   width: 100%;
@@ -116,7 +118,7 @@ export const ViolationForm = () => {
         secret: violation.secret,
         timestamp: new Date().getTime(),
       })
-      localStorage.setItem('violations', violations)
+      localStorage.setItem('violations', JSON.stringify(violations))
     } catch (e) {
       // disallowed cookies prevent access to local storage in some browsers
       return
@@ -129,6 +131,9 @@ export const ViolationForm = () => {
       const body = {
         description: data.description,
         town: parseInt(data.town, 10),
+        name: data.name,
+        email: data.email,
+        phone: data.phoneNumber,
       }
       data.section ? (body['section'] = data.section) : body
       savedImageIds ? (body['pictures'] = savedImageIds) : body
@@ -147,6 +152,10 @@ export const ViolationForm = () => {
   return (
     <FormProvider {...methods}>
       <CommentFormStyle onSubmit={handleSubmit(onSubmit)}>
+        <Link to={ROUTES.submit}>
+          <small>⟵ обратно</small>
+        </Link>
+        <h1>Подай сигнал</h1>
         <SectionSelector
           key={key}
           errors={errors}

@@ -1,81 +1,21 @@
 import React, { useState, useEffect } from 'react'
-
-import {
-  Redirect,
-  Route,
-  Switch,
-  useHistory,
-  useLocation,
-} from 'react-router-dom'
+import { Redirect, Route, Switch } from 'react-router-dom'
 import axios from 'axios'
-
 import Header from './layout/Header'
 import Footer from './layout/Footer'
-import LoadingScreen from './layout/LoadingScreen'
-
-import ResultUnit from './ResultUnit.js'
-
+import { ROUTES } from './routes.js'
+import { ResultUnit } from './ResultUnit.js'
 import { Wrapper } from './App'
-import Violations from './Violations'
-import Videos from './Videos'
-
-import styled from 'styled-components'
 import { ViolationForm } from './ViolationForm'
 import { ProtocolForm } from './ProtocolForm'
 import { Submit } from './Submit'
-
-const NavigationTabsBackground = styled.div`
-  background-color: #ddd;
-  width: 100%;
-  border-bottom: 1px solid #bbb;
-`
-
-const NavigationTabs = styled.nav`
-  width: 100%;
-  max-width: 600px;
-  margin: 0 auto;
-  padding-top: 10px;
-`
-
-const NavigationTab = styled.button`
-  width: calc(100% / 3);
-  border: none;
-  background: none;
-  cursor: pointer;
-  background-color: #f0f0f0;
-  padding: 10px;
-  margin-bottom: -1px;
-  //border: 1px solid #ccc;
-  border-top: 1px solid #ccc;
-  border-right: 1px solid #bbb;
-  border-collapse: collapse;
-  color: #666;
-
-  &:first-of-type {
-    border-left: 1px solid #ccc;
-    border-radius: 10px 0 0 0;
-  }
-
-  &:last-of-type {
-    border-radius: 0 10px 0 0;
-  }
-
-  &.selected {
-    background-color: #fff;
-    border-bottom: 1px solid white;
-    color: #444;
-  }
-
-  &:disabled {
-    cursor: auto;
-    color: #aaa;
-    background-color: #ccc;
-  }
-`
+import { ProtocolSummary } from './ProtocolSummary'
+import { MyProtocols } from './MyProtocols'
+import { MyViolations } from './MyViolations'
 
 export const ElectionContext = React.createContext()
 
-export default (props) => {
+export default () => {
   const [meta, setMeta] = useState(null)
 
   const dataURL = process.env.DATA_URL ? process.env.DATA_URL : '/json'
@@ -93,10 +33,16 @@ export default (props) => {
       <Header title={!meta ? null : meta.name} />
       <Wrapper>
         <Switch>
-          <Route path="/submit" component={Submit} />
-          <Route path="/protocol/new" component={ProtocolForm} />
-          <Route path="/violation/new" component={ViolationForm} />
-          <Route path={[`/:unit`, `/`]} render={() => <ResultUnit />} />
+          <Route path={ROUTES.submit} component={Submit} />
+          <Route path={ROUTES.protocolForm} component={ProtocolForm} />
+          <Route path={ROUTES.myProtocols} exact component={MyProtocols} />
+          <Route path={ROUTES.myViolations} exact component={MyViolations} />
+          <Route path={ROUTES.protocol} component={ProtocolSummary} />
+          <Route path={ROUTES.violationForm} component={ViolationForm} />
+          <Route
+            path={[ROUTES.resultUnit, `/`]}
+            render={() => <ResultUnit />}
+          />
           <Redirect to={`/`} />
         </Switch>
       </Wrapper>
