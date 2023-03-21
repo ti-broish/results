@@ -22,6 +22,7 @@ import Videos from './Videos'
 import styled from 'styled-components'
 import { ViolationForm } from './ViolationForm'
 import { ProtocolForm } from './ProtocolForm'
+import { Submit } from './Submit'
 
 const NavigationTabsBackground = styled.div`
   background-color: #ddd;
@@ -92,6 +93,7 @@ export default (props) => {
       <Header title={!meta ? null : meta.name} />
       <Wrapper>
         <Switch>
+          <Route path="/submit" component={Submit} />
           <Route path="/protocol/new" component={ProtocolForm} />
           <Route path="/violation/new" component={ViolationForm} />
           <Route path={[`/:unit`, `/`]} render={() => <ResultUnit />} />
