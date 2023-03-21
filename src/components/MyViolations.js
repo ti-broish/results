@@ -17,7 +17,6 @@ const ViolationsListStyle = styled.div`
 export const MyViolations = () => {
   const [violations, setViolations] = useState([])
   useEffect(async () => {
-    let ignore = false
     try {
       const violationsFromLocalStorage =
         JSON.parse(localStorage.getItem('violations')) || []
@@ -30,15 +29,9 @@ export const MyViolations = () => {
           }
         })
       )
-      !ignore &&
-        setViolations(
-          violationsDetails.sort((a, b) => a.timestamp - b.timestamp)
-        )
+      setViolations(violationsDetails.sort((a, b) => a.timestamp - b.timestamp))
     } catch (error) {
       console.error(error)
-    }
-    return () => {
-      ignore = true
     }
   }, [])
 

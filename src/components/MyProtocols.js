@@ -17,7 +17,6 @@ const ProtocolsListStyle = styled.div`
 export const MyProtocols = () => {
   const [protocols, setProtocols] = useState([])
   useEffect(async () => {
-    let ignore = false
     try {
       const protocolsFromLocalStorage =
         JSON.parse(localStorage.getItem('protocols')) || []
@@ -30,13 +29,9 @@ export const MyProtocols = () => {
           }
         })
       )
-      !ignore &&
-        setProtocols(protocolsDetails.sort((a, b) => a.timestamp - b.timestamp))
+      setProtocols(protocolsDetails.sort((a, b) => a.timestamp - b.timestamp))
     } catch (error) {
       console.error(error)
-    }
-    return () => {
-      ignore = true
     }
   }, [])
 
