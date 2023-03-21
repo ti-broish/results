@@ -1,9 +1,14 @@
 import React from 'react'
+import styled from 'styled-components'
+
+const Options = styled.div`
+  padding: 1em 0;
+`
 
 export default ({ name, label, value, options, onChange, register }) => (
   <div className="form-control">
     <label>{label}</label>
-    <div>
+    <Options>
       {options.map((option) => (
         <label key={option.value} className="radioLabel">
           <input
@@ -17,6 +22,6 @@ export default ({ name, label, value, options, onChange, register }) => (
           {option.label}
         </label>
       ))}
-    </div>
+    </Options>
   </div>
 )

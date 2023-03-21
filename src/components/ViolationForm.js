@@ -33,7 +33,9 @@ const CommentFormStyle = styled.form`
     margin-left: 5px;
     padding: 5px;
   }
-  input[type='text'] {
+  input[type='text'],
+  input[type='email'],
+  select {
     width: 80%;
     font-size: 18px;
     padding: 10px;
@@ -55,6 +57,9 @@ const CommentFormStyle = styled.form`
   button {
     padding: 10px;
     margin: 20px 5px;
+    background: #38decb;
+    border: none;
+    color: #fff;
   }
 `
 const requiredMessage = 'Полето е задължително.'
