@@ -8,7 +8,8 @@ import { Link } from 'react-router-dom'
 import UploadPhotos from './UploadPhotos'
 import { SectionSelector } from './sectionSelector/SectionSelector'
 import api from '../utils/api'
-import { saveImages, convertImagesToBase64 } from '../utils/uploadPhotosHelper'
+import { saveImages } from '../utils/uploadPhotosHelper'
+import { ROUTES } from './routes'
 
 const CommentFormStyle = styled.form`
   width: 100%;
@@ -151,7 +152,7 @@ export const ViolationForm = () => {
   return (
     <FormProvider {...methods}>
       <CommentFormStyle onSubmit={handleSubmit(onSubmit)}>
-        <Link to="/submit">
+        <Link to={ROUTES.submit}>
           <small>⟵ обратно</small>
         </Link>
         <h1>Подай сигнал</h1>
@@ -211,5 +212,3 @@ export const ViolationForm = () => {
     </FormProvider>
   )
 }
-
-export const ViolationFormRoute = '/violation/new'

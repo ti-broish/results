@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { MyProtocolsRoute } from './MyProtocols'
-import { MyViolationsRoute } from './MyViolations'
-import { ProtocolFormRoute } from './ProtocolForm'
-import { ViolationFormRoute } from './ViolationForm'
+import { ROUTES } from './routes'
 
 export const Submit = () => {
   const [hasViolations, setHasViolations] = useState(false)
@@ -21,19 +18,19 @@ export const Submit = () => {
   }, [])
   return (
     <>
-      <Link to={ProtocolFormRoute}>Изпрати протокол</Link>
+      <Link to={ROUTES.protocolForm}>Изпрати протокол</Link>
       <br />
-      <Link to={ViolationFormRoute}>Подай сигнал</Link>
+      <Link to={ROUTES.violationForm}>Подай сигнал</Link>
       {hasViolations && (
         <>
           <br />
-          <Link to={MyViolationsRoute}>Моите сигнали</Link>
+          <Link to={ROUTES.myViolations}>Моите сигнали</Link>
         </>
       )}
       {hasProtcols && (
         <>
           <br />
-          <Link to={MyProtocolsRoute}>Моите протоколи</Link>
+          <Link to={ROUTES.myProtocols}>Моите протоколи</Link>
         </>
       )}
     </>

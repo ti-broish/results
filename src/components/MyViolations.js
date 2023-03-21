@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import api from '../utils/api'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { ROUTES } from './routes'
 
 const ViolationsListStyle = styled.div`
   display: flex;
@@ -37,14 +38,14 @@ export const MyViolations = () => {
 
   return (
     <ViolationsListStyle>
-      <Link to="/submit">
+      <Link to={ROUTES.submit}>
         <small>⟵ обратно</small>
       </Link>
       <h2>Моите Сигнали</h2>
       {violations.length === 0 ? (
         <>
           <p>Не сте подали сигнали от това устройство</p>
-          <Link to="/violation/new">Подайте сигнал</Link>
+          <Link to={ROUTES.violationForm}>Подайте сигнал</Link>
         </>
       ) : (
         violations.map((violation) => (
@@ -68,5 +69,3 @@ export const MyViolations = () => {
     </ViolationsListStyle>
   )
 }
-
-export const MyViolationsRoute = '/me/violations'

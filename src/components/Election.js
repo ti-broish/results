@@ -1,21 +1,17 @@
 import React, { useState, useEffect } from 'react'
-
 import { Redirect, Route, Switch } from 'react-router-dom'
 import axios from 'axios'
-
 import Header from './layout/Header'
 import Footer from './layout/Footer'
-
-import { ResultUnit, ResultUnitRoute } from './ResultUnit.js'
-
+import { ROUTES } from './routes.js'
+import { ResultUnit } from './ResultUnit.js'
 import { Wrapper } from './App'
-
-import { ViolationForm, ViolationFormRoute } from './ViolationForm'
-import { ProtocolForm, ProtocolFormRoute } from './ProtocolForm'
-import { Submit, SubmitRoute } from './Submit'
-import { ProtocolSummary, ProtocolSummaryRoute } from './ProtocolSummary'
-import { MyProtocols, MyProtocolsRoute } from './MyProtocols'
-import { MyViolations, MyViolationsRoute } from './MyViolations'
+import { ViolationForm } from './ViolationForm'
+import { ProtocolForm } from './ProtocolForm'
+import { Submit } from './Submit'
+import { ProtocolSummary } from './ProtocolSummary'
+import { MyProtocols } from './MyProtocols'
+import { MyViolations } from './MyViolations'
 
 export const ElectionContext = React.createContext()
 
@@ -37,13 +33,16 @@ export default () => {
       <Header title={!meta ? null : meta.name} />
       <Wrapper>
         <Switch>
-          <Route path={SubmitRoute} component={Submit} />
-          <Route path={ProtocolFormRoute} component={ProtocolForm} />
-          <Route path={MyProtocolsRoute} exact component={MyProtocols} />
-          <Route path={MyViolationsRoute} exact component={MyViolations} />
-          <Route path={ProtocolSummaryRoute} component={ProtocolSummary} />
-          <Route path={ViolationFormRoute} component={ViolationForm} />
-          <Route path={[ResultUnitRoute, `/`]} render={() => <ResultUnit />} />
+          <Route path={ROUTES.submit} component={Submit} />
+          <Route path={ROUTES.protocolForm} component={ProtocolForm} />
+          <Route path={ROUTES.myProtocols} exact component={MyProtocols} />
+          <Route path={ROUTES.myViolations} exact component={MyViolations} />
+          <Route path={ROUTES.protocol} component={ProtocolSummary} />
+          <Route path={ROUTES.violationForm} component={ViolationForm} />
+          <Route
+            path={[ROUTES.resultUnit, `/`]}
+            render={() => <ResultUnit />}
+          />
           <Redirect to={`/`} />
         </Switch>
       </Wrapper>

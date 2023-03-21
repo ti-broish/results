@@ -6,6 +6,7 @@ import UploadPhotos from './UploadPhotos'
 import api from '../utils/api'
 import { saveImages } from '../utils/uploadPhotosHelper'
 import { ValidationError } from '../utils/ValidationError'
+import { ROUTES } from './routes'
 
 const IMAGES_MIN_COUNT = 4
 
@@ -154,7 +155,7 @@ export const ProtocolForm = () => {
       <div>
         {!isSubmitted ? (
           <>
-            <Link to="/submit">
+            <Link to={ROUTES.submit}>
               <small>⟵ обратно</small>
             </Link>
             <h1>Изпрати протокол</h1>
@@ -210,5 +211,3 @@ export const ProtocolForm = () => {
     </ProtocolFormStyle>
   )
 }
-
-export const ProtocolFormRoute = '/protocol/new'

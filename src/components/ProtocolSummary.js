@@ -70,5 +70,3 @@ const ProtocolSummaryStyle = styled.div`
   border-radius: 5px;
   padding: 10px;
 `
-
-export const ProtocolSummaryRoute = '/protocols/:protocolId'

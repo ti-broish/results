@@ -79,5 +79,3 @@ export const ResultUnit = (props) => {
     </>
   )
 }
-
-export const ResultUnitRoute = '/:unit'
