@@ -66,7 +66,10 @@ const schema = yup
       .email('Въведете валиден имейл')
       .required(requiredMessage),
     phoneNumber: yup.string().required(requiredMessage),
-    description: yup.string().required(requiredMessage),
+    description: yup
+      .string()
+      .min(20, 'Моля въведете поне 20 символа')
+      .required(requiredMessage),
     electionRegion: yup.string().required(requiredMessage),
     municipality: yup.string().required(requiredMessage),
     town: yup.number().required(requiredMessage),
