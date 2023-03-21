@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import api from '../utils/api'
 import UploadPhotos from './UploadPhotos'
 import { saveImages } from '../utils/uploadPhotosHelper'
@@ -72,6 +72,25 @@ export const ProtocolForm = () => {
     setIsEmailSent(false)
     setProtocol(null)
   }
+
+  useEffect(() => {
+    if (!protocol) {
+      return
+    }
+    try {
+      const protocols = JSON.parse(localStorage.getItem('protocols')) || []
+      protocols.push({
+        id: protocol.id,
+        secret: protocol.secret,
+        timestamp: new Date().getTime(),
+      })
+      localStorage.setItem('protocols', JSON.stringify(protocols))
+    } catch (e) {
+      // disallowed cookies prevent access to local storage in some browsers
+      return
+    }
+  }, [protocol])
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {

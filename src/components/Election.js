@@ -79,31 +79,11 @@ export default (props) => {
 
   const dataURL = process.env.DATA_URL ? process.env.DATA_URL : '/json'
 
-  const history = useHistory()
-  const location = useLocation()
-
   useEffect(() => {
     axios.get(`${dataURL}/results/meta.json`).then((res) => {
       setMeta(res.data)
     })
   }, [])
-
-  const isElectionDayOver = () => {
-    return true
-    if (!meta) return false
-    else return Date.now() - new Date(meta.endOfElectionDayTimestamp) > 0
-  }
-
-  const showAfterElectionDate = (component) => {
-    return isElectionDayOver() ? component : <Redirect to="/violations" />
-  }
-
-  const getLocation = () => {
-    const loc = location.pathname.split('/')
-    if (loc[1] === 'violations') return 'violations'
-    if (loc[1] === 'videos') return 'videos'
-    else return '/'
-  }
 
   return (
     <ElectionContext.Provider
@@ -111,24 +91,12 @@ export default (props) => {
     >
       <Header title={!meta ? null : meta.name} />
       <Wrapper>
-        {!meta ? (
-          <LoadingScreen />
-        ) : (
-          <Switch>
-            <Route
-              path="/videos"
-              render={() => showAfterElectionDate(<Videos />)}
-            />
-            <Route path="/protocol_form" component={ProtocolForm} />
-            <Route path="/violation_form" component={ViolationForm} />
-            <Route path="/violations" component={Violations} />
-            <Route
-              path={[`/:unit`, `/`]}
-              render={() => showAfterElectionDate(<ResultUnit />)}
-            />
-            <Redirect to={`/`} />
-          </Switch>
-        )}
+        <Switch>
+          <Route path="/protocol/new" component={ProtocolForm} />
+          <Route path="/violation/new" component={ViolationForm} />
+          <Route path={[`/:unit`, `/`]} render={() => <ResultUnit />} />
+          <Redirect to={`/`} />
+        </Switch>
       </Wrapper>
       <Footer />
     </ElectionContext.Provider>
