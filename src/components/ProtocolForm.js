@@ -1,12 +1,13 @@
 import styled from 'styled-components'
 import React, { useEffect, useState } from 'react'
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
-import { Link } from 'react-router-dom'
 import UploadPhotos from './UploadPhotos'
 import api from '../utils/api'
 import { saveImages } from '../utils/uploadPhotosHelper'
 import { ValidationError } from '../utils/ValidationError'
 import { ROUTES } from './routes'
+import { Link } from './components/Link'
+import { Button } from './components/Button'
 
 const IMAGES_MIN_COUNT = 4
 
@@ -175,13 +176,13 @@ export const ProtocolForm = () => {
                     </p>
                   </>
                 )}
-                <button
+                <Button
                   type="submit"
                   disabled={files.length < IMAGES_MIN_COUNT}
                   title={`Качете поне ${IMAGES_MIN_COUNT} снимки, за да изпратите протокол`}
                 >
                   Изпрати протокол
-                </button>
+                </Button>
               </div>
             </form>
           </>
@@ -208,13 +209,13 @@ export const ProtocolForm = () => {
                     </label>
                   </div>
                   <div className="form-control">
-                    <button type="submit">Изпрати имейл</button>
+                    <Button type="submit">Изпрати имейл</Button>
                   </div>
                 </form>
               </div>
             )}
             <div className="form-control">
-              <button onClick={reset}>Изпрати друг протокол</button>
+              <Button onClick={reset}>Изпрати друг протокол</Button>
             </div>
           </>
         ) : (

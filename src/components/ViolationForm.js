@@ -4,12 +4,13 @@ import React, { useEffect, useState } from 'react'
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import { Link } from 'react-router-dom'
 import UploadPhotos from './UploadPhotos'
 import { SectionSelector } from './sectionSelector/SectionSelector'
 import api from '../utils/api'
 import { saveImages } from '../utils/uploadPhotosHelper'
 import { ROUTES } from './routes'
+import { Link } from './components/Link'
+import { Button } from './components/Button'
 
 const CommentFormStyle = styled.form`
   width: 100%;
@@ -55,7 +56,7 @@ const CommentFormStyle = styled.form`
     color: red;
   }
   button {
-    padding: 10px;
+    padding: 0.4em 1em;
     margin: 20px 5px;
     background: #38decb;
     border: none;
@@ -205,7 +206,7 @@ export const ViolationForm = () => {
         ></UploadPhotos>
         <div className="form-control">
           <label></label>
-          <button type="submit">Изпрати сигнал</button>
+          <Button type="submit">Изпрати</Button>
         </div>
         {message && (
           <div>

@@ -26,6 +26,7 @@ const GlobalCSS = styled.div`
   a:active,
   a:focus,
   a:visited {
+    text-decoration: none;
     outline: none;
     -moz-outline-style: none;
   }
