@@ -165,11 +165,24 @@ export const ProtocolForm = () => {
                 callback={handlePhotoUpload}
                 isRequired={true}
               ></UploadPhotos>
-              {files.length >= IMAGES_MIN_COUNT && (
-                <div className="form-control">
-                  <button type="submit">Изпрати протокол</button>
-                </div>
-              )}
+              <div className="form-control">
+                {files.length > 0 && files.length < IMAGES_MIN_COUNT && (
+                  <>
+                    <p>Трябва да снимате целият протокол.</p>
+                    <p class="unsuccessfulMessage">
+                      Качете поне {IMAGES_MIN_COUNT} снимки, за да изпратите
+                      протокол.
+                    </p>
+                  </>
+                )}
+                <button
+                  type="submit"
+                  disabled={files.length < IMAGES_MIN_COUNT}
+                  title={`Качете поне ${IMAGES_MIN_COUNT} снимки, за да изпратите протокол`}
+                >
+                  Изпрати протокол
+                </button>
+              </div>
             </form>
           </>
         ) : error === null ? (
