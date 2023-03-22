@@ -3,7 +3,7 @@ import axios from 'axios'
 const api = axios.create({
   baseURL: `${process.env.DATA_URL.replace(/\/+$/, '')}/`,
   headers: {
-    'Accelt-Language': 'bg-BG',
+    'Accept-Language': 'bg-BG',
     'Content-Type': 'application/json',
   },
 })
