@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { Link as RouterLink } from 'react-router-dom'
 const StyledButton = styled.button`
   padding: 0.4em 1em;
   margin: 20px 5px;
