@@ -9,14 +9,22 @@ const StyledButton = styled.button`
   border: none;
   color: #fff;
   border-radius: 3px;
+  cursor: pointer;
   &:hover {
     opacity: 0.8;
   }
+  &:active {
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
+  }
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
 `
 
-export function Button({ onClick, children, type = 'button' }) {
+export function Button({ onClick, children, type = 'button', ...props }) {
   return (
-    <StyledButton onClick={onClick} type={type}>
+    <StyledButton onClick={onClick} type={type} {...props}>
       {children}
     </StyledButton>
   )
