@@ -4,7 +4,7 @@ import abcSorter from '../../utils/abcSorter'
 import DropDown from './DropDown'
 import Radios from './Radios'
 
-const DOMESTIC_COUNTRY_CODE = '00'
+const DOMESTIC_COUNTRY_CODE = '000'
 
 const fetchData = async (cache, url, callback) => {
   if (cache.current[url]) {
