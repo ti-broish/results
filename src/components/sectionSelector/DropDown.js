@@ -1,4 +1,6 @@
 import React from 'react'
+import { Label } from '../components/Label'
+import { Select } from '../components/Select'
 
 export default ({
   name,
@@ -13,15 +15,14 @@ export default ({
 }) => (
   <div>
     {label && (
-      <label className="inputLabel">
+      <Label>
         {label}
         {required && <span style={{ color: 'red', marginLeft: '2px' }}>*</span>}
-      </label>
+      </Label>
     )}
     <div>
-      <select
+      <Select
         {...register(name)}
-        className="form-control"
         name={name}
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -35,7 +36,7 @@ export default ({
             {option.label}
           </option>
         ))}
-      </select>
+      </Select>
       {errors && <p style={{ color: 'red' }}>{errors.message}</p>}
     </div>
   </div>

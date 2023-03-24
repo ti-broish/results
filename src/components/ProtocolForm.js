@@ -8,50 +8,19 @@ import { ValidationError } from '../utils/ValidationError'
 import { ROUTES } from './routes'
 import { Link } from './components/Link'
 import { Button } from './components/Button'
+import { Input } from './components/Input'
+import { Label } from './components/Label'
 
 const IMAGES_MIN_COUNT = 4
 
 const ProtocolFormStyle = styled.div`
   min-height: 50vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
 
   .errorMsg {
-    color: red;
-  }
-
-  textarea {
-    width: 80%;
-    height: 50px;
-    padding: 20px;
-    margin-left: 5px;
-    margin-bottom: 10px;
-  }
-
-  input[type='radio'] {
-    margin: 5px;
-    vertical-align: middle;
-  }
-
-  .inputLabel {
-    display: block;
-    margin-left: 5px;
-    padding: 5px;
-  }
-
-  input[type='text'] {
-    width: 80%;
-    font-size: 18px;
-    padding: 20px;
-    border: 1px solid #eee;
-    margin: 20px 0;
-    box-sizing: border-box;
-    margin-left: 5px;
-  }
-
-  .successfulMessage {
-    color: green;
-  }
-
-  .unsuccessfulMessage {
     color: red;
   }
 `
@@ -194,21 +163,17 @@ export const ProtocolForm = () => {
             {!isEmailSent && (
               <div>
                 <form onSubmit={sendProtocolEmail}>
-                  <div className="form-control">
-                    <label>
-                      <span className="inputLabel">Имейл</span>
-                      <input
-                        type="email"
-                        required={true}
-                        value={email}
-                        pattern="^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
-                        title="Въведете валиден имейл адрес"
-                        placeholder="Въведете имейл, за да можем да ви известим при проблем със снимките"
-                        onChange={(e) => setEmail(e.target.value)}
-                      />
-                    </label>
-                  </div>
-                  <div className="form-control">
+                  <Input
+                    label="Имейл"
+                    type="email"
+                    required={true}
+                    value={email}
+                    pattern="^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
+                    title="Въведете валиден имейл адрес"
+                    placeholder="Въведете имейл, за да можем да ви известим при проблем със снимките"
+                    onChange={(e) => setEmail(e.target.value)}
+                  />
+                  <div className="form-control" style={{ margin: '2em 0' }}>
                     <Button type="submit">Изпрати имейл</Button>
                   </div>
                 </form>

@@ -11,6 +11,7 @@ import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3'
 export const Wrapper = styled.div`
   max-width: 900px;
   margin: 20px auto 50px auto;
+  padding: 0 1em;
 `
 
 const GlobalCSS = styled.div`
@@ -18,8 +19,11 @@ const GlobalCSS = styled.div`
   font-weight: normal;
   background-color: white;
 
-  button {
-    font-family: 'Montserrat', sans-serif;
+  box-sizing: border-box;
+  *,
+  *:before,
+  *:after {
+    box-sizing: inherit;
   }
 
   а,
@@ -29,6 +33,13 @@ const GlobalCSS = styled.div`
     text-decoration: none;
     outline: none;
     -moz-outline-style: none;
+  }
+
+  .successfulMessage {
+    color: green;
+  }
+  .unsuccessfulMessage {
+    color: red;
   }
 `
 
