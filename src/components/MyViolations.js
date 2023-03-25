@@ -23,14 +23,23 @@ export const MyViolations = () => {
         JSON.parse(localStorage.getItem('violations')) || []
       const violationsDetails = await Promise.all(
         violationsFromLocalStorage.map(async ({ id, secret, timestamp }) => {
-          const data = await api.get(`violations/${id}?secret=${secret}`)
-          return {
-            ...data,
-            timestamp,
+          try {
+            const data = await api.get(`violations/${id}?secret=${secret}`)
+            return {
+              ...data,
+              timestamp,
+            }
+          } catch (error) {
+            console.error(error)
+            return null
           }
         })
       )
-      setViolations(violationsDetails.sort((a, b) => a.timestamp - b.timestamp))
+      setViolations(
+        violationsDetails
+          .filter((x) => !!x)
+          .sort((a, b) => a.timestamp - b.timestamp)
+      )
     } catch (error) {
       console.error(error)
     }

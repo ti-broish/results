@@ -23,14 +23,23 @@ export const MyProtocols = () => {
         JSON.parse(localStorage.getItem('protocols')) || []
       const protocolsDetails = await Promise.all(
         protocolsFromLocalStorage.map(async ({ id, secret, timestamp }) => {
-          const data = await api.get(`protocols/${id}?secret=${secret}`)
-          return {
-            ...data,
-            timestamp,
+          try {
+            const data = await api.get(`protocols/${id}?secret=${secret}`)
+            return {
+              ...data,
+              timestamp,
+            }
+          } catch (error) {
+            console.error(error)
+            return null
           }
         })
       )
-      setProtocols(protocolsDetails.sort((a, b) => a.timestamp - b.timestamp))
+      setProtocols(
+        protocolsDetails
+          .filter((x) => !!x)
+          .sort((a, b) => a.timestamp - b.timestamp)
+      )
     } catch (error) {
       console.error(error)
     }
