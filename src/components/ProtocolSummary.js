@@ -47,30 +47,33 @@ export const ProtocolSummary = () => {
     }
   }, [protocolId])
 
+  if (error) {
+    return <p>{error}</p>
+  }
+
   const { id, statusLocalized, pictures, section, createdAt } = protocolDetails
 
   return (
     <ProtocolSummaryStyle>
       <div>
-        {pictures.map((picture) => (
-          <img src={picture.url} alt="" />
-        ))}
-      </div>
-      <div>
         <h1>Протокол {id}</h1>
-        <p>Получен на: {new Date(createdAt).toLocaleString('bg-BG')}</p>
         {section && <p>Секция: {section.id}</p>}
         <p>Статус: {statusLocalized}</p>
+        <p>Получен на: {new Date(createdAt).toLocaleString('bg-BG')}</p>
+      </div>
+      <div>
+        {pictures?.map((picture) => (
+          <img src={picture.url} alt="" />
+        ))}
       </div>
     </ProtocolSummaryStyle>
   )
 }
 
 const ProtocolSummaryStyle = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border: 1px solid #ccc;
-  border-radius: 5px;
   padding: 10px;
+
+  img {
+    max-width: 100%;
+  }
 `
