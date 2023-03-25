@@ -25,7 +25,9 @@ export const MyViolations = () => {
       const violationsDetails = await Promise.all(
         violationsFromLocalStorage.map(async ({ id, secret, timestamp }) => {
           try {
-            const data = await api.get(`violations/${id}?secret=${secret}`)
+            const data = await api.get(
+              `violations/${id}?secret=${encodeURIComponent(secret)}`
+            )
             return {
               ...data,
               timestamp,

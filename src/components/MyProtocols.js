@@ -25,7 +25,9 @@ export const MyProtocols = () => {
       const protocolsDetails = await Promise.all(
         protocolsFromLocalStorage.map(async ({ id, secret, timestamp }) => {
           try {
-            const data = await api.get(`protocols/${id}?secret=${secret}`)
+            const data = await api.get(
+              `protocols/${id}?secret=${encodeURIComponent(secret)}`
+            )
             return {
               ...data,
               timestamp,

@@ -21,7 +21,11 @@ export const ProtocolSummary = () => {
       return
     }
     try {
-      const data = await api.get(`protocols/${id}?secret=${secret}`)
+      const data = await api.get(
+        `protocols/${protocolId}?secret=${encodeURIComponent(
+          protocolFromStorage.secret
+        )}`
+      )
       if (!ignore) {
         setProtocolDetails(data)
         setError(null)
