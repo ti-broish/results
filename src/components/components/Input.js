@@ -31,6 +31,7 @@ export function Input({
         type={type}
         name={name}
         {...(register ? register(name) : {})}
+        {...props}
       />
       {errors && errors.name && (
         <p className="errorMsg">{errors.name.message}</p>

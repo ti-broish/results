@@ -15,6 +15,10 @@ const StyledLink = styled(RouterLink)`
   }
 `
 
-export function Link({ to, children }) {
-  return <StyledLink to={to}>{children}</StyledLink>
+export function Link({ to, children, ...props }) {
+  return (
+    <StyledLink to={to} {...props}>
+      {children}
+    </StyledLink>
+  )
 }
