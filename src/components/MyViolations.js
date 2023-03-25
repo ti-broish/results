@@ -2,7 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import api from '../utils/api'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, LinkButton } from './components/Link'
+import { Link as RouterLink } from 'react-router-dom'
 import { ROUTES } from './routes'
 
 const ViolationsListStyle = styled.div`
@@ -54,7 +55,7 @@ export const MyViolations = () => {
       {violations.length === 0 ? (
         <>
           <p>Не сте подали сигнали от това устройство</p>
-          <Link to={ROUTES.violationForm}>Подайте сигнал</Link>
+          <LinkButton to={ROUTES.violationForm}>Подайте&nbsp;сигнал</LinkButton>
         </>
       ) : (
         violations.map((violation) => (
@@ -65,13 +66,15 @@ export const MyViolations = () => {
               {new Date(violation.createdAt).toLocaleString('bg-BG')}
             </p>
             <p>Статус: {violation.statusLocalized}</p>
-            <Link to={`/violations/${violation.id}`}>
-              <p>{violation.description || violation.publishedText}</p>
-              {violation.pictures && violation.pictures[0]?.url && (
+            <p>{violation.description || violation.publishedText}</p>
+            {violation.pictures && violation.pictures[0]?.url && (
+              <RouterLink to={`/violations/${violation.id}`}>
                 <img src={violation.pictures[0]?.url} alt="" height="200px" />
-              )}
+              </RouterLink>
+            )}
+            <LinkButton to={`/violations/${violation.id}`}>
               Вижте сигнала
-            </Link>
+            </LinkButton>
           </div>
         ))
       )}

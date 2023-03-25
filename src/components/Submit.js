@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Link } from './components/Link'
+import { LinkButton } from './components/Link'
 import { ROUTES } from './routes'
 
 const HorizontalLinks = styled.div`
@@ -24,16 +24,16 @@ export const Submit = () => {
   }, [])
   return (
     <HorizontalLinks>
-      <Link to={ROUTES.protocolForm}>Изпрати протокол</Link>
-      <Link to={ROUTES.violationForm}>Подай сигнал</Link>
+      <LinkButton to={ROUTES.protocolForm}>Изпрати протокол</LinkButton>
+      <LinkButton to={ROUTES.violationForm}>Подай сигнал</LinkButton>
       {hasViolations && (
         <>
-          <Link to={ROUTES.myViolations}>Моите сигнали</Link>
+          <LinkButton to={ROUTES.myViolations}>Моите сигнали</LinkButton>
         </>
       )}
       {hasProtcols && (
         <>
-          <Link to={ROUTES.myProtocols}>Моите протоколи</Link>
+          <LinkButton to={ROUTES.myProtocols}>Моите протоколи</LinkButton>
         </>
       )}
     </HorizontalLinks>
