@@ -18,16 +18,18 @@ export function Select({
   name,
   value,
   onChange,
+  register,
   disabled = false,
   ...props
 }) {
   return (
     <StyledSelect
+      {...(register ? register(name) : {})}
+      {...props}
       name={name}
       onChange={onChange}
       value={value}
       disabled={disabled}
-      {...props}
     >
       {children}
     </StyledSelect>

@@ -28,10 +28,10 @@ export function Input({
     <div className="form-control">
       <Label>{label}</Label>
       <StyledInput
-        type={type}
-        name={name}
         {...(register ? register(name) : {})}
         {...props}
+        type={type}
+        name={name}
       />
       {errors && errors.name && (
         <p className="errorMsg">{errors.name.message}</p>

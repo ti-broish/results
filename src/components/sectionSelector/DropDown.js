@@ -22,7 +22,7 @@ export default ({
     )}
     <div>
       <Select
-        {...register(name)}
+        register={register}
         name={name}
         value={value}
         onChange={(e) => onChange(e.target.value)}
