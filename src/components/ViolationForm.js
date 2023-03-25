@@ -11,56 +11,26 @@ import { saveImages } from '../utils/uploadPhotosHelper'
 import { ROUTES } from './routes'
 import { Link } from './components/Link'
 import { Button } from './components/Button'
+import { Input } from './components/Input'
+import { Textarea } from './components/Textarea'
 
 const CommentFormStyle = styled.form`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
   .errorMsg {
     color: red;
-  }
-  textarea {
-    width: 80%;
-    height: 50px;
-    padding: 20px;
-    margin-left: 5px;
-    margin-bottom: 10px;
   }
   input[type='radio'] {
     margin: 5px;
     vertical-align: middle;
-  }
-  .inputLabel {
-    display: block;
-    margin-top: 10px;
-    margin-left: 5px;
-    padding: 5px;
-  }
-  input[type='text'],
-  input[type='email'],
-  select {
-    width: 80%;
-    font-size: 18px;
-    padding: 10px;
-    border: 1px solid #eee;
-    margin-bottom: 10px;
-    box-sizing: border-box;
-    margin-left: 5px;
-  }
-  select {
-    margin-left: 5px;
-    padding: 5px;
   }
   .successfulMessage {
     color: green;
   }
   .unsuccessfulMessage {
     color: red;
-  }
-  button {
-    padding: 0.4em 1em;
-    margin: 20px 5px;
-    background: #38decb;
-    border: none;
-    color: #fff;
   }
 `
 const requiredMessage = 'Полето е задължително.'
@@ -171,43 +141,33 @@ export const ViolationForm = () => {
           register={register}
           setValue={setValue}
         />
-        <div className="form-control">
-          <label className="inputLabel">Име</label>
-          <input type="text" name="name" {...register('name')} />
-          {errors.name && <p className="errorMsg">{errors.name.message}</p>}
-        </div>
-        <div className="form-control">
-          <label className="inputLabel">Имейл</label>
-          <input type="email" name="email" {...register('email')} />
-          {errors.email && <p className="errorMsg">{errors.email.message}</p>}
-        </div>
-        <div className="form-control">
-          <label className="inputLabel">Телефон</label>
-          <input type="text" name="phoneNumber" {...register('phoneNumber')} />
-          {errors.phoneNumber && (
-            <p className="errorMsg">{errors.phoneNumber.message}</p>
-          )}
-        </div>
-        <div className="form-control">
-          <label className="inputLabel">Описание на нарушението</label>
-          <textarea
-            id="violationText"
-            name="description"
-            {...register('description')}
-          />
-          {errors.description && (
-            <p className="errorMsg">{errors.description.message}</p>
-          )}
-        </div>
+        <Input name="name" label="Име" register={register} errors={errors} />
+        <Input
+          name="email"
+          label="Имейл"
+          type="email"
+          register={register}
+          errors={errors}
+        />
+        <Input
+          name="phoneNumber"
+          label="Телефон"
+          type="tel"
+          register={register}
+          errors={errors}
+        />
+        <Textarea
+          name="description"
+          label="Описание на нарушението"
+          register={register}
+          errors={errors}
+        />
         <UploadPhotos
           name="photoUpload"
           callback={handlePhotoUpload}
           isRequired={false}
         ></UploadPhotos>
-        <div className="form-control">
-          <label></label>
-          <Button type="submit">Изпрати</Button>
-        </div>
+        <Button type="submit">Изпрати</Button>
         {message && (
           <div>
             {!message.includes('не') ? (
