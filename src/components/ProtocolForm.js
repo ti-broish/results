@@ -9,7 +9,6 @@ import { ROUTES } from './routes'
 import { Link } from './components/Link'
 import { Button } from './components/Button'
 import { Input } from './components/Input'
-import { Label } from './components/Label'
 
 const IMAGES_MIN_COUNT = 4
 
@@ -102,7 +101,6 @@ export const ProtocolForm = () => {
   }
 
   const sendProtocolEmail = async (event) => {
-    console.log(event)
     event.preventDefault()
     if (!protocol?.id || !email) {
       throw new Error('Няма протокол или имейл')
@@ -164,15 +162,21 @@ export const ProtocolForm = () => {
               <div>
                 <form onSubmit={sendProtocolEmail}>
                   <Input
+                    name="email"
                     label="Имейл"
                     type="email"
                     required={true}
                     value={email}
+                    autoComplete="email"
                     pattern="^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
                     title="Въведете валиден имейл адрес"
-                    placeholder="Въведете имейл, за да можем да ви известим при проблем със снимките"
+                    placeholder="Имейл адрес"
                     onChange={(e) => setEmail(e.target.value)}
                   />
+                  <p>
+                    Ако желаете, можете да въведете имейл, за да можем да ви
+                    известим при проблем със снимките на протокола
+                  </p>
                   <div className="form-control" style={{ margin: '2em 0' }}>
                     <Button type="submit">Изпрати имейл</Button>
                   </div>
