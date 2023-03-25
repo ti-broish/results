@@ -4,7 +4,7 @@ export const ROUTES = {
   protocolForm: '/protocol/new',
   myProtocols: '/my-protocols',
   myViolations: '/my-violations',
-  protocol: '/protocol/:id',
-  violation: '/violation/:id',
+  protocol: '/protocol/:protocolId',
+  violation: '/violation/:violationId',
   resultUnit: '/:unit',
 }
