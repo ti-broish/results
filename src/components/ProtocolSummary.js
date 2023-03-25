@@ -13,7 +13,7 @@ export const ProtocolSummary = () => {
     let ignore = false
     const protocolsFromStorage =
       JSON.parse(localStorage.getItem('protocols')) || []
-    const protocolFromStorage = protocolsFromStorage.filter(
+    const protocolFromStorage = protocolsFromStorage.find(
       (protocol) => protocol.id === protocolId
     )
     if (!protocolFromStorage) {
