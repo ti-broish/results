@@ -18,6 +18,7 @@ const StyledLink = styled(RouterLink)`
 const StyledLinkButton = styled(RouterLink)`
   display: inline-block;
   text-decoration: none;
+  text-align: center;
   width: min-content;
   min-width: 220px;
   padding: 1em 1.4em;
