@@ -7,6 +7,7 @@ import Election from './Election'
 import styled from 'styled-components'
 import Embed from './Embed'
 import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3'
+import './recaptcha/recaptcha.css'
 
 export const Wrapper = styled.div`
   max-width: 900px;
