@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import api from '../utils/api'
 import { useParams } from 'react-router-dom'
+import { Link } from './components/Link'
+import { ROUTES } from './routes'
 
 export const ProtocolSummary = () => {
   const { protocolId } = useParams()
   const [protocolDetails, setProtocolDetails] = useState({})
   const [error, setError] = useState(null)
+  const [ownProtocol, setOwnProtocol] = useState(false)
 
   useEffect(async () => {
     if (!localStorage || !protocolId) return
@@ -18,6 +21,7 @@ export const ProtocolSummary = () => {
     )
     let protocolUrl = `protocols/${protocolId}`
     if (protocolFromStorage) {
+      setOwnProtocol(true)
       protocolUrl = `${protocolUrl}?secret=${encodeURIComponent(
         protocolFromStorage.secret
       )}`
@@ -51,7 +55,12 @@ export const ProtocolSummary = () => {
 
   const { id, statusLocalized, pictures, section, createdAt } = protocolDetails
 
-  return (
+  return <>
+    {ownProtocol && (
+      <Link to={ROUTES.submit}>
+        <small>⟵ обратно</small>
+      </Link>
+    )}
     <ProtocolSummaryStyle>
       <div>
         <h1 style={{ wordBreak: 'break-word' }}>Протокол {id}</h1>
@@ -65,7 +74,7 @@ export const ProtocolSummary = () => {
         ))}
       </div>
     </ProtocolSummaryStyle>
-  )
+  </>
 }
 
 const ProtocolSummaryStyle = styled.div`
