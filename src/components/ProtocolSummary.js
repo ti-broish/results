@@ -55,26 +55,28 @@ export const ProtocolSummary = () => {
 
   const { id, statusLocalized, pictures, section, createdAt } = protocolDetails
 
-  return <>
-    {ownProtocol && (
-      <Link to={ROUTES.submit}>
-        <small>⟵ обратно</small>
-      </Link>
-    )}
-    <ProtocolSummaryStyle>
-      <div>
-        <h1 style={{ wordBreak: 'break-word' }}>Протокол {id}</h1>
-        {section && <p>Секция: {section.id}</p>}
-        <p>Статус: {statusLocalized}</p>
-        <p>Получен на: {new Date(createdAt).toLocaleString('bg-BG')}</p>
-      </div>
-      <div>
-        {pictures?.map((picture) => (
-          <img src={picture.url} alt="" />
-        ))}
-      </div>
-    </ProtocolSummaryStyle>
-  </>
+  return (
+    <>
+      {ownProtocol && (
+        <Link to={ROUTES.submit}>
+          <small>⟵ обратно</small>
+        </Link>
+      )}
+      <ProtocolSummaryStyle>
+        <div>
+          <h1 style={{ wordBreak: 'break-word' }}>Протокол {id}</h1>
+          {section && <p>Секция: {section.id}</p>}
+          <p>Статус: {statusLocalized}</p>
+          <p>Получен на: {new Date(createdAt).toLocaleString('bg-BG')}</p>
+        </div>
+        <div>
+          {pictures?.map((picture, index) => (
+            <img src={picture.url} alt="" key={index} />
+          ))}
+        </div>
+      </ProtocolSummaryStyle>
+    </>
+  )
 }
 
 const ProtocolSummaryStyle = styled.div`
