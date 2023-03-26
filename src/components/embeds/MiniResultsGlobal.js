@@ -16,6 +16,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import styled from 'styled-components'
+import { populateWithFakeResults } from '../units/helpers'
 
 const EmbedButton = styled.button`
   border: none;
@@ -60,6 +61,10 @@ export default (props) => {
   const [mode, setMode] = useState('violations')
   const [resultsAvailable, setResultsAvailable] = useState(false)
   const [violationsReported, setViolationsReported] = useState(false)
+  const [streamsAvailable, setStreamsAvailable] = useState(false)
+  const [sectionsWithResults, setSectionsWithResults] = useState(false)
+  const [populatedSections, setPopulatedSections] = useState(false)
+  const [sectionsMode, setSectionsMode] = useState('risk')
 
   const query = useQuery()
   const mapOnly = query.get('mapOnly') ? true : false
@@ -69,15 +74,23 @@ export default (props) => {
 
   const [data, setData] = useState(null)
 
+  // Set to true to populate with fake data
+  const devMode = false
+
   useEffect(() => {
     setData(null)
     axios
       .get(`${dataURL}/results/index.json`)
       .then((res) => {
-        // res.data = populateWithFakeResults(res.data, parties);
+        if (devMode) {
+          res.data = populateWithFakeResults(res.data, parties)
+        }
         setData(res.data)
         setResultsAvailable(res.data?.results.length > 0)
         setViolationsReported(false && res.data?.stats.violationsCount > 0)
+        setStreamsAvailable(res.data?.stats.streamsCount > 0)
+        setSectionsWithResults(res.data?.stats.sectionsWithResults > 0)
+        setPopulatedSections(res.data?.stats.populated > 0)
       })
       .catch((err) => {
         console.log(err)
@@ -93,7 +106,7 @@ export default (props) => {
     <LoadingScreen />
   ) : (
     <div>
-      {mapOnly || resultsOnly ? null : (
+      {!mapOnly && !resultsOnly && (
         <div style={{ position: 'fixed', left: 0, top: 0, padding: '5px' }}>
           <EmbedButton
             className={embedMode === 'map' ? 'active' : ''}
@@ -116,9 +129,9 @@ export default (props) => {
         </div>
       )}
 
-      {resultsOnly ? null : (
+      {!resultsOnly && (
         <div>
-          {embedMode !== 'map' ? null : (
+          {embedMode === 'map' && (
             <div
               style={{ position: 'fixed', top: 0, right: 0, padding: '5px' }}
             >
@@ -130,7 +143,7 @@ export default (props) => {
               </EmbedButton>
             </div>
           )}
-          {embedMode !== 'regions' ? null : (
+          {embedMode === 'regions' && (
             <div
               style={{ position: 'fixed', top: 0, right: 0, padding: '5px' }}
             >
@@ -171,8 +184,17 @@ export default (props) => {
             results={data.results}
             mapModesHidden={!mapModesOpen}
             linkToMainSite={linkToMainSite}
+            filters={{
+              resultsAvailable,
+              violationsReported,
+              streamsAvailable,
+              sectionsWithResults,
+              populatedSections,
+            }}
             mode={mode}
             setMode={setMode}
+            sectionsMode={sectionsMode}
+            setSectionsMode={(sectionsMode) => setSectionsMode(sectionsMode)}
             homepage={homepage}
             embed
           />,
@@ -190,14 +212,17 @@ export default (props) => {
         <SubdivisionTable
           parties={parties}
           results={data.results}
+          resultsAvailable={resultsAvailable}
           showNumbers
           subdivisions={data.nodes.map(aggregateData)}
           modesHidden={!subdivisionModesOpen}
+          selectedMode={mode}
+          sectionsMode={sectionsMode}
           embed
         />
       ) : null}
       <div style={{ height: '30px', display: 'block' }} />
-      {homepage ? null : <Source />}
+      {!homepage && <Source />}
     </div>
   )
 }

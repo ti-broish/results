@@ -57,7 +57,9 @@ export default (props) => {
     setSelectedRegion(e.target.value)
   }
 
-  const publicURL = process.env.PUBLIC_URL ? process.env.PUBLIC_URL : ''
+  const publicURL = process.env.PUBLIC_URL
+    ? process.env.PUBLIC_URL.replace(/\/*$/, '')
+    : ''
   return (
     <div>
       <Header title={'Вграждане'} />
