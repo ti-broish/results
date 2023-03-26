@@ -16,16 +16,14 @@ export const ProtocolSummary = () => {
     const protocolFromStorage = protocolsFromStorage.find(
       (protocol) => protocol.id === protocolId
     )
-    if (!protocolFromStorage) {
-      setError('Протоколът не е намерен')
-      return
+    let protocolUrl = `protocols/${protocolId}`
+    if (protocolFromStorage) {
+      protocolUrl = `${protocolUrl}?secret=${encodeURIComponent(
+        protocolFromStorage.secret
+      )}`
     }
     try {
-      const data = await api.get(
-        `protocols/${protocolId}?secret=${encodeURIComponent(
-          protocolFromStorage.secret
-        )}`
-      )
+      const data = await api.get(protocolUrl)
       if (!ignore) {
         setProtocolDetails(data)
         setError(null)
