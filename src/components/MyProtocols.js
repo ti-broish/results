@@ -62,7 +62,7 @@ export const MyProtocols = () => {
       ) : (
         protocols.map((protocol) => (
           <div key={protocol.id}>
-            <h2>Протокол {protocol.id}</h2>
+            <h2 style={{ wordBreak: 'break-word' }}>Протокол {protocol.id}</h2>
             <p>
               Изпратен на:{' '}
               {new Date(protocol.createdAt).toLocaleString('bg-BG')}

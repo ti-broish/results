@@ -62,7 +62,7 @@ export const MyViolations = () => {
       ) : (
         violations.map((violation) => (
           <div key={violation.id}>
-            <h2>Сигнал {violation.id}</h2>
+            <h2 style={{ wordBreak: 'break-word' }}>Сигнал {violation.id}</h2>
             <p>
               Изпратен на:{' '}
               {new Date(violation.createdAt).toLocaleString('bg-BG')}

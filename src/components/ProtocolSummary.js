@@ -56,7 +56,7 @@ export const ProtocolSummary = () => {
   return (
     <ProtocolSummaryStyle>
       <div>
-        <h1>Протокол {id}</h1>
+        <h1 style={{ wordBreak: 'break-word' }}>Протокол {id}</h1>
         {section && <p>Секция: {section.id}</p>}
         <p>Статус: {statusLocalized}</p>
         <p>Получен на: {new Date(createdAt).toLocaleString('bg-BG')}</p>
