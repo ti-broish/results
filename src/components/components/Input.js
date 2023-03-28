@@ -13,6 +13,9 @@ const StyledInput = styled.input`
   @media screen and (min-width: 750px) {
     width: 450px;
   }
+  ::placeholder {
+    color: #ccc;
+  }
 `
 
 export function Input({
@@ -22,13 +25,19 @@ export function Input({
   errors,
   register,
   type = 'text',
+  required = false,
+  pattern,
   ...props
 }) {
   return (
     <div className="form-control">
-      <Label>{label}</Label>
+      <Label>
+        {label}
+        {required && <span style={{ color: 'red', marginLeft: '2px' }}>*</span>}
+      </Label>
       <StyledInput
-        {...(register ? register(name) : {})}
+        {...(register ? register(name, { required, pattern }) : {})}
+        pattern={pattern}
         {...props}
         type={type}
         name={name}

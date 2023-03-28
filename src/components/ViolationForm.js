@@ -144,9 +144,16 @@ export const ViolationForm = () => {
           register={register}
           setValue={setValue}
         />
-        <Input name="name" label="Име" register={register} errors={errors} />
+        <Input
+          name="name"
+          required={true}
+          label="Име"
+          register={register}
+          errors={errors}
+        />
         <Input
           name="email"
+          required={true}
           label="Имейл"
           type="email"
           register={register}
@@ -154,14 +161,22 @@ export const ViolationForm = () => {
         />
         <Input
           name="phoneNumber"
+          required={true}
           label="Телефон"
           type="tel"
+          placeholder="+359888888888"
+          pattern="^\+(?:[0-9] ?){6,14}[0-9]$"
+          title="Tелефонният номер трябва да включва кода на държавата като +359888..."
           register={register}
           errors={errors}
         />
         <Textarea
           name="description"
+          required={true}
+          minLength={20}
+          pattern=".{20,}"
           label="Описание на нарушението"
+          title="Моля въведете поне 20 символа за описание на нарушението"
           register={register}
           errors={errors}
         />
