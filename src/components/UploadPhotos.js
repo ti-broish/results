@@ -55,8 +55,9 @@ const uploadImage = async function (
   options
 ) {
   const reader = new FileReader()
-  reader.readAsDataURL(file)
+  const abortController = new AbortController()
 
+  reader.readAsDataURL(file)
   reader.onload = async () => {
     const encodedDataURL = reader.result
     const byteSize = (str) => new Blob([str]).size
@@ -66,9 +67,15 @@ const uploadImage = async function (
       return
     }
     try {
-      const savedImage = await api.post('pictures', {
-        image: encodedDataURL,
-      })
+      const savedImage = await api.post(
+        'pictures',
+        {
+          image: encodedDataURL,
+        },
+        {
+          signal: abortController.signal,
+        }
+      )
       load(savedImage.id)
     } catch (err) {
       error('Възникна грешка при качването на снимките')
@@ -77,6 +84,14 @@ const uploadImage = async function (
 
   reader.onerror = () => {
     error('Възникна грешка при качването на снимките')
+  }
+
+  return {
+    abort: () => {
+      abortController.abort()
+      reader.abort()
+      abort()
+    },
   }
 }
 
