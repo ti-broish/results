@@ -135,6 +135,7 @@ export default function UploadPhotos({ files, callback, isRequired }) {
         acceptedFileTypes={['image/png', 'image/jpeg']}
         allowMultiple={true}
         maxParallelUploads={4}
+        itemInsertInterval={15}
         name="files"
         labelIdle='<span class="filepond--label-action">Качи снимки</span>'
         credits={false}
