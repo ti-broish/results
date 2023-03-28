@@ -20,6 +20,11 @@ const PREVIEW_MAX_WIDTH = 150
 const PREVIEW_MAX_HEIGHT = 350
 
 const FilePondContainer = styled.div`
+  @keyframes hideAnimation {
+    to {
+      opacity: 0;
+    }
+  }
   .filepond--image-preview {
     background-color: #fff;
   }
@@ -31,6 +36,10 @@ const FilePondContainer = styled.div`
   .filepond--file-info-sub,
   .filepond--file-status-sub {
     display: none;
+  }
+  .filepond--file-status-main {
+    animation: hideAnimation 1s ease-out 5s;
+    animation-fill-mode: forwards;
   }
   .filepond--image-preview-overlay-success {
     color: rgb(0, 0, 0, 0.5);
