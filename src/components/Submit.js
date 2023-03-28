@@ -37,6 +37,9 @@ export const Submit = () => {
           <LinkButton to={ROUTES.myProtocols}>Моите протоколи</LinkButton>
         </>
       )}
+      <LinkButton to={ROUTES.rightsAndObligations}>
+        Права и задължения
+      </LinkButton>
     </HorizontalLinks>
   )
 }

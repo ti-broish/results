@@ -4,15 +4,16 @@ import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 
 import Election from './Election'
 
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3'
 import styled from 'styled-components'
 import Embed from './Embed'
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3'
 import './recaptcha/recaptcha.css'
 
 export const Wrapper = styled.div`
   max-width: 900px;
   margin: 20px auto 50px auto;
   padding: 0 1em;
+  padding-bottom: 5rem;
 `
 
 const GlobalCSS = styled.div`
