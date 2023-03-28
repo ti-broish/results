@@ -110,6 +110,13 @@ const uploadImage = async function (
   }
 }
 
+const compareFiles = (a, b) => {
+  if (!(a.file && b.file)) {
+    return 0
+  }
+  return a.filename.localeCompare(b.filename)
+}
+
 export default function UploadPhotos({ files, callback, isRequired }) {
   return (
     <FilePondContainer>
@@ -137,6 +144,7 @@ export default function UploadPhotos({ files, callback, isRequired }) {
         maxParallelUploads={4}
         checkValidity={true}
         itemInsertInterval={15}
+        itemInsertLocation={compareFiles}
         name="files"
         labelIdle='<span class="filepond--label-action">Качи снимки</span>'
         credits={false}
