@@ -1,5 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Link } from './components/Link'
+import { ROUTES } from './routes'
 
 const MOBILE_WIDTH = 952
 const MainContent = styled.div`
@@ -38,6 +40,9 @@ const MainContent = styled.div`
 export const RightsAndObligations = () => {
   return (
     <MainContent>
+      <Link to={ROUTES.submit}>
+        <small>⟵ обратно</small>
+      </Link>
       <h1>Права и задължения</h1>
       <hr />
       <p>
