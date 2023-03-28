@@ -7,6 +7,10 @@ const FooterDiv = styled.footer`
   padding: 10px;
   box-sizing: border-box;
   height: 71px;
+  position: fixed;
+  bottom: 0;
+  height: 5rem;
+  width: 100%;
 
   p {
     text-align: center;

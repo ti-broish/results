@@ -7,4 +7,5 @@ export const ROUTES = {
   protocol: '/protocol/:protocolId',
   violation: '/violation/:violationId',
   resultUnit: '/:unit',
+  rightsAndObligations: '/rights-and-obligations',
 }

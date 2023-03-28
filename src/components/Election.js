@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react'
-import { Redirect, Route, Switch } from 'react-router-dom'
 import axios from 'axios'
-import Header from './layout/Header'
-import Footer from './layout/Footer'
-import { ROUTES } from './routes.js'
-import { ResultUnit } from './ResultUnit.js'
+import React, { useEffect, useState } from 'react'
+import { Redirect, Route, Switch } from 'react-router-dom'
 import { Wrapper } from './App'
-import { ViolationForm } from './ViolationForm'
-import { ProtocolForm } from './ProtocolForm'
-import { Submit } from './Submit'
-import { ProtocolSummary } from './ProtocolSummary'
+import Footer from './layout/Footer'
+import Header from './layout/Header'
 import { MyProtocols } from './MyProtocols'
 import { MyViolations } from './MyViolations'
+import { ProtocolForm } from './ProtocolForm'
+import { ProtocolSummary } from './ProtocolSummary'
+import { ResultUnit } from './ResultUnit.js'
+import { RightsAndObligations } from './RightsAndObligations'
+import { ROUTES } from './routes.js'
+import { Submit } from './Submit'
+import { ViolationForm } from './ViolationForm'
 
 export const ElectionContext = React.createContext()
 
@@ -39,6 +40,11 @@ export default () => {
           <Route path={ROUTES.myViolations} exact component={MyViolations} />
           <Route path={ROUTES.protocol} component={ProtocolSummary} />
           <Route path={ROUTES.violationForm} component={ViolationForm} />
+          <Route
+            path={ROUTES.rightsAndObligations}
+            component={RightsAndObligations}
+          />
+
           <Route
             path={[ROUTES.resultUnit, `/`]}
             render={() => <ResultUnit />}
