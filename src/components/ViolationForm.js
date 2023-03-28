@@ -152,6 +152,9 @@ export const ViolationForm = () => {
           required={true}
           label="Имейл"
           type="email"
+          autoComplete="email"
+          pattern="^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
+          title="Въведете валиден имейл адрес"
           register={register}
           errors={errors}
         />
