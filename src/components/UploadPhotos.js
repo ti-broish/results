@@ -29,7 +29,9 @@ const FilePondContainer = styled.div`
   }
   .filepond--image-preview-overlay,
   .filepond--file-info-main,
-  .filepond--file-info-sub {
+  .filepond--file-info-sub,
+  .filepond--file-status-main,
+  .filepond--file-status-sub {
     display: none;
   }
   /* Style the individual items */
