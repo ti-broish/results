@@ -27,14 +27,17 @@ const FilePondContainer = styled.div`
   .filepond--item-panel {
     border-radius: 0 !important;
   }
-  .filepond--image-preview-overlay,
   .filepond--file-info-main,
   .filepond--file-info-sub,
-  .filepond--file-status-main,
   .filepond--file-status-sub {
     display: none;
   }
-  /* Style the individual items */
+  .filepond--image-preview-overlay-success {
+    color: rgb(0, 0, 0, 0.5);
+  }
+  .filepond--file-action-button {
+    cursor: pointer;
+  }
   .filepond--item {
     width: calc(50% - 0.5em);
   }
@@ -112,6 +115,8 @@ export default function UploadPhotos({ files, callback, isRequired }) {
         labelTapToCancel="Отказ"
         labelButtonRemoveItem="Премахни"
         labelFileLoading="Зареждане..."
+        labelFileProcessing="Качване..."
+        labelFileProcessingComplete="Готово"
         fileValidateTypeLabelExpectedTypes="Очаквани файлове: {allButLastType} или {lastType}"
         required={isRequired}
         onupdatefiles={callback}
