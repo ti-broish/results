@@ -28,6 +28,9 @@ const FilePondContainer = styled.div`
   .filepond--image-preview {
     background-color: #fff;
   }
+  .filepond--file-wrapper {
+    min-height: 50px;
+  }
   .filepond--image-preview-wrapper,
   .filepond--item-panel {
     border-radius: 0 !important;
