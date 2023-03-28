@@ -124,7 +124,11 @@ export const ViolationForm = () => {
       )
       setMessage('Сигналът Ви беше изпратен успешно!')
     } catch (error) {
-      setMessage(`Сигналът Ви не беше изпратен!: ${error.message}`)
+      setMessage(
+        `Сигналът Ви не беше изпратен! ${
+          error?.response?.data?.message || error.message
+        }`
+      )
     }
   }
 
