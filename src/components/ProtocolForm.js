@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 import UploadPhotos from './UploadPhotos'
 import api from '../utils/api'
-import { saveImages } from '../utils/uploadPhotosHelper'
 import { ValidationError } from '../utils/ValidationError'
 import { ROUTES } from './routes'
 import { Link } from './components/Link'
@@ -68,7 +67,7 @@ export const ProtocolForm = () => {
       if (files.length < IMAGES_MIN_COUNT) {
         throw new ValidationError('Качете поне 4 снимки')
       }
-      const savedImageIds = await saveImages(files)
+      const savedImageIds = files.map((file) => file.serverId)
       const body = {
         pictures: savedImageIds,
       }
@@ -137,7 +136,7 @@ export const ProtocolForm = () => {
                 {files.length > 0 && files.length < IMAGES_MIN_COUNT && (
                   <>
                     <p>Трябва да снимате целият протокол.</p>
-                    <p class="unsuccessfulMessage">
+                    <p className="unsuccessfulMessage">
                       Качете поне {IMAGES_MIN_COUNT} снимки, за да изпратите
                       протокол.
                     </p>
