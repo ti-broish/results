@@ -6,6 +6,7 @@ import FilePondPluginFileEncode from 'filepond-plugin-file-encode'
 import FilePondPluginImageExifOrientation from 'filepond-plugin-image-exif-orientation'
 import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
+import api from '../utils/api'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
 
 registerPlugin(
@@ -40,6 +41,43 @@ const FilePondContainer = styled.div`
   }
 `
 
+const uploadImage = async function (
+  fieldName,
+  file,
+  metadata,
+  load,
+  error,
+  progress,
+  abort,
+  transfer,
+  options
+) {
+  const reader = new FileReader()
+  reader.readAsDataURL(file)
+
+  reader.onload = async () => {
+    const encodedDataURL = reader.result
+    const byteSize = (str) => new Blob([str]).size
+    const imageMB = byteSize(encodedDataURL) / Math.pow(1024, 2)
+    if (Math.round(imageMB) > 50) {
+      error(`Размерът на файла ${file.name}  е твърде голям`)
+      return
+    }
+    try {
+      const savedImage = await api.post('pictures', {
+        image: encodedDataURL,
+      })
+      load(savedImage.id)
+    } catch (err) {
+      error('Възникна грешка при качването на снимките')
+    }
+  }
+
+  reader.onerror = () => {
+    error('Възникна грешка при качването на снимките')
+  }
+}
+
 export default function UploadPhotos({ files, callback, isRequired }) {
   return (
     <FilePondContainer>
@@ -65,6 +103,7 @@ export default function UploadPhotos({ files, callback, isRequired }) {
         name="files"
         labelIdle='<span class="filepond--label-action">Качи снимки</span>'
         credits={false}
+        server={{ process: uploadImage }}
       />
     </FilePondContainer>
   )

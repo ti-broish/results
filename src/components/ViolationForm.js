@@ -7,7 +7,6 @@ import * as yup from 'yup'
 import UploadPhotos from './UploadPhotos'
 import { SectionSelector } from './sectionSelector/SectionSelector'
 import api from '../utils/api'
-import { saveImages } from '../utils/uploadPhotosHelper'
 import { ROUTES } from './routes'
 import { Link } from './components/Link'
 import { Button } from './components/Button'
@@ -106,7 +105,7 @@ export const ViolationForm = () => {
 
   const onSubmit = async (data) => {
     try {
-      const savedImageIds = await saveImages(files)
+      const savedImageIds = files.map((file) => file.serverId)
       const body = {
         description: data.description,
         town: parseInt(data.town, 10),
