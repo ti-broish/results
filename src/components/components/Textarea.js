@@ -18,12 +18,25 @@ export function Textarea({
   children,
   errors,
   register,
+  required = false,
+  minLength,
   ...props
 }) {
+  const pattern = minLength > 0 ? `.{${minLength},}` : undefined
   return (
     <div className="form-control">
-      <Label>{label}</Label>
-      <StyledTextarea name={name} {...register(name)} {...props} rows={5} />
+      <Label>
+        {label}
+        {required && <span style={{ color: 'red', marginLeft: '2px' }}>*</span>}
+      </Label>
+      <StyledTextarea
+        name={name}
+        {...register(name, { required, minLength, pattern })}
+        {...props}
+        minLength={minLength}
+        required={required}
+        rows={5}
+      />
       {errors.name && <p className="errorMsg">{errors.name.message}</p>}
     </div>
   )
