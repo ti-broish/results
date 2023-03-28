@@ -31,9 +31,6 @@ export const ProtocolForm = () => {
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isEmailSent, setIsEmailSent] = useState(false)
 
-  const handlePhotoUpload = (files) => {
-    setFiles(files)
-  }
   const reset = () => {
     setFiles([])
     setError(null)
@@ -129,7 +126,7 @@ export const ProtocolForm = () => {
             <form onSubmit={handleSubmit}>
               <UploadPhotos
                 files={files}
-                callback={handlePhotoUpload}
+                callback={setFiles}
                 isRequired={true}
               ></UploadPhotos>
               <div className="form-control">

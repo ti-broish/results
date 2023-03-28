@@ -74,10 +74,6 @@ export const ViolationForm = () => {
   const [files, setFiles] = useState([])
   const [violation, setViolation] = useState(null)
 
-  const handlePhotoUpload = (files) => {
-    setFiles(files)
-  }
-
   useEffect(() => {
     if (isSubmitSuccessful) {
       reset()
@@ -182,7 +178,7 @@ export const ViolationForm = () => {
         />
         <UploadPhotos
           name="photoUpload"
-          callback={handlePhotoUpload}
+          callback={setFiles}
           isRequired={false}
         ></UploadPhotos>
         <Button type="submit">Изпрати</Button>
