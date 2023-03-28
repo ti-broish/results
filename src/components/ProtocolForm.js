@@ -136,7 +136,7 @@ export const ProtocolForm = () => {
                 {files.length > 0 && files.length < IMAGES_MIN_COUNT && (
                   <>
                     <p>Трябва да снимате целият протокол.</p>
-                    <p class="unsuccessfulMessage">
+                    <p className="unsuccessfulMessage">
                       Качете поне {IMAGES_MIN_COUNT} снимки, за да изпратите
                       протокол.
                     </p>
