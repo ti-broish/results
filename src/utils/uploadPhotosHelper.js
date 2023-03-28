@@ -1,8 +1,7 @@
 import { ValidationError } from './ValidationError'
 import api from './api'
-import convertToBase64 from './fileToBase64'
 
-const saveImages = async function (images) {
+export const saveImages = async function (images) {
   let imageIds = []
   const byteSize = (str) => new Blob([str]).size
   for (const image in images) {
@@ -26,14 +25,3 @@ const saveImages = async function (images) {
 
   return imageIds
 }
-
-const convertImagesToBase64 = async function (images) {
-  const imageArray = Array.from(images)
-  return await Promise.all(
-    imageArray.map(async (image) => {
-      return await convertToBase64(image)
-    })
-  )
-}
-
-export { convertImagesToBase64, saveImages }
