@@ -83,9 +83,11 @@ export default (props) => {
   const { displayParties, displayPartiesTotal } = generateDisplayParties(
     props.parties,
     props.results,
-    11,
+    props.partiesCount !== undefined ? props.partiesCount : 11,
     null,
-    '0'
+    null,
+    null,
+    props.showFeaturedOnly !== undefined ? props.showFeaturedOnly : true
   )
 
   let thresholdPlaced = false
