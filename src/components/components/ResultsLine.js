@@ -85,7 +85,7 @@ export default handleViewport((props) => {
                 <table style="width: 100%;">
                 <tbody>
                 ${
-                  validVotes
+                  typeof validVotes === 'number' && !isNaN(validVotes)
                     ? `
                         <tr>
                             <td style="padding-right: 20px;">Гласове</td>
