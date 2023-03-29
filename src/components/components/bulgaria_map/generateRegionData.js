@@ -17,7 +17,6 @@ export const generateDisplayParties = (
   const tempParties = {}
   parties.forEach((party) => {
     tempParties[party.id] = { ...party, validVotes: null }
-    if (party.id.toString() === '0') tempParties[party.id].color = 'ccc'
   })
 
   for (var i = 0; i < results.length; i += 2) {
