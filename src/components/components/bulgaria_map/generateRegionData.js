@@ -296,7 +296,6 @@ export const generateRegionDataProcessed = (sectionsMode, regions) => {
     (acc, [_, region]) => Math.max(acc, region.stats.midRisk),
     0
   )
-  console.log(maxHighRiskSections)
 
   for (const region of regions) {
     const {
