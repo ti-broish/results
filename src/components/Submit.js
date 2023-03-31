@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import styled from 'styled-components'
 import { LinkButton } from './components/Link'
 import { ROUTES } from './routes'
+import { ElectionContext } from './Election'
 
 const HorizontalLinks = styled.div`
   display: flex;
@@ -10,8 +11,11 @@ const HorizontalLinks = styled.div`
 `
 
 export const Submit = () => {
+  const { meta } = useContext(ElectionContext)
   const [hasViolations, setHasViolations] = useState(false)
   const [hasProtcols, setHasProtocols] = useState(false)
+  const showProtocolButton =
+    meta && Date.parse(meta.endOfElectionDayTimestamp) < Date.now()
 
   useEffect(() => {
     if (!localStorage) {
@@ -25,7 +29,9 @@ export const Submit = () => {
   }, [])
   return (
     <HorizontalLinks>
-      <LinkButton to={ROUTES.protocolForm}>Изпрати протокол</LinkButton>
+      {showProtocolButton && (
+        <LinkButton to={ROUTES.protocolForm}>Изпрати протокол</LinkButton>
+      )}
       <LinkButton to={ROUTES.violationForm}>Подай сигнал</LinkButton>
       {hasViolations && (
         <>
@@ -37,6 +43,7 @@ export const Submit = () => {
           <LinkButton to={ROUTES.myProtocols}>Моите протоколи</LinkButton>
         </>
       )}
+      <LinkButton to={ROUTES.resultUnit.replace(':unit', '')}>Карта</LinkButton>
       <LinkButton to={ROUTES.rightsAndObligations}>
         Права и задължения
       </LinkButton>
