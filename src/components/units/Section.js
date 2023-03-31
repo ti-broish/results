@@ -110,6 +110,9 @@ export default (props) => {
         totalValid={data.stats.validVotes}
         totalInvalid={data.stats.invalidVotes}
         embed={props.embed}
+        showThreshold={true}
+        partiesCount={parties.length}
+        showFeaturedOnly={false}
       />
       <h2>Местоположение</h2>
       <SectionDetailsTable embed={props.embed}>
@@ -167,14 +170,14 @@ export default (props) => {
       {data.protocols
         ? data.protocols.map((protocol, index) => {
             return (
-              <>
+              <div key={index}>
                 <h3>Протокол {index + 1}</h3>
                 <ImageGallery
                   items={protocol.pictures.map((picture) => ({
                     original: picture.url,
                   }))}
                 />
-              </>
+              </div>
             )
           })
         : null}

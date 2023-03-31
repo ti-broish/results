@@ -12,12 +12,12 @@ export const generateDisplayParties = (
   count,
   firstPartyId,
   lastPartyId,
-  removePartyId
+  removePartyId,
+  showFeaturedOnly = true
 ) => {
   const tempParties = {}
   parties.forEach((party) => {
     tempParties[party.id] = { ...party, validVotes: null }
-    if (party.id.toString() === '0') tempParties[party.id].color = 'ccc'
   })
 
   for (var i = 0; i < results.length; i += 2) {
@@ -59,21 +59,30 @@ export const generateDisplayParties = (
     count = count - 1
   }
 
-  displayParties = displayParties
-    .sort((a, b) => {
-      if (!isNaN(a.validVotes) && !isNaN(b.validVotes)) {
-        return b.validVotes - a.validVotes
-      } else if (isNaN(a.validVotes) && !isNaN(b.validVotes)) {
-        return 100000
-      } else if (!isNaN(a.validVotes) && isNaN(b.validVotes)) {
-        return -10000
-      } else return parseInt(a.number, 10) - parseInt(b.number, 10)
-    })
-    .slice(0, count)
+  displayParties = displayParties.sort((a, b) => {
+    if (a.validVotes !== b.validVotes) {
+      return b.validVotes - a.validVotes
+    }
+    if (a.isFeatured !== b.isFeatured) {
+      return b.isFeatured - a.isFeatured
+    }
+
+    if (a.number === '0' || b.number === '0') {
+      return a.number === '0' ? 1 : -1
+    }
+
+    return parseInt(a.number, 10) - parseInt(b.number, 10)
+  })
 
   if (firstPartyId) displayParties = [firstParty, ...displayParties]
   if (lastPartyId) displayParties = [...displayParties, lastParty]
 
+  if (showFeaturedOnly) {
+    displayParties = displayParties.filter((party) => party.isFeatured)
+  }
+  if (count > 0) {
+    displayParties = displayParties.slice(0, count)
+  }
   displayParties.forEach((party) => (displayPartiesTotal += party.validVotes))
 
   return {
@@ -297,7 +306,6 @@ export const generateRegionDataProcessed = (sectionsMode, regions) => {
     (acc, [_, region]) => Math.max(acc, region.stats.midRisk),
     0
   )
-  console.log(maxHighRiskSections)
 
   for (const region of regions) {
     const {

@@ -114,63 +114,65 @@ const MobileNavMenu = styled.div`
   }
 `
 
-export default (props) => {
+export default () => {
   const [menuOpen, setMenuOpen] = useState(false)
 
-  return [
-    <HeaderCompensator />,
-    <HeaderStyle>
-      <Wrapper>
-        <a href="/">
-          <LogoImage src="/brand/logo_horizontal_white.png?v=2" />
-        </a>
-        <Navigation>
-          <a href="/signup">Запиши се</a>
-          <a href="/about">Kампанията</a>
-          <a href="/instructions">Инструкции</a>
-          <a href="/videos">Видео</a>
-          <a href="/ti-glasuvash">Ти Гласуваш</a>
-        </Navigation>
-        <MobileMenuButton onClick={() => setMenuOpen(!menuOpen)}>
-          <FontAwesomeIcon icon={faBars} />
-        </MobileMenuButton>
-      </Wrapper>
-    </HeaderStyle>,
-    <MobileNavigation>
-      <Menu
-        right
-        isOpen={menuOpen}
-        onStateChange={(state) => {
-          if (state.isOpen !== menuOpen) setMenuOpen(state.isOpen)
-        }}
-      >
-        <MobileNavMenu>
-          <a href="/" onClick={() => setMenuOpen(false)}>
-            Начало
+  return (
+    <>
+      <HeaderCompensator />
+      <HeaderStyle>
+        <Wrapper>
+          <a href="/">
+            <LogoImage src="/brand/logo_horizontal_white.png?v=2" />
           </a>
-          <a href="/signup" onClick={() => setMenuOpen(false)}>
-            Запиши се
-          </a>
-          <a href="/about" onClick={() => setMenuOpen(false)}>
-            Kампанията
-          </a>
-          <a href="/instructions" onClick={() => setMenuOpen(false)}>
-            Инструкции
-          </a>
-          <a href="/videos" onClick={() => setMenuOpen(false)}>
-            Видео
-          </a>
-          <a href="/news" onClick={() => setMenuOpen(false)}>
-            Актуална информация
-          </a>
-          <a href="/privacy-notice" onClick={() => setMenuOpen(false)}>
-            Декларация за поверителност
-          </a>
-          <a href="/ti-glasuvash" onClick={() => setMenuOpen(false)}>
-            Ти Гласуваш!
-          </a>
-        </MobileNavMenu>
-      </Menu>
-    </MobileNavigation>,
-  ]
+          <Navigation>
+            <a href="/signup">Запиши се</a>
+            <a href="/about">Kампанията</a>
+            <a href="/instructions">Инструкции</a>
+            <a href="/videos">Видео</a>
+            <a href="/ti-glasuvash">Ти Гласуваш</a>
+          </Navigation>
+          <MobileMenuButton onClick={() => setMenuOpen(!menuOpen)}>
+            <FontAwesomeIcon icon={faBars} />
+          </MobileMenuButton>
+        </Wrapper>
+      </HeaderStyle>
+      <MobileNavigation>
+        <Menu
+          right
+          isOpen={menuOpen}
+          onStateChange={(state) => {
+            if (state.isOpen !== menuOpen) setMenuOpen(state.isOpen)
+          }}
+        >
+          <MobileNavMenu>
+            <a href="/" onClick={() => setMenuOpen(false)}>
+              Начало
+            </a>
+            <a href="/signup" onClick={() => setMenuOpen(false)}>
+              Запиши се
+            </a>
+            <a href="/about" onClick={() => setMenuOpen(false)}>
+              Kампанията
+            </a>
+            <a href="/instructions" onClick={() => setMenuOpen(false)}>
+              Инструкции
+            </a>
+            <a href="/videos" onClick={() => setMenuOpen(false)}>
+              Видео
+            </a>
+            <a href="/news" onClick={() => setMenuOpen(false)}>
+              Актуална информация
+            </a>
+            <a href="/privacy-notice" onClick={() => setMenuOpen(false)}>
+              Декларация за поверителност
+            </a>
+            <a href="/ti-glasuvash" onClick={() => setMenuOpen(false)}>
+              Ти Гласуваш!
+            </a>
+          </MobileNavMenu>
+        </Menu>
+      </MobileNavigation>
+    </>
+  )
 }

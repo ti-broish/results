@@ -22,7 +22,7 @@ export default handleViewport((props) => {
         </span>
 
         <span style={{ float: 'right' }}>
-          {!props.percentage
+          {typeof props.percentage !== 'number' && !isNaN(props.percentage)
             ? 'Няма данни'
             : `${formatPercentage(props.percentage)}%`}
         </span>

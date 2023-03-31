@@ -52,10 +52,11 @@ const filterControls = (controls, filters) => {
 const renderPrimaryControls = (filters, mode, setMode) => {
   const controlsToShow = filterControls(PRIMARY_CONTROLS, filters)
 
-  return controlsToShow.map((control) => (
+  return controlsToShow.map((control, index) => (
     <button
       className={mode === control.mode ? 'selected' : ''}
       onClick={() => setMode(control.mode)}
+      key={index}
     >
       {control.title}
     </button>
@@ -65,10 +66,11 @@ const renderPrimaryControls = (filters, mode, setMode) => {
 const renderSectionControls = (filters, sectionsMode, setSectionsMode) => {
   const controlsToShow = filterControls(SECTION_CONTROLS, filters)
 
-  return controlsToShow.map((control) => (
+  return controlsToShow.map((control, index) => (
     <button
       className={sectionsMode === control.mode ? 'selected' : ''}
       onClick={() => setSectionsMode(control.mode)}
+      key={index}
     >
       {control.title}
     </button>

@@ -28,7 +28,9 @@ export const generateTooltipDominant = (region, tooltipData) => {
                           party.displayName
                         }</td>
                         ${
-                          party.validVotes
+                          typeof party.validVotes === 'number' &&
+                          !isNaN(party.validVotes) &&
+                          region.stats.validVotes
                             ? `
                                 <td style="text-align: right; padding-right: 20px;">${formatCount(
                                   party.validVotes
@@ -105,7 +107,8 @@ export const generateTooltipSingleParty = (
                           partyResult.color
                         }; text-align: right; padding-left: 20px;">
                         ${
-                          partyResult.validVotes
+                          typeof partyResult.validVotes === 'number' &&
+                          !isNaN(partyResult.validVotes)
                             ? `${formatCount(partyResult.validVotes)} &nbsp;`
                             : `Няма данни`
                         }
@@ -117,7 +120,9 @@ export const generateTooltipSingleParty = (
                           partyResult.color
                         }; text-align: right; padding-left: 20px;">
                         ${
-                          partyResult.validVotes
+                          typeof partyResult.validVotes === 'number' &&
+                          !isNaN(partyResult.validVotes) &&
+                          region.stats.validVotes
                             ? `${formatPercentage(
                                 partyResult.validVotes / region.stats.validVotes
                               )}%`
