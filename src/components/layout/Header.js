@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
-
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { slide as Menu } from 'react-burger-menu'
-
 import styled from 'styled-components'
+import { ROUTES } from '../routes'
 
 const MOBILE_WIDTH = 952
 
@@ -122,15 +121,18 @@ export default () => {
       <HeaderCompensator />
       <HeaderStyle>
         <Wrapper>
-          <a href="/">
+          <Link to={ROUTES.submit}>
             <LogoImage src="/brand/logo_horizontal_white.png?v=2" />
-          </a>
+          </Link>
           <Navigation>
-            <a href="/signup">Запиши се</a>
-            <a href="/about">Kампанията</a>
+            {/*<Link to={ROUTES.protocolForm}>Изпрати протокол</Link>*/}
+            <Link to={ROUTES.violationForm}>Подай сигнал</Link>
+            {/*<a href="/signup">Запиши се</a>*/}
+            {/*<a href="/about">Kампанията</a>*/}
             <a href="/instructions">Инструкции</a>
-            <a href="/videos">Видео</a>
-            <a href="/ti-glasuvash">Ти Гласуваш</a>
+            <Link to={ROUTES.resultUnit.replace(':unit', '')}>Карта</Link>
+            {/*<a href="/videos">Видео</a>*/}
+            {/*<a href="/ti-glasuvash">Ти Гласуваш</a>*/}
           </Navigation>
           <MobileMenuButton onClick={() => setMenuOpen(!menuOpen)}>
             <FontAwesomeIcon icon={faBars} />
@@ -149,27 +151,37 @@ export default () => {
             <a href="/" onClick={() => setMenuOpen(false)}>
               Начало
             </a>
-            <a href="/signup" onClick={() => setMenuOpen(false)}>
+            {/*<a href="/signup" onClick={() => setMenuOpen(false)}>
               Запиши се
-            </a>
-            <a href="/about" onClick={() => setMenuOpen(false)}>
+            </a>*/}
+            {/*<a href="/about" onClick={() => setMenuOpen(false)}>
               Kампанията
-            </a>
+            </a>*/}
+            {/*<Link to={ROUTES.protocolForm}>Изпрати протокол</Link>*/}
+            <Link to={ROUTES.violationForm} onClick={() => setMenuOpen(false)}>
+              Подай сигнал
+            </Link>
             <a href="/instructions" onClick={() => setMenuOpen(false)}>
               Инструкции
             </a>
-            <a href="/videos" onClick={() => setMenuOpen(false)}>
+            <Link
+              to={ROUTES.resultUnit.replace(':unit', '')}
+              onClick={() => setMenuOpen(false)}
+            >
+              Карта
+            </Link>
+            {/*<a href="/videos" onClick={() => setMenuOpen(false)}>
               Видео
             </a>
-            <a href="/news" onClick={() => setMenuOpen(false)}>
+            {/*<a href="/news" onClick={() => setMenuOpen(false)}>
               Актуална информация
             </a>
             <a href="/privacy-notice" onClick={() => setMenuOpen(false)}>
               Декларация за поверителност
             </a>
-            <a href="/ti-glasuvash" onClick={() => setMenuOpen(false)}>
+            {/*<a href="/ti-glasuvash" onClick={() => setMenuOpen(false)}>
               Ти Гласуваш!
-            </a>
+            </a>*/}
           </MobileNavMenu>
         </Menu>
       </MobileNavigation>
