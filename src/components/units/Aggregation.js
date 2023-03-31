@@ -117,7 +117,7 @@ export default (props) => {
 
         setData(res.data)
         setResultsAvailable(res.data?.results.length > 0)
-        setViolationsReported(false && res.data?.stats.violationsCount > 0)
+        setViolationsReported(res.data?.stats.violationsCount > 0)
         setStreamsAvailable(res.data?.stats.streamsCount > 0)
         setSectionsWithResults(res.data?.stats.sectionsWithResults > 0)
         setPopulatedSections(res.data?.stats.populated > 0)
