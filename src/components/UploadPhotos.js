@@ -8,6 +8,7 @@ import FilePondPluginImagePreview from 'filepond-plugin-image-preview'
 import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type'
 import api from '../utils/api'
 import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 
 registerPlugin(
   FilePondPluginImageExifOrientation,
@@ -58,57 +59,62 @@ const FilePondContainer = styled.div`
   }
 `
 
-const uploadImage = async function (
-  fieldName,
-  file,
-  metadata,
-  load,
-  error,
-  progress,
-  abort,
-  transfer,
-  options
-) {
-  const reader = new FileReader()
-  const abortController = new AbortController()
+const uploadImage =
+  (executeRecaptcha) =>
+  async (
+    fieldName,
+    file,
+    metadata,
+    load,
+    error,
+    progress,
+    abort,
+    transfer,
+    options
+  ) => {
+    const reader = new FileReader()
+    const abortController = new AbortController()
 
-  reader.readAsDataURL(file)
-  reader.onload = async () => {
-    const encodedDataURL = reader.result
-    const byteSize = (str) => new Blob([str]).size
-    const imageMB = byteSize(encodedDataURL) / Math.pow(1024, 2)
-    if (Math.round(imageMB) > 50) {
-      error(`Размерът на файла ${file.name}  е твърде голям`)
-      return
+    reader.readAsDataURL(file)
+    reader.onload = async () => {
+      const encodedDataURL = reader.result
+      const byteSize = (str) => new Blob([str]).size
+      const imageMB = byteSize(encodedDataURL) / Math.pow(1024, 2)
+      if (Math.round(imageMB) > 50) {
+        error(`Размерът на файла ${file.name}  е твърде голям`)
+        return
+      }
+      try {
+        const savedImage = await api.post(
+          'pictures',
+          {
+            image: encodedDataURL,
+          },
+          {
+            signal: abortController.signal,
+            headers: {
+              'x-recaptcha-token': await executeRecaptcha('sendProtocolImage'),
+            },
+          }
+        )
+        load(savedImage.id)
+      } catch (err) {
+        error('Възникна грешка при качването на снимките')
+      }
     }
-    try {
-      const savedImage = await api.post(
-        'pictures',
-        {
-          image: encodedDataURL,
-        },
-        {
-          signal: abortController.signal,
-        }
-      )
-      load(savedImage.id)
-    } catch (err) {
+
+    reader.onerror = () => {
       error('Възникна грешка при качването на снимките')
     }
-  }
 
-  reader.onerror = () => {
-    error('Възникна грешка при качването на снимките')
+    return {
+      abort: () => {
+        abortController.abort()
+        reader.abort()
+        abort()
+      },
+    }
   }
-
-  return {
-    abort: () => {
-      abortController.abort()
-      reader.abort()
-      abort()
-    },
-  }
-}
 
 const compareFiles = (a, b) => {
   if (!(a.file && b.file)) {
@@ -118,6 +124,7 @@ const compareFiles = (a, b) => {
 }
 
 export default function UploadPhotos({ files, callback, isRequired }) {
+  const { executeRecaptcha } = useGoogleReCaptcha()
   return (
     <FilePondContainer>
       {' '}
@@ -148,7 +155,7 @@ export default function UploadPhotos({ files, callback, isRequired }) {
         name="files"
         labelIdle='<span class="filepond--label-action">Качи снимки</span>'
         credits={false}
-        server={{ process: uploadImage }}
+        server={{ process: uploadImage(executeRecaptcha) }}
       />
     </FilePondContainer>
   )
