@@ -364,7 +364,12 @@ export default handleViewport(
                       // This is specifically added for the globe path only
                       // otherwise we cannot click on the continents as
                       // the SVG is bound by the vectors, rarger than full box
-                      if (key === '32') style.pointerEvents = 'bounding-box'
+                      if (key === '32') {
+                        style.pointerEvents = 'bounding-box'
+                        if (mode === 'turnout') {
+                          style.display = 'none'
+                        }
+                      }
 
                       return style
                     }
