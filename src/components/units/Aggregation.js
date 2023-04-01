@@ -69,6 +69,15 @@ export const aggregateData = (data) => {
   return data
 }
 
+// Only show results, when they are available and after election day end
+const shouldShowResults = (results, meta) => {
+  if (!results || !meta) return false
+
+  const { endOfElectionDayTimestamp } = meta
+
+  return results.length > 0 && new Date() > new Date(endOfElectionDayTimestamp)
+}
+
 export default (props) => {
   const chooseModeBasedOnApiResponse = () => {
     if (!resultsAvailable) {
@@ -101,6 +110,13 @@ export default (props) => {
   useEffect(() => {
     setSelectedMode(chooseModeBasedOnApiResponse())
   }, [resultsAvailable, violationsReported])
+  useEffect(() => {
+    setResultsAvailable(shouldShowResults(data?.results, meta))
+    setViolationsReported(data?.stats.violationsCount > 0)
+    setStreamsAvailable(data?.stats.streamsCount > 0)
+    setSectionsWithResults(data?.stats.sectionsWithResults > 0)
+    setPopulatedSections(data?.stats.populated > 0)
+  }, [data, meta])
 
   const refreshResults = () => {
     // Set to true, to populate with fake data
@@ -116,11 +132,6 @@ export default (props) => {
         }
 
         setData(res.data)
-        setResultsAvailable(res.data?.results.length > 0)
-        setViolationsReported(res.data?.stats.violationsCount > 0)
-        setStreamsAvailable(res.data?.stats.streamsCount > 0)
-        setSectionsWithResults(res.data?.stats.sectionsWithResults > 0)
-        setPopulatedSections(res.data?.stats.populated > 0)
       })
       .catch((err) => {
         console.log(err)

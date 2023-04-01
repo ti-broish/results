@@ -39,9 +39,17 @@ const useQuery = () => {
   return new URLSearchParams(useLocation().search)
 }
 
-import ProgressBar from '../components/ProgressBar'
 import { ElectionContext } from '../Election'
 import LoadingScreen from '../layout/LoadingScreen'
+
+// Only show results, when they are available and after election day end
+const shouldShowResults = (results, meta) => {
+  if (!results || !meta) return false
+
+  const { endOfElectionDayTimestamp } = meta
+
+  return results.length > 0 && new Date() > new Date(endOfElectionDayTimestamp)
+}
 
 export default (props) => {
   const chooseModeBasedOnApiResponse = () => {
@@ -86,17 +94,20 @@ export default (props) => {
           res.data = populateWithFakeResults(res.data, parties)
         }
         setData(res.data)
-        setResultsAvailable(res.data?.results.length > 0)
-        setViolationsReported(res.data?.stats.violationsCount > 0)
-        setStreamsAvailable(res.data?.stats.streamsCount > 0)
-        setSectionsWithResults(res.data?.stats.sectionsWithResults > 0)
-        setPopulatedSections(res.data?.stats.populated > 0)
       })
       .catch((err) => {
         console.log(err)
         if (!data) history.push('/')
       })
   }, [])
+
+  useEffect(() => {
+    setResultsAvailable(shouldShowResults(data?.results, meta))
+    setViolationsReported(data?.stats.violationsCount > 0)
+    setStreamsAvailable(data?.stats.streamsCount > 0)
+    setSectionsWithResults(data?.stats.sectionsWithResults > 0)
+    setPopulatedSections(data?.stats.populated > 0)
+  }, [data, meta])
 
   useEffect(() => {
     setMode(chooseModeBasedOnApiResponse())
@@ -165,17 +176,6 @@ export default (props) => {
       >
         <div style={{ padding: '5px', fontWeight: 'bold' }}>{meta.name}</div>
       </div>
-      <ProgressBar
-        percentage={data.stats.sectionsWithResults / data.stats.sectionsCount}
-        color={'#5a5aff'}
-        emptyColor={'rgb(189, 189, 249)'}
-        title={'Обработени секции'}
-        description={
-          'Тази линия показва процентът от секции, за които имаме получени и обработени резултати'
-        }
-        embed
-        homepage={homepage}
-      />
       {!resultsOnly && (mapOnly || embedMode === 'map') ? (
         [
           <BulgariaMap
@@ -200,14 +200,20 @@ export default (props) => {
           />,
         ]
       ) : resultsOnly || embedMode === 'bars' ? (
-        <ResultsTable
-          results={data.results}
-          parties={parties}
-          totalValid={data.stats.validVotes}
-          totalInvalid={data.stats.invalidVotes}
-          showThreshold={data.type === 'election'}
-          embed
-        />
+        resultsAvailable ? (
+          <ResultsTable
+            results={data.results}
+            parties={parties}
+            totalValid={data.stats.validVotes}
+            totalInvalid={data.stats.invalidVotes}
+            showThreshold={data.type === 'election'}
+            embed
+          />
+        ) : (
+          <div style={{ textAlign: 'center' }}>
+            Oчаквайте резултати след края на изборния ден
+          </div>
+        )
       ) : embedMode === 'regions' ? (
         <SubdivisionTable
           parties={parties}
