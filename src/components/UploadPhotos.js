@@ -75,7 +75,7 @@ const uploadImage =
     const abortController = new AbortController()
     const compressionOptions = {
       maxSizeMB: 2,
-      maxWidthOrHeight: 10000,
+      maxWidthOrHeight: 4000,
       useWebWorker: true,
     }
     try {
