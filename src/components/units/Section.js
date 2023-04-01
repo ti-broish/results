@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
-import Helmet from 'react-helmet'
 import axios from 'axios'
-import { useParams, useHistory } from 'react-router-dom'
+import Helmet from 'react-helmet'
+import { useHistory, useParams } from 'react-router-dom'
 import { mapNodeType } from '../ResultUnit'
 import LoadingScreen from '../layout/LoadingScreen'
 
@@ -13,9 +13,10 @@ import ImageGallery from '../../utils/ImageGallery'
 import { ElectionContext } from '../Election'
 import Crumbs from '../components/Crumbs'
 
-import Player from '../embeds/Player'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import ViolationFeeds from '../ViolationFeeds'
+import Player from '../embeds/Player'
 
 const renderRiskLevelText = (riskLevel) => {
   switch (riskLevel) {
@@ -26,6 +27,10 @@ const renderRiskLevelText = (riskLevel) => {
     default:
       return `Нисък`
   }
+}
+
+const protocolLink = (id) => {
+  return `/protocol/${id}`
 }
 
 const SectionDetailsTable = styled.table`
@@ -166,21 +171,22 @@ export default (props) => {
       </SectionDetailsTable>
       <h2>Видеонаблюдение</h2>
       <Player section={data.segment} />
-      {data.protocols.length > 0 ? <h2>Протоколи:</h2> : null}
-      {data.protocols
-        ? data.protocols.map((protocol, index) => {
-            return (
-              <div key={index}>
+      {data.protocols.length > 0 && <h2>Протоколи:</h2>}
+      {data.protocols &&
+        data.protocols.map((protocol, index) => {
+          return (
+            <div key={index}>
+              <Link to={protocolLink(protocol.id)}>
                 <h3>Протокол {index + 1}</h3>
-                <ImageGallery
-                  items={protocol.pictures.map((picture) => ({
-                    original: picture.url,
-                  }))}
-                />
-              </div>
-            )
-          })
-        : null}
+              </Link>
+              <ImageGallery
+                items={protocol.pictures.map((picture) => ({
+                  original: picture.url,
+                }))}
+              />
+            </div>
+          )
+        })}
       <h2 style={props.embed ? { fontSize: '15px' } : {}}>Сигнали</h2>
       <ViolationFeeds unit={unit}></ViolationFeeds>
     </div>
