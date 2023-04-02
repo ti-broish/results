@@ -61,6 +61,7 @@ export const ViolationSummary = () => {
     pictures,
     section,
     createdAt,
+    town,
   } = violationDetails
 
   return (
@@ -73,10 +74,44 @@ export const ViolationSummary = () => {
       <ViolationSummaryStyle>
         <div>
           <h1 style={{ wordBreak: 'break-word' }}>Сигнал {id}</h1>
-          {section && <p>Секция: {section.id}</p>}
+          {section && (
+            <p>
+              Секция: <Link to={`/${section.id}`}>{section.id}</Link>
+            </p>
+          )}
+          {town && (
+            <>
+              <p>
+                {town.municipality ? (
+                  <>Община: {town.municipality.name}</>
+                ) : (
+                  <>Държава: {town.country.name}</>
+                )}
+                , Населено място: {town.name}
+              </p>
+              {(section?.electionRegion ||
+                town.municipality?.electionRegions?.length === 1) && (
+                <p>
+                  МИР:{' '}
+                  <Link
+                    to={`/${
+                      section?.electionRegion?.code ||
+                      town.municipality?.electionRegions[0].code
+                    }`}
+                  >
+                    {section?.electionRegion?.name ||
+                      town.municipality?.electionRegions[0].name}
+                  </Link>
+                </p>
+              )}
+            </>
+          )}
           <p>Статус: {statusLocalized}</p>
           <p>Получен на: {new Date(createdAt).toLocaleString('bg-BG')}</p>
-          <p>{description || publishedText}</p>
+          <p>
+            <b>Нарушение:</b>
+            <br /> <br /> {description || publishedText}
+          </p>
         </div>
         <div>
           {pictures?.map((picture, index) => (
