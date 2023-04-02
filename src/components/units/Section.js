@@ -169,8 +169,20 @@ export default (props) => {
           </tr>
         </tbody>
       </SectionDetailsTable>
-      {/*<h2>Видеонаблюдение</h2>
-      <Player section={data.segment} />*/}
+      {!data.segment.startsWith('32') && (
+        <>
+          <h2>Видеонаблюдение</h2>
+          <a
+            href={`https://evideo.bg/rik${data.segment.slice(0, 2)}.html#${
+              data.segment
+            }`}
+            target="_blank"
+          >
+            Видеоизлъчване от СИК
+          </a>
+        </>
+      )}
+      {/*<Player section={data.segment} />*/}
       {data.protocols.length > 0 && <h2>Протоколи:</h2>}
       {data.protocols &&
         data.protocols.map((protocol, index) => {
