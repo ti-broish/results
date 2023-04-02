@@ -169,8 +169,8 @@ export default (props) => {
           </tr>
         </tbody>
       </SectionDetailsTable>
-      <h2>Видеонаблюдение</h2>
-      <Player section={data.segment} />
+      {/*<h2>Видеонаблюдение</h2>
+      <Player section={data.segment} />*/}
       {data.protocols.length > 0 && <h2>Протоколи:</h2>}
       {data.protocols &&
         data.protocols.map((protocol, index) => {
