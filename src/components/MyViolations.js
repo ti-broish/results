@@ -74,7 +74,9 @@ export const MyViolations = () => {
                 <img src={violation.pictures[0]?.url} alt="" height="200px" />
               </RouterLink>
             )}
-            <LinkButton to={`/violations/${violation.id}`}>
+            <LinkButton
+              to={ROUTES.violation.replace(':violationId', violation.id)}
+            >
               Вижте сигнала
             </LinkButton>
           </div>

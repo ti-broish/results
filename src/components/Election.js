@@ -13,6 +13,7 @@ import { RightsAndObligations } from './RightsAndObligations'
 import { ROUTES } from './routes.js'
 import { Submit } from './Submit'
 import { ViolationForm } from './ViolationForm'
+import { ViolationSummary } from './ViolationSummary'
 
 export const ElectionContext = React.createContext()
 
@@ -36,10 +37,11 @@ export default () => {
         <Switch>
           <Route path={ROUTES.submit} component={Submit} />
           <Route path={ROUTES.protocolForm} component={ProtocolForm} />
+          <Route path={ROUTES.violationForm} component={ViolationForm} />
           <Route path={ROUTES.myProtocols} exact component={MyProtocols} />
           <Route path={ROUTES.myViolations} exact component={MyViolations} />
           <Route path={ROUTES.protocol} component={ProtocolSummary} />
-          <Route path={ROUTES.violationForm} component={ViolationForm} />
+          <Route path={ROUTES.violation} component={ViolationSummary} />
           <Route
             path={ROUTES.rightsAndObligations}
             component={RightsAndObligations}
