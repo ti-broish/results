@@ -11,11 +11,8 @@ const HorizontalLinks = styled.div`
 `
 
 export const Submit = () => {
-  const { meta } = useContext(ElectionContext)
   const [hasViolations, setHasViolations] = useState(false)
   const [hasProtcols, setHasProtocols] = useState(false)
-  const showProtocolButton =
-    meta && Date.parse(meta.endOfElectionDayTimestamp) < Date.now()
 
   useEffect(() => {
     if (!localStorage) {
@@ -29,9 +26,7 @@ export const Submit = () => {
   }, [])
   return (
     <HorizontalLinks>
-      {showProtocolButton && (
-        <LinkButton to={ROUTES.protocolForm}>Изпрати протокол</LinkButton>
-      )}
+      <LinkButton to={ROUTES.protocolForm}>Изпрати протокол</LinkButton>
       <LinkButton to={ROUTES.violationForm}>Подай сигнал</LinkButton>
       {hasViolations && (
         <>
