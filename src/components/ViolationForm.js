@@ -8,7 +8,7 @@ import UploadPhotos from './UploadPhotos'
 import { SectionSelector } from './sectionSelector/SectionSelector'
 import api from '../utils/api'
 import { ROUTES } from './routes'
-import { Link } from './components/Link'
+import { Link, LinkButton } from './components/Link'
 import { Button } from './components/Button'
 import { Input } from './components/Input'
 import { Textarea } from './components/Textarea'
@@ -62,24 +62,17 @@ export const ViolationForm = () => {
   const { executeRecaptcha } = useGoogleReCaptcha()
   const methods = useForm({ resolver: yupResolver(schema) })
   const {
-    formState: { errors, isSubmitSuccessful },
-    formState,
+    formState: { errors },
     register,
     setValue,
     handleSubmit,
     reset,
   } = methods
-  const [message, setMessage] = useState('')
   const [key, setKey] = useState(0)
   const [files, setFiles] = useState([])
   const [violation, setViolation] = useState(null)
-
-  useEffect(() => {
-    if (isSubmitSuccessful) {
-      reset()
-      setKey(key + 1)
-    }
-  }, [formState, reset])
+  const [error, setError] = useState(null)
+  const [isSubmitted, setIsSubmitted] = useState(false)
 
   useEffect(() => {
     if (!violation) {
@@ -99,6 +92,14 @@ export const ViolationForm = () => {
     }
   }, [violation])
 
+  const resetEverything = () => {
+    reset()
+    setError(null)
+    setFiles([])
+    setKey(key + 1)
+    setIsSubmitted(false)
+  }
+
   const onSubmit = async (data) => {
     try {
       const savedImageIds = files.map((file) => file.serverId)
@@ -117,84 +118,102 @@ export const ViolationForm = () => {
           headers: { 'x-recaptcha-token': recaptchaToken },
         })
       )
-      setMessage('Сигналът Ви беше изпратен успешно!')
+      reset()
+      setError(null)
+      setFiles([])
+      setKey(key + 1)
+      setIsSubmitted(true)
     } catch (error) {
-      setMessage(
-        `Сигналът Ви не беше изпратен! ${
-          error?.response?.data?.message || error.message
-        }`
-      )
+      setIsSubmitted(false)
+      setError(error)
     }
   }
 
   return (
     <FormProvider {...methods}>
-      <CommentFormStyle onSubmit={handleSubmit(onSubmit)}>
-        <Link to={ROUTES.submit}>
-          <small>⟵ обратно</small>
-        </Link>
-        <h1>Подай сигнал</h1>
-        <SectionSelector
-          key={key}
-          errors={errors}
-          register={register}
-          setValue={setValue}
-        />
-        <Input
-          name="name"
-          required={true}
-          label="Име"
-          register={register}
-          errors={errors}
-        />
-        <Input
-          name="email"
-          required={true}
-          label="Имейл"
-          type="email"
-          autoComplete="email"
-          pattern="^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
-          title="Въведете валиден имейл адрес"
-          register={register}
-          errors={errors}
-        />
-        <Input
-          name="phoneNumber"
-          required={true}
-          label="Телефон"
-          type="tel"
-          placeholder="+359888888888"
-          pattern="^\+(?:[0-9] ?){6,14}[0-9]$"
-          title="Tелефонният номер трябва да включва кода на държавата като +359888..."
-          register={register}
-          errors={errors}
-        />
-        <Textarea
-          name="description"
-          required={true}
-          minLength={20}
-          pattern=".{20,}"
-          label="Описание на нарушението"
-          title="Моля въведете поне 20 символа за описание на нарушението"
-          register={register}
-          errors={errors}
-        />
-        <UploadPhotos
-          name="photoUpload"
-          callback={setFiles}
-          isRequired={false}
-        ></UploadPhotos>
-        <Button type="submit">Изпрати</Button>
-        {message && (
+      {!isSubmitted ? (
+        <CommentFormStyle onSubmit={handleSubmit(onSubmit)}>
+          <Link to={ROUTES.submit}>
+            <small>⟵ обратно</small>
+          </Link>
+          <h1>Подай сигнал</h1>
+          <SectionSelector
+            key={key}
+            errors={errors}
+            register={register}
+            setValue={setValue}
+          />
+          <Input
+            name="name"
+            required={true}
+            label="Име"
+            register={register}
+            errors={errors}
+          />
+          <Input
+            name="email"
+            required={true}
+            label="Имейл"
+            type="email"
+            autoComplete="email"
+            pattern="^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
+            title="Въведете валиден имейл адрес"
+            register={register}
+            errors={errors}
+          />
+          <Input
+            name="phoneNumber"
+            required={true}
+            label="Телефон"
+            type="tel"
+            placeholder="+359888888888"
+            pattern="^\+(?:[0-9] ?){6,14}[0-9]$"
+            title="Tелефонният номер трябва да включва кода на държавата като +359888..."
+            register={register}
+            errors={errors}
+          />
+          <Textarea
+            name="description"
+            required={true}
+            minLength={20}
+            pattern=".{20,}"
+            label="Описание на нарушението"
+            title="Моля въведете поне 20 символа за описание на нарушението"
+            register={register}
+            errors={errors}
+          />
+          <UploadPhotos
+            name="photoUpload"
+            callback={setFiles}
+            isRequired={false}
+          ></UploadPhotos>
+          <Button type="submit">Изпрати</Button>
+          {error && (
+            <div>
+              <p className="unsuccessfulMessage">
+                Сигналът Ви не беше изпратен!{' '}
+                {error?.response?.data?.message || error.message}
+              </p>
+            </div>
+          )}
+        </CommentFormStyle>
+      ) : (
+        <div>
+          <p className="successfulMessage">
+            Сигналът Ви беше изпратен успешно!
+          </p>
           <div>
-            {!message.includes('не') ? (
-              <p className="successfulMessage">{message}</p>
-            ) : (
-              <p className="unsuccessfulMessage">{message}</p>
-            )}
+            <LinkButton
+              to={ROUTES.violation.replace(':violationId', violation.id)}
+            >
+              Вижте сигнала
+            </LinkButton>
           </div>
-        )}
-      </CommentFormStyle>
+          <div className="form-control">
+            <Button onClick={resetEverything}>Изпрати друг сигнал</Button>
+          </div>
+        </div>
+      )}
     </FormProvider>
   )
 }
