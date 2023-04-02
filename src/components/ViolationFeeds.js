@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 
 import axios from 'axios'
-import { useParams } from 'react-router-dom'
+import { useParams, useHistory } from 'react-router-dom'
 
 import { Link } from 'react-router-dom'
 import { ElectionContext } from './Election'
@@ -26,6 +26,7 @@ const Violation = styled.div`
   box-shadow: 0 0 10px #ddd;
   border-bottom: 3px solid #bbb;
   color: #333;
+  cursor: pointer;
 
   h4,
   p {
@@ -69,6 +70,8 @@ const defaultRegionName = 'Последни сигнали'
 
 export default (props) => {
   const { meta, parties, dataURL } = useContext(ElectionContext)
+  const history = useHistory()
+  const navigateTo = (path) => history.push(path)
 
   const [violationData, setViolationData] = useState({
     items: null,
@@ -136,7 +139,7 @@ export default (props) => {
 
     return (
       <Fade key={violation.id} clear>
-        <Violation>
+        <Violation onClick={() => navigateTo(`/violation/${violation.id}`)}>
           <h4>
             {violation.town.name}
             {violation.town.municipality
@@ -150,7 +153,10 @@ export default (props) => {
             {!electionRegion ? (
               ''
             ) : (
-              <Link to={`/${electionRegion.code}`}>
+              <Link
+                to={`/${electionRegion.code}`}
+                onClick={(e) => e.stopPropagation()}
+              >
                 МИР {electionRegion.code}. {electionRegion.name}
               </Link>
             )}
@@ -160,7 +166,10 @@ export default (props) => {
             ) : (
               <>
                 Секция{' '}
-                <Link to={`/${violation.section.id}`}>
+                <Link
+                  to={`/${violation.section.id}`}
+                  onClick={(e) => e.stopPropagation()}
+                >
                   {violation.section.id}
                 </Link>
               </>
