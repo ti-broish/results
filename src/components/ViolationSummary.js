@@ -92,7 +92,7 @@ export const ViolationSummary = () => {
               {(section?.electionRegion ||
                 town.municipality?.electionRegions?.length === 1) && (
                 <p>
-                  МИР:{' '}
+                  Област:{' '}
                   <Link
                     to={`/${
                       section?.electionRegion?.code ||

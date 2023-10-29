@@ -201,7 +201,7 @@ export default (props) => {
               ''
             ) : (
               <Link to={`/${electionRegion.code}`}>
-                МИР {electionRegion.code}. {electionRegion.name}
+                Област {electionRegion.code}. {electionRegion.name}
               </Link>
             )}
             {electionRegion && violation.section ? ', ' : ''}

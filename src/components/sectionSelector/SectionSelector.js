@@ -156,7 +156,7 @@ export const SectionSelector = ({ register, errors, setValue }) => {
         <>
           <DropDown
             name="electionRegion"
-            label="МИР"
+            label="Област"
             options={electionRegions.map((region) => ({
               value: region.code,
               label: `${region.code} ${region.name}`,

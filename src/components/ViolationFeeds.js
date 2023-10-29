@@ -157,7 +157,7 @@ export default (props) => {
                 to={`/${electionRegion.code}`}
                 onClick={(e) => e.stopPropagation()}
               >
-                МИР {electionRegion.code}. {electionRegion.name}
+                Област {electionRegion.code}. {electionRegion.name}
               </Link>
             )}
             {electionRegion && violation.section ? ', ' : ''}

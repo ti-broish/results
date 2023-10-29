@@ -166,7 +166,7 @@ export default (props) => {
       <div key={i}>
         <h3 style={{ margin: '20px 0 10px 0' }}>
           <Link to={`/${stream.section.id}`}>Секция {stream.section.id}</Link>,{' '}
-          МИР {stream.section.electionRegion.code}.{' '}
+          Област {stream.section.electionRegion.code}.{' '}
           {stream.section.electionRegion.name}
         </h3>
         <h5 style={{ color: '#666', marginTop: '10px' }}>
