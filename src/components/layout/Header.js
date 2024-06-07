@@ -128,12 +128,13 @@ export default () => {
             <LogoImage src="/brand/logo_horizontal_white.png?v=2" />
           </Link>
           <Navigation>
+            <Link to={ROUTES.violationForm}>Подай сигнал</Link>
             {shouldAllowSendingProtocols(meta) && (
               <Link to={ROUTES.protocolForm}>Изпрати протокол</Link>
             )}
-            <Link to={ROUTES.violationForm}>Подай сигнал</Link>
             {/*<a href="/signup">Запиши се</a>*/}
             {/*<a href="/about">Kампанията</a>*/}
+            <a href="/izvan-bulgaria">Извън страната</a>
             <a href="/instructions">Инструкции</a>
             <Link to={ROUTES.resultUnit.replace(':unit', '')}>Карта</Link>
             {/*<a href="/videos">Видео</a>*/}
@@ -162,12 +163,13 @@ export default () => {
             {/*<a href="/about" onClick={() => setMenuOpen(false)}>
               Kампанията
             </a>*/}
-            {shouldAllowSendingProtocols(meta) && (
-              <Link to={ROUTES.protocolForm}>Изпрати протокол</Link>
-            )}
             <Link to={ROUTES.violationForm} onClick={() => setMenuOpen(false)}>
               Подай сигнал
             </Link>
+            {shouldAllowSendingProtocols(meta) && (
+              <Link to={ROUTES.protocolForm}>Изпрати протокол</Link>
+            )}
+            <a href="/izvan-bulgaria">Извън страната</a>
             <a href="/instructions" onClick={() => setMenuOpen(false)}>
               Инструкции
             </a>
