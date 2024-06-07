@@ -1,10 +1,12 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars } from '@fortawesome/free-solid-svg-icons'
 import { slide as Menu } from 'react-burger-menu'
 import styled from 'styled-components'
 import { ROUTES } from '../routes'
+import { ElectionContext } from '../Election'
+import { shouldAllowSendingProtocols } from '../../utils/visibility'
 
 const MOBILE_WIDTH = 952
 
@@ -115,6 +117,7 @@ const MobileNavMenu = styled.div`
 
 export default () => {
   const [menuOpen, setMenuOpen] = useState(false)
+  const { meta } = useContext(ElectionContext)
 
   return (
     <>
@@ -125,7 +128,9 @@ export default () => {
             <LogoImage src="/brand/logo_horizontal_white.png?v=2" />
           </Link>
           <Navigation>
-            <Link to={ROUTES.protocolForm}>Изпрати протокол</Link>
+            {shouldAllowSendingProtocols(meta) && (
+              <Link to={ROUTES.protocolForm}>Изпрати протокол</Link>
+            )}
             <Link to={ROUTES.violationForm}>Подай сигнал</Link>
             {/*<a href="/signup">Запиши се</a>*/}
             {/*<a href="/about">Kампанията</a>*/}

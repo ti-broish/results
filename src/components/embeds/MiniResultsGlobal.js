@@ -41,14 +41,13 @@ const useQuery = () => {
 
 import { ElectionContext } from '../Election'
 import LoadingScreen from '../layout/LoadingScreen'
+import { shouldAllowSendingProtocols } from '../../utils/visibility'
 
 // Only show results, when they are available and after election day end
 const shouldShowResults = (results, meta) => {
-  if (!results || !meta) return false
+  if (!results) return false
 
-  const { endOfElectionDayTimestamp } = meta
-
-  return results.length > 0 && new Date() > new Date(endOfElectionDayTimestamp)
+  return results.length > 0 && shouldAllowSendingProtocols(meta)
 }
 
 export default (props) => {
