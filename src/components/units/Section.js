@@ -17,6 +17,7 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import ViolationFeeds from '../ViolationFeeds'
 import Player from '../embeds/Player'
+import { shouldShowOfficialStreaming } from '../../utils/visibility'
 
 const renderRiskLevelText = (riskLevel) => {
   switch (riskLevel) {
@@ -82,7 +83,7 @@ const ContentPanel = styled.div`
 
 export default (props) => {
   const history = useHistory()
-  const { dataURL, globalData, parties } = useContext(ElectionContext)
+  const { dataURL, parties, meta } = useContext(ElectionContext)
   const { unit } = useParams()
 
   const [data, setData] = useState(null)
@@ -169,7 +170,7 @@ export default (props) => {
           </tr>
         </tbody>
       </SectionDetailsTable>
-      {!data.segment.startsWith('32') && (
+      {!data.segment.startsWith('32') && shouldShowOfficialStreaming(meta) && (
         <>
           <h2>Видеонаблюдение</h2>
           <a

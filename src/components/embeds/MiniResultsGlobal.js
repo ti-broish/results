@@ -42,15 +42,9 @@ const useQuery = () => {
 import { ElectionContext } from '../Election'
 import LoadingScreen from '../layout/LoadingScreen'
 import { shouldAllowSendingProtocols } from '../../utils/visibility'
+import { shouldShowResults } from '../../utils/visibility'
 
-// Only show results, when they are available and after election day end
-const shouldShowResults = (results, meta) => {
-  if (!results) return false
-
-  return results.length > 0 && shouldAllowSendingProtocols(meta)
-}
-
-export default (props) => {
+export default () => {
   const chooseModeBasedOnApiResponse = () => {
     if (!resultsAvailable) {
       if (violationsReported) {
