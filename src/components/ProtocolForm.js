@@ -188,7 +188,7 @@ export const ProtocolForm = () => {
                     required={true}
                     value={email}
                     autoComplete="email"
-                    pattern="^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
+                    pattern="[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~\-]+@[a-zA-Z0-9\-]+(?:\.[a-zA-Z0-9\-]+)*"
                     title="Въведете валиден имейл адрес"
                     placeholder="Имейл адрес"
                     onChange={(e) => setEmail(e.target.value)}
