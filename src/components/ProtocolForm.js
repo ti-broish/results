@@ -1,7 +1,7 @@
 import styled from 'styled-components'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
-import UploadPhotos from './UploadPhotos'
+import UploadPhotos, { imagesAreUploaded } from './UploadPhotos'
 import api from '../utils/api'
 import { ValidationError } from '../utils/ValidationError'
 import { ROUTES } from './routes'
@@ -32,6 +32,8 @@ export const ProtocolForm = () => {
   const [email, setEmail] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isEmailSent, setIsEmailSent] = useState(false)
+  const submitDisabled = useRef(files.length < IMAGES_MIN_COUNT)
+  const [refresh, setRefresh] = useState(false)
 
   const reset = () => {
     setFiles([])
@@ -40,6 +42,7 @@ export const ProtocolForm = () => {
     setIsSubmitted(false)
     setIsEmailSent(false)
     setProtocol(null)
+    submitDisabled.current = true
   }
 
   useEffect(() => {
@@ -60,13 +63,29 @@ export const ProtocolForm = () => {
     }
   }, [protocol])
 
+  const filesUpdatedCallback = (fs) => {
+    submitDisabled.current = true
+    setFiles(fs)
+  }
+
+  const filesReadyCallback = () => {
+    // filesReadyCallback is called before files count is updated
+    // so we need to compare against IMAGES_MIN_COUNT - 1
+    submitDisabled.current = files.length < IMAGES_MIN_COUNT - 1
+    setRefresh(!refresh)
+  }
+
   const handleSubmit = async (event) => {
     event.preventDefault()
     try {
+      submitDisabled.current = files.length < IMAGES_MIN_COUNT
       if (files.length < IMAGES_MIN_COUNT) {
         throw new ValidationError('Качете поне 4 снимки')
       }
-      const savedImageIds = files.map((file) => file.serverId)
+      const savedImageIds = await imagesAreUploaded(files)
+      if (savedImageIds instanceof Error) {
+        throw savedImageIds
+      }
       const body = {
         pictures: savedImageIds,
       }
@@ -94,6 +113,8 @@ export const ProtocolForm = () => {
       }
 
       setError(err)
+    } finally {
+      submitDisabled.current = true
     }
     setIsSubmitted(true)
   }
@@ -128,7 +149,8 @@ export const ProtocolForm = () => {
             <form onSubmit={handleSubmit}>
               <UploadPhotos
                 files={files}
-                callback={setFiles}
+                callbackFilesUpdated={filesUpdatedCallback}
+                callbackFilesReady={filesReadyCallback}
                 isRequired={true}
               ></UploadPhotos>
               <div className="form-control">
@@ -143,7 +165,7 @@ export const ProtocolForm = () => {
                 )}
                 <Button
                   type="submit"
-                  disabled={files.length < IMAGES_MIN_COUNT}
+                  disabled={submitDisabled.current}
                   title={`Качете поне ${IMAGES_MIN_COUNT} снимки, за да изпратите протокол`}
                 >
                   Изпрати протокол

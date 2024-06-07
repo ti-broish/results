@@ -136,7 +136,26 @@ const compareFiles = (a, b) => {
   return a.filename.localeCompare(b.filename)
 }
 
-export default function UploadPhotos({ files, callback, isRequired }) {
+export const imagesAreUploaded = async (files) => {
+  return new Promise(function (resolve, reject) {
+    let count = 0
+    ;(function waitFor() {
+      if (files.every((file) => !!file.serverId))
+        return resolve(files.map((file) => file.serverId))
+      count++
+      console.log('files', files)
+      if (count > 160) reject(new Error('Снимките не са качени.'))
+      setTimeout(waitFor, 50)
+    })()
+  })
+}
+
+export default function UploadPhotos({
+  files,
+  callbackFilesUpdated,
+  callbackFilesReady,
+  isRequired,
+}) {
   const { executeRecaptcha } = process.env.GOOGLE_RECAPTCHA_KEY
     ? useGoogleReCaptcha()
     : { executeRecaptcha: null }
@@ -160,7 +179,8 @@ export default function UploadPhotos({ files, callback, isRequired }) {
         labelFileProcessingComplete="Готово"
         fileValidateTypeLabelExpectedTypes="Очаквани файлове: {allButLastType} или {lastType}"
         required={isRequired}
-        onupdatefiles={callback}
+        onupdatefiles={callbackFilesUpdated}
+        onprocessfiles={callbackFilesReady}
         acceptedFileTypes={['image/png', 'image/jpeg']}
         allowMultiple={true}
         maxParallelUploads={4}

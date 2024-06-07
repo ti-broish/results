@@ -1,10 +1,10 @@
 import { useForm, FormProvider } from 'react-hook-form'
 import styled from 'styled-components'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
-import UploadPhotos from './UploadPhotos'
+import UploadPhotos, { imagesAreUploaded } from './UploadPhotos'
 import { SectionSelector } from './sectionSelector/SectionSelector'
 import api from '../utils/api'
 import { ROUTES } from './routes'
@@ -84,6 +84,8 @@ export const ViolationForm = () => {
   const [violation, setViolation] = useState(null)
   const [error, setError] = useState(null)
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const submitDisabled = useRef(false)
+  const [refresh, setRefresh] = useState(false)
 
   useEffect(() => {
     if (!violation) {
@@ -109,11 +111,27 @@ export const ViolationForm = () => {
     setFiles([])
     setKey(key + 1)
     setIsSubmitted(false)
+    submitDisabled.current = false
+  }
+
+  const filesUpdatedCallback = (files) => {
+    submitDisabled.current = true
+    setFiles(files)
+  }
+
+  const filesReadyCallback = () => {
+    submitDisabled.current = false
+    setRefresh(!refresh)
   }
 
   const onSubmit = async (data) => {
     try {
-      const savedImageIds = files.map((file) => file.serverId)
+      submitDisabled.current = true
+      const savedImageIds =
+        files.length > 0 ? await imagesAreUploaded(files) : []
+      if (savedImageIds instanceof Error) {
+        throw savedImageIds
+      }
       const body = {
         description: data.description,
         town: parseInt(data.town, 10),
@@ -121,9 +139,12 @@ export const ViolationForm = () => {
         email: data.email,
         phone: data.phoneNumber,
       }
-      data.section ? (body['section'] = data.section) : body
-      savedImageIds ? (body['pictures'] = savedImageIds) : body
-      const recaptchaToken = await executeRecaptcha('sendViolation')
+      if (data.section) {
+        body['section'] = data.section
+      }
+      if (savedImageIds.length > 0) {
+        body['pictures'] = savedImageIds
+      }
       setViolation(
         await api.post('violations', body, {
           headers: executeRecaptcha
@@ -132,11 +153,13 @@ export const ViolationForm = () => {
         })
       )
       reset()
+      submitDisabled.current = false
       setError(null)
       setFiles([])
       setKey(key + 1)
       setIsSubmitted(true)
     } catch (error) {
+      submitDisabled.current = false
       setIsSubmitted(false)
       setError(error)
     }
@@ -197,10 +220,14 @@ export const ViolationForm = () => {
           />
           <UploadPhotos
             name="photoUpload"
-            callback={setFiles}
+            files={files}
+            callbackFilesUpdated={filesUpdatedCallback}
+            callbackFilesReady={filesReadyCallback}
             isRequired={false}
           ></UploadPhotos>
-          <Button type="submit">Изпрати</Button>
+          <Button type="submit" disabled={submitDisabled.current}>
+            Изпрати
+          </Button>
           {error && (
             <div>
               <p className="unsuccessfulMessage">
