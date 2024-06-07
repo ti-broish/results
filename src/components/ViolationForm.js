@@ -40,7 +40,16 @@ const schema = yup
       .string()
       .email('Въведете валиден имейл')
       .required(requiredMessage),
-    phoneNumber: yup.string().required(requiredMessage),
+    phoneNumber: yup
+      .string()
+      .transform((input) =>
+        /^0[1-9][0-9]{8}/.test(input)
+          ? input.replace(/^0(.+)/, '+359$1')
+          : /^0{0,2}359[1-9][0-9]{8}/.test(input)
+          ? input.replace(/^0{0,2}359(.+)/, '+359$1')
+          : input
+      )
+      .required(requiredMessage),
     description: yup
       .string()
       .min(20, 'Моля въведете поне 20 символа')
@@ -167,8 +176,8 @@ export const ViolationForm = () => {
             label="Телефон"
             type="tel"
             placeholder="+359888888888"
-            pattern="^\+(?:[0-9] ?){6,14}[0-9]$"
-            title="Tелефонният номер трябва да включва кода на държавата като +359888..."
+            pattern="^(\+(?:[0-9] ?){6,14}[0-9]|0[1-9][0-9]{8}|0{0,2}359[1-9][0-9]{8})$"
+            title="Tелефонният номер трябва да бъде започва с +359 или 0"
             register={register}
             errors={errors}
           />
