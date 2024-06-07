@@ -162,7 +162,9 @@ export default () => {
             {/*<a href="/about" onClick={() => setMenuOpen(false)}>
               Kампанията
             </a>*/}
-            <Link to={ROUTES.protocolForm}>Изпрати протокол</Link>
+            {shouldAllowSendingProtocols(meta) && (
+              <Link to={ROUTES.protocolForm}>Изпрати протокол</Link>
+            )}
             <Link to={ROUTES.violationForm} onClick={() => setMenuOpen(false)}>
               Подай сигнал
             </Link>
