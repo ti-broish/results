@@ -8,11 +8,14 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = env => {
     return {
-        entry: './src/index.js',
+        entry: {
+          main: ['./src/index.js'],
+          browserCompression: ['./src/utils/browser-image-compression.js']
+        },
         output: {
             publicPath: '/',
             path: path.join(__dirname, '../dist'),
-            filename: 'bundle.[contenthash].js',
+            filename: '[name].[contenthash].js',
             chunkFilename: '[name].[contenthash].bundle.js',
         },
         module: {
@@ -53,6 +56,7 @@ module.exports = env => {
             new HtmlWebpackPlugin({
                 title: 'Ти Броиш',
                 template: 'src/index.ejs',
+                chunks: ['main'],
                 publicPath: process.env.PUBLIC_URL || '/',
             }),
             new webpack.DefinePlugin({

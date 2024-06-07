@@ -80,7 +80,11 @@ const uploadImage =
     const compressionOptions = {
       maxSizeMB: 2,
       maxWidthOrHeight: 4000,
-      useWebWorker: true,
+      useWebWorker: false,
+      libUrl:
+        process.env.NODE_ENV === 'production'
+          ? `${process.env.PUBLIC_URL}/browserCompression.2382d07deff11def95b8.js`
+          : '/browserCompression.js',
     }
     try {
       const compressedFile = await imageCompression(file, compressionOptions)
