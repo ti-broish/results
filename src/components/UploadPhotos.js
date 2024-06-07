@@ -32,6 +32,10 @@ const FilePondContainer = styled.div`
   .filepond--file-wrapper {
     min-height: 50px;
   }
+  .filepond--drop-label,
+  .filepond--file-wrapper {
+    cursor: pointer;
+  }
   .filepond--image-preview-wrapper,
   .filepond--item-panel {
     border-radius: 0 !important;
