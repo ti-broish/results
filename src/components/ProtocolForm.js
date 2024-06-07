@@ -25,7 +25,9 @@ const ProtocolFormStyle = styled.div`
 export const ProtocolForm = () => {
   const [files, setFiles] = useState([])
   const [error, setError] = useState(null)
-  const { executeRecaptcha } = useGoogleReCaptcha()
+  const { executeRecaptcha } = process.env.GOOGLE_RECAPTCHA_KEY
+    ? useGoogleReCaptcha()
+    : { executeRecaptcha: null }
   const [protocol, setProtocol] = useState(null)
   const [email, setEmail] = useState('')
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -70,9 +72,9 @@ export const ProtocolForm = () => {
       }
       setProtocol(
         await api.post('protocols', body, {
-          headers: {
-            'x-recaptcha-token': await executeRecaptcha('sendProtocol'),
-          },
+          headers: executeRecaptcha
+            ? { 'x-recaptcha-token': await executeRecaptcha('sendProtocol') }
+            : {},
         })
       )
       setError(null)

@@ -68,7 +68,9 @@ const schema = yup
   .required()
 
 export const ViolationForm = () => {
-  const { executeRecaptcha } = useGoogleReCaptcha()
+  const { executeRecaptcha } = process.env.GOOGLE_RECAPTCHA_KEY
+    ? useGoogleReCaptcha()
+    : { executeRecaptcha: null }
   const methods = useForm({ resolver: yupResolver(schema) })
   const {
     formState: { errors },
@@ -124,7 +126,9 @@ export const ViolationForm = () => {
       const recaptchaToken = await executeRecaptcha('sendViolation')
       setViolation(
         await api.post('violations', body, {
-          headers: { 'x-recaptcha-token': recaptchaToken },
+          headers: executeRecaptcha
+            ? { 'x-recaptcha-token': await executeRecaptcha('sendViolation') }
+            : {},
         })
       )
       reset()

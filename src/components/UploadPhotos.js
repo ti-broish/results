@@ -96,9 +96,13 @@ const uploadImage =
           },
           {
             signal: abortController.signal,
-            headers: {
-              'x-recaptcha-token': await executeRecaptcha('sendProtocolImage'),
-            },
+            headers: executeRecaptcha
+              ? {
+                  'x-recaptcha-token': await executeRecaptcha(
+                    'sendProtocolImage'
+                  ),
+                }
+              : {},
           }
         )
         load(savedImage.id)
@@ -129,7 +133,9 @@ const compareFiles = (a, b) => {
 }
 
 export default function UploadPhotos({ files, callback, isRequired }) {
-  const { executeRecaptcha } = useGoogleReCaptcha()
+  const { executeRecaptcha } = process.env.GOOGLE_RECAPTCHA_KEY
+    ? useGoogleReCaptcha()
+    : { executeRecaptcha: null }
   return (
     <FilePondContainer>
       {' '}

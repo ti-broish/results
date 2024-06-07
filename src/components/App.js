@@ -49,17 +49,23 @@ export default (props) => {
   const publicURL = process.env.PUBLIC_URL ? process.env.PUBLIC_URL : '/'
   const reCaptchaKey = process.env.GOOGLE_RECAPTCHA_KEY
 
-  return (
+  const app = (
+    <GlobalCSS>
+      <BrowserRouter basename={publicURL}>
+        <Switch>
+          <Route path="/embed" component={Embed} />
+          <Route path="/" component={Election} />
+          <Redirect to="/" />
+        </Switch>
+      </BrowserRouter>
+    </GlobalCSS>
+  )
+
+  return reCaptchaKey ? (
     <GoogleReCaptchaProvider reCaptchaKey={reCaptchaKey} language="bg">
-      <GlobalCSS>
-        <BrowserRouter basename={publicURL}>
-          <Switch>
-            <Route path="/embed" component={Embed} />
-            <Route path="/" component={Election} />
-            <Redirect to="/" />
-          </Switch>
-        </BrowserRouter>
-      </GlobalCSS>
+      {app}
     </GoogleReCaptchaProvider>
+  ) : (
+    app
   )
 }
