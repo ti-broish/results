@@ -18,6 +18,7 @@ const StyledButton = styled.button`
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+    box-shadow: none;
   }
 `
 
