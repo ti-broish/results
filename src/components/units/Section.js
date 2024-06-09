@@ -174,9 +174,10 @@ export default (props) => {
         <>
           <h2>Видеонаблюдение</h2>
           <a
-            href={`https://evideo.bg/rik${data.segment.slice(0, 2)}.html#${
-              data.segment
-            }`}
+            href={`https://evideo.bg/europe2024/${data.segment.slice(
+              0,
+              2
+            )}.html#${data.segment}`}
             target="_blank"
           >
             Видеоизлъчване от СИК
