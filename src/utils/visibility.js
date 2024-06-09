@@ -8,8 +8,7 @@ const hasElectionDayEnded = (meta) => {
 
 export const shouldAllowSendingProtocols = (meta) => hasElectionDayEnded(meta)
 
-export const shouldShowOfficialStreaming = (results, meta) =>
-  hasElectionDayEnded(meta)
+export const shouldShowOfficialStreaming = hasElectionDayEnded
 
 // Only show results, when they are available and after election day end
 export const shouldShowResults = (results, meta) => {
