@@ -8,7 +8,7 @@
   },
   "scripts": {
     "build": "NODE_OPTIONS=--openssl-legacy-provider node -r dotenv/config node_modules/.bin/webpack --config webpack/build.config.js",
-    "build:prod": "NODE_OPTIONS=--openssl-legacy-provider node -r dotenv/config node_modules/.bin/webpack --env DATA_URL=https://api.tibroish.bg --config webpack/build.config.js",
+    "build:prod": "NODE_OPTIONS=--openssl-legacy-provider node -r dotenv/config node_modules/.bin/webpack --env DATA_URL=https://api.tibroish.bg --env PUBLIC_URL=/results/2024-10-27 --env NODE_ENV=production --config webpack/build.config.js",
     "serve": "NODE_OPTIONS=--openssl-legacy-provider node -r dotenv/config node_modules/.bin/webpack serve --env DATA_URL=https://d1tapi.tibroish.bg --config webpack/serve.config.js",
     "serve:prod": "NODE_OPTIONS=--openssl-legacy-provider node -r dotenv/config node_modules/.bin/webpack serve --env DATA_URL=https://api.tibroish.bg --config webpack/serve.config.js",
     "serve:local": "NODE_OPTIONS=--openssl-legacy-provider DATA_URL=http://localhost:4000 node -r dotenv/config node_modules/.bin/webpack serve --config webpack/serve.config.js",
