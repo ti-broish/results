@@ -12,6 +12,7 @@ export const shouldShowOfficialStreaming = hasElectionDayEnded
 
 // Only show results, when they are available and after election day end
 export const shouldShowResults = (results, meta) => {
+  return false
   if (!results) return false
 
   return results.length > 0 && shouldAllowSendingProtocols(meta)
