@@ -134,7 +134,9 @@ export default () => {
             )}
             {/*<a href="/signup">Запиши се</a>*/}
             {/*<a href="/about">Kампанията</a>*/}
-            <a href="/izvan-bulgaria">Извън страната</a>
+            {!shouldAllowSendingProtocols(meta) && (
+              <a href="/izvan-bulgaria">Извън страната</a>
+            )}
             <a href="/instructions">Инструкции</a>
             <Link to={ROUTES.resultUnit.replace(':unit', '')}>Карта</Link>
             {/*<a href="/videos">Видео</a>*/}
@@ -169,7 +171,9 @@ export default () => {
             {shouldAllowSendingProtocols(meta) && (
               <Link to={ROUTES.protocolForm}>Изпрати протокол</Link>
             )}
-            <a href="/izvan-bulgaria">Извън страната</a>
+            {!shouldAllowSendingProtocols(meta) && (
+              <a href="/izvan-bulgaria">Извън страната</a>
+            )}
             <a href="/instructions" onClick={() => setMenuOpen(false)}>
               Инструкции
             </a>
