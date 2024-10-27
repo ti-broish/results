@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import { useParams, useHistory } from 'react-router-dom'
 
-import { Link } from 'react-router-dom'
 import { ElectionContext } from './Election'
 import LoadingScreen from './layout/LoadingScreen'
 import { formatDateTime } from './Util'
@@ -11,6 +10,7 @@ import { formatDateTime } from './Util'
 import styled from 'styled-components'
 
 import { Fade } from 'react-awesome-reveal'
+import { Link, LinkButton } from './components/Link'
 
 const ViolationFeed = styled.div`
   max-width: 600px;
@@ -197,16 +197,28 @@ export default (props) => {
       {loading ? (
         <LoadingScreen />
       ) : violationData?.items.length > 0 ? (
-        <ViolationFeed>
-          {violationData.items.map(renderViolation)}
-          {!violationData.moreToLoad ? null : (
-            <ShowMoreButton disabled={loading} onClick={getMoreViolations}>
-              {loading ? 'Зареждане...' : 'Покажи още'}
-            </ShowMoreButton>
-          )}
-        </ViolationFeed>
+        <>
+          <LinkButton to={`/violation/new?unit=${unit}`}>
+            Подай сигнал
+          </LinkButton>
+          <ViolationFeed>
+            {violationData.items.map(renderViolation)}
+            {!violationData.moreToLoad ? null : (
+              <ShowMoreButton disabled={loading} onClick={getMoreViolations}>
+                {loading ? 'Зареждане...' : 'Покажи още'}
+              </ShowMoreButton>
+            )}
+          </ViolationFeed>
+        </>
       ) : (
-        <h5>Няма публикувани сигнали</h5>
+        props.totalViolationsCount > 0 && (
+          <>
+            <h5>Няма публикувани сигнали</h5>
+            <LinkButton to={`/violation/new?unit=${unit}`}>
+              Подай сигнал
+            </LinkButton>
+          </>
+        )
       )}
     </>
   )

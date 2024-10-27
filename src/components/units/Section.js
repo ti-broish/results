@@ -202,7 +202,16 @@ export default (props) => {
           )
         })}
       <h2 style={props.embed ? { fontSize: '15px' } : {}}>Сигнали</h2>
-      <ViolationFeeds unit={unit}></ViolationFeeds>
+      <p>
+        {data.stats.violationsCount}{' '}
+        {data.stats.violationsCount === 1
+          ? 'подаден сигнал'
+          : 'подадени сигнала'}
+      </p>
+      <ViolationFeeds
+        unit={unit}
+        totalViolationsCount={data.stats.violationsCount}
+      ></ViolationFeeds>
     </div>
   )
 }
