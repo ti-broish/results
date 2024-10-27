@@ -1,10 +1,9 @@
-import React from 'react'
+import React, { lazy, Suspense } from 'react'
 
 import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom'
 
 import Election from './Election'
 
-import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3'
 import styled from 'styled-components'
 import Embed from './Embed'
 import './recaptcha/recaptcha.css'
@@ -45,6 +44,12 @@ const GlobalCSS = styled.div`
   }
 `
 
+const GoogleReCaptchaProvider = lazy(() =>
+  import('react-google-recaptcha-v3').then((module) => ({
+    default: module.GoogleReCaptchaProvider,
+  }))
+)
+
 export default (props) => {
   const publicURL = process.env.PUBLIC_URL ? process.env.PUBLIC_URL : '/'
   const reCaptchaKey = process.env.GOOGLE_RECAPTCHA_KEY
@@ -62,9 +67,11 @@ export default (props) => {
   )
 
   return reCaptchaKey ? (
-    <GoogleReCaptchaProvider reCaptchaKey={reCaptchaKey} language="bg">
-      {app}
-    </GoogleReCaptchaProvider>
+    <Suspense fallback={app}>
+      <GoogleReCaptchaProvider reCaptchaKey={reCaptchaKey} language="bg">
+        {app}
+      </GoogleReCaptchaProvider>
+    </Suspense>
   ) : (
     app
   )
