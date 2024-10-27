@@ -174,7 +174,7 @@ export default (props) => {
         <>
           <h2>Видеонаблюдение</h2>
           <a
-            href={`https://evideo.bg/europe2024/${data.segment.slice(
+            href={`https://evideo.bg/pe202410/${data.segment.slice(
               0,
               2
             )}.html#${data.segment}`}
