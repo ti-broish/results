@@ -15,6 +15,9 @@ module.exports = env => {
             },
             historyApiFallback: true,
             port: 2000,
+            watchFiles: ['src/**/*'],
+            hot: true,
+            liveReload: true,
         },
     });
 };
