@@ -127,15 +127,25 @@ const BulgariaMapStyle = styled.div`
     fill: #ccc;
     stroke: white;
     stroke-width: 50px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+
+  #bulgaria-map {
+    filter: drop-shadow(0 4px 4px grey);
   }
 
   path:hover {
     cursor: pointer;
-    filter: brightness(0.9);
+    filter: brightness(0.98) drop-shadow(0 200px 400px rgba(0, 0, 0, 0.4));
+    transform: scale(1.02);
   }
 
   path.no-data:hover {
     cursor: not-allowed;
+    transform: none;
+    filter: none;
   }
 `
 
@@ -234,6 +244,7 @@ export default handleViewport(
     const history = useHistory()
     const [singleParty, setSingleParty] = useState('')
     const [singlePartyMode, setSinglePartyMode] = useState('percentage')
+    const [hoveredRegion, setHoveredRegion] = useState(null)
 
     const regionData = generateRegionData(
       regions,
@@ -327,69 +338,78 @@ export default handleViewport(
                   id="Plan_x0020_1"
                   transform="translate(-1740.6745,-1498.0644)"
                 >
-                  {Object.keys(regionPaths)?.map((key, index) => {
-                    const regionDataForKey = regionData[key]
-                    const tooltipData = regionDataForKey
-                      ? regionDataForKey.tooltipData
-                      : null
-                    const regionHasNoViolations =
-                      tooltipData?.publishedViolations == 0
+                  {Object.keys(regionPaths)
+                    .sort((a, b) => {
+                      if (a === hoveredRegion) return 1
+                      if (b === hoveredRegion) return -1
+                      return 0
+                    })
+                    ?.map((key, index) => {
+                      const regionDataForKey = regionData[key]
+                      const tooltipData = regionDataForKey
+                        ? regionDataForKey.tooltipData
+                        : null
+                      const regionHasNoViolations =
+                        tooltipData?.publishedViolations == 0
 
-                    const clickHandler = () => {
-                      if (linkToMainSite) {
-                        const newHref = `https://tibroish.bg${publicURL}/${key}`
-                        top.location.href = newHref
-                      } else if (embed) {
-                        history.push(`/embed/mini-results/${key}`)
-                      } else if (showViolationsOnly) {
-                        if (regionHasNoViolations) {
-                          return
-                        }
-                        loadViolationsForRegion(key)
-                      } else history.push(`/${key}`)
-                    }
-                    const color = regionDataForKey
-                      ? regionDataForKey.color
-                      : '#eee'
-
-                    const region = regions.find(
-                      (region) => region.id.toString() === key.toString()
-                    )
-
-                    const dynamicStyle = (key) => {
-                      const style = {
-                        fill: shouldLoad ? color : '#888',
-                        transition: 'fill 1.5s ease',
+                      const clickHandler = () => {
+                        if (linkToMainSite) {
+                          const newHref = `https://tibroish.bg${publicURL}/${key}`
+                          top.location.href = newHref
+                        } else if (embed) {
+                          history.push(`/embed/mini-results/${key}`)
+                        } else if (showViolationsOnly) {
+                          if (regionHasNoViolations) {
+                            return
+                          }
+                          loadViolationsForRegion(key)
+                        } else history.push(`/${key}`)
                       }
-                      // This is specifically added for the globe path only
-                      // otherwise we cannot click on the continents as
-                      // the SVG is bound by the vectors, rarger than full box
-                      if (key === '32') {
-                        style.pointerEvents = 'bounding-box'
-                        if (mode === 'turnout') {
-                          style.display = 'none'
+                      const color = regionDataForKey
+                        ? regionDataForKey.color
+                        : '#eee'
+
+                      const region = regions.find(
+                        (region) => region.id.toString() === key.toString()
+                      )
+
+                      const dynamicStyle = (key) => {
+                        const style = {
+                          fill: shouldLoad ? color : '#888',
+                          transition:
+                            'fill 1.5s ease, transform 0.3s ease, filter 0.3s ease',
                         }
+                        // This is specifically added for the globe path only
+                        // otherwise we cannot click on the continents as
+                        // the SVG is bound by the vectors, rarger than full box
+                        if (key === '32') {
+                          style.pointerEvents = 'bounding-box'
+                          if (mode === 'turnout') {
+                            style.display = 'none'
+                          }
+                        }
+
+                        return style
                       }
 
-                      return style
-                    }
-
-                    return (
-                      <path
-                        key={index}
-                        onClick={clickHandler}
-                        style={dynamicStyle(key)}
-                        d={regionPaths[key].path}
-                        data-tip={generateTooltipContent(
-                          singleParty,
-                          region,
-                          tooltipData,
-                          mode
-                        )}
-                        data-for={'bulgariaMapTooltip'}
-                      />
-                    )
-                  })}
+                      return (
+                        <path
+                          key={key}
+                          onClick={clickHandler}
+                          onMouseEnter={() => setHoveredRegion(key)}
+                          onMouseLeave={() => setHoveredRegion(null)}
+                          style={dynamicStyle(key)}
+                          d={regionPaths[key].path}
+                          data-tip={generateTooltipContent(
+                            singleParty,
+                            region,
+                            tooltipData,
+                            mode
+                          )}
+                          data-for={'bulgariaMapTooltip'}
+                        />
+                      )
+                    })}
                 </g>
               </svg>
             </BulgariaMapStyle>
