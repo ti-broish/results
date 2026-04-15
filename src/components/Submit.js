@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { LinkButton } from './components/Link'
 import { ROUTES } from './routes'
 import { ElectionContext } from './Election'
+import { shouldAllowSendingProtocols } from '../utils/visibility'
 
 const HorizontalLinks = styled.div`
   display: flex;
@@ -13,6 +14,8 @@ const HorizontalLinks = styled.div`
 export const Submit = () => {
   const [hasViolations, setHasViolations] = useState(false)
   const [hasProtcols, setHasProtocols] = useState(false)
+  const { meta } = useContext(ElectionContext)
+  const allowProtocols = shouldAllowSendingProtocols(meta)
 
   useEffect(() => {
     if (!localStorage) {
@@ -26,14 +29,16 @@ export const Submit = () => {
   }, [])
   return (
     <HorizontalLinks>
-      <LinkButton to={ROUTES.protocolForm}>Изпрати протокол</LinkButton>
+      {allowProtocols && (
+        <LinkButton to={ROUTES.protocolForm}>Изпрати протокол</LinkButton>
+      )}
       <LinkButton to={ROUTES.violationForm}>Подай сигнал</LinkButton>
       {hasViolations && (
         <>
           <LinkButton to={ROUTES.myViolations}>Моите сигнали</LinkButton>
         </>
       )}
-      {hasProtcols && (
+      {allowProtocols && hasProtcols && (
         <>
           <LinkButton to={ROUTES.myProtocols}>Моите протоколи</LinkButton>
         </>
