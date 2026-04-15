@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Това е разделът за визуализация на резултати, от публичният сайт на ТиБроиш.",
   "engines": {
-    "node": "^18",
-    "npm": "^9"
+    "node": "^20",
+    "npm": "^10"
   },
   "scripts": {
     "build": "NODE_OPTIONS=--openssl-legacy-provider node -r dotenv/config node_modules/.bin/webpack --config webpack/build.config.js",
