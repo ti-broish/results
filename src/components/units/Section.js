@@ -18,7 +18,7 @@ import styled from 'styled-components'
 import ViolationFeeds from '../ViolationFeeds'
 import Player from '../embeds/Player'
 import { shouldShowOfficialStreaming } from '../../utils/visibility'
-import { LinkButton } from '../components/Link'
+import { Link as AppLink } from '../components/Link'
 
 const renderRiskLevelText = (riskLevel) => {
   switch (riskLevel) {
@@ -73,17 +73,35 @@ const VideoPanel = styled.div`
   margin: 20px 0;
 
   h2 {
-    margin: 0 0 12px 0;
+    margin: 0 0 16px 0;
     color: #333;
   }
 
-  a {
+  .video-link {
+    display: inline-block;
+    font-size: 20px;
     color: #38decb;
     font-weight: bold;
     text-decoration: none;
 
     &:hover {
       opacity: 0.8;
+    }
+
+    svg {
+      margin-right: 8px;
+    }
+  }
+
+  .signal-link {
+    display: block;
+    margin-top: 12px;
+    font-size: 14px;
+    color: #666;
+    text-decoration: none;
+
+    &:hover {
+      color: #38decb;
     }
   }
 `
@@ -197,19 +215,21 @@ export default (props) => {
         <VideoPanel>
           <h2>Видеонаблюдение</h2>
           <a
+            className="video-link"
             href={`https://evideo.bg/pe202604/${data.segment.slice(
               0,
               2
             )}.html#${data.segment}`}
             target="_blank"
           >
-            Видеоизлъчване от СИК
+            &#9654; Видеоизлъчване от СИК
           </a>
-          <div>
-            <LinkButton to={`/violation/new?unit=${data.segment}&type=video`}>
-              Подай видео сигнал
-            </LinkButton>
-          </div>
+          <AppLink
+            className="signal-link"
+            to={`/violation/new?unit=${data.segment}&type=video`}
+          >
+            Подай видео сигнал &rarr;
+          </AppLink>
         </VideoPanel>
       )}
       {/*<Player section={data.segment} />*/}
