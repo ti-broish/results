@@ -2,6 +2,7 @@ import { useForm, FormProvider } from 'react-hook-form'
 import styled from 'styled-components'
 import React, { useEffect, useState, useRef } from 'react'
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
+import { useLocation } from 'react-router-dom'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import UploadPhotos, { imagesAreUploaded } from './UploadPhotos'
@@ -68,6 +69,8 @@ const schema = yup
   .required()
 
 export const ViolationForm = () => {
+  const location = useLocation()
+  const unit = new URLSearchParams(location.search).get('unit')
   const { executeRecaptcha } = process.env.GOOGLE_RECAPTCHA_KEY
     ? useGoogleReCaptcha()
     : { executeRecaptcha: null }
@@ -178,6 +181,7 @@ export const ViolationForm = () => {
             errors={errors}
             register={register}
             setValue={setValue}
+            initialSection={unit}
           />
           <Input
             name="name"
