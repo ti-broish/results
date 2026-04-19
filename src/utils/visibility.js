@@ -6,9 +6,19 @@ const hasElectionDayEnded = (meta) => {
   return new Date() > new Date(meta.endOfElectionDayTimestamp)
 }
 
+const isNearElectionDayEnd = (meta) => {
+  if (!meta?.endOfElectionDayTimestamp) {
+    return false
+  }
+
+  const tenMinutesBefore =
+    new Date(meta.endOfElectionDayTimestamp).getTime() - 10 * 60 * 1000
+  return new Date().getTime() > tenMinutesBefore
+}
+
 export const shouldAllowSendingProtocols = (meta) => hasElectionDayEnded(meta)
 
-export const shouldShowOfficialStreaming = hasElectionDayEnded
+export const shouldShowOfficialStreaming = isNearElectionDayEnd
 
 // Only show results, when they are available and after election day end
 export const shouldShowResults = (results, meta) => {
