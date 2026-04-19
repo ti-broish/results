@@ -127,7 +127,7 @@ export const SectionSelector = ({ register, errors, setValue }) => {
       cache,
       town && (!townHasCityRegions || cityRegion)
         ? `sections?town=${town}${
-            cityRegion ? `&cityRegion=${cityRegion}` : ''
+            cityRegion ? `&city_region=${cityRegion}` : ''
           }`
         : null,
       (list) => list.sort(abcSorter('code'))
