@@ -24,7 +24,9 @@ export const SectionSelector = ({
   initialSection,
 }) => {
   const cache = useRef({})
-  const initializing = useRef(initialSection?.length === 9)
+  const initializing = useRef(
+    initialSection?.length === 9 || initialSection?.startsWith('32')
+  )
   const [isAbroad, setAbroad] = useState(false)
   const [country, setCountry] = useState(isAbroad ? '' : DOMESTIC_COUNTRY_CODE)
   const [countries, setCountries] = useState([])
@@ -164,13 +166,59 @@ export const SectionSelector = ({
 
   const initDone = useRef(false)
   useEffect(async () => {
-    if (
-      !initialSection ||
-      initialSection.length !== 9 ||
-      initDone.current ||
-      electionRegions.length === 0
-    )
+    if (!initialSection || initDone.current) return
+
+    if (initialSection.startsWith('32')) {
+      initDone.current = true
+
+      setAbroad(true)
+      setValue('isAbroad', true)
+
+      const fetchedCountries = await fetchData(cache, 'countries', (list) =>
+        list.filter((x) => x.isAbroad).sort(abcSorter())
+      )
+      setCountries(fetchedCountries)
+
+      const countryCode =
+        initialSection.length >= 5 ? initialSection.substring(2, 5) : null
+
+      if (!countryCode) {
+        initializing.current = false
+        return
+      }
+
+      setCountry(countryCode)
+      setValue('country', countryCode)
+
+      const fetchedTowns = await fetchData(
+        cache,
+        `towns?country=${countryCode}`,
+        (list) => list.sort(abcSorter())
+      )
+      setTowns(fetchedTowns)
+
+      if (initialSection.length === 9) {
+        for (const t of fetchedTowns) {
+          const secs = await fetchData(cache, `sections?town=${t.id}`, (list) =>
+            list.sort(abcSorter('code'))
+          )
+          const found = secs.find((s) => s.id === initialSection)
+          if (found) {
+            setTown(t.id)
+            setValue('town', t.id)
+            setSections(secs)
+            setSection(found.id)
+            setValue('section', found.id)
+            break
+          }
+        }
+      }
+
+      initializing.current = false
       return
+    }
+
+    if (initialSection.length !== 9 || electionRegions.length === 0) return
     initDone.current = true
 
     const erCode = initialSection.substring(0, 2)
