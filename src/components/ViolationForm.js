@@ -34,47 +34,72 @@ const CommentFormStyle = styled.form`
   }
 `
 const requiredMessage = 'Полето е задължително.'
-const schema = yup
-  .object({
-    name: yup.string().required(requiredMessage),
-    email: yup
-      .string()
-      .email('Въведете валиден имейл')
-      .required(requiredMessage),
-    phoneNumber: yup
-      .string()
-      .transform((input) =>
-        /^0[1-9][0-9]{8}/.test(input)
-          ? input.replace(/^0(.+)/, '+359$1')
-          : /^0{0,2}359[1-9][0-9]{8}/.test(input)
-          ? input.replace(/^0{0,2}359(.+)/, '+359$1')
-          : input
-      )
-      .required(requiredMessage),
-    description: yup
-      .string()
-      .min(20, 'Моля въведете поне 20 символа')
-      .required(requiredMessage),
-    electionRegion: yup.string().required(requiredMessage),
-    municipality: yup.string().required(requiredMessage),
-    town: yup.number().required(requiredMessage),
-    cityRegion: yup.string(),
-    section: yup.string(),
-    isAbroad: yup.boolean(),
-    country: yup.string().when('isAbroad', {
-      is: true,
-      then: (x) => x.required(requiredMessage),
-    }),
-  })
-  .required()
+const createSchema = (isVideo) =>
+  yup
+    .object({
+      name: yup.string().required(requiredMessage),
+      email: yup
+        .string()
+        .email('Въведете валиден имейл')
+        .required(requiredMessage),
+      phoneNumber: yup
+        .string()
+        .transform((input) =>
+          /^0[1-9][0-9]{8}/.test(input)
+            ? input.replace(/^0(.+)/, '+359$1')
+            : /^0{0,2}359[1-9][0-9]{8}/.test(input)
+            ? input.replace(/^0{0,2}359(.+)/, '+359$1')
+            : input
+        )
+        .required(requiredMessage),
+      description: isVideo
+        ? yup
+            .string()
+            .min(5, 'Моля въведете поне 5 символа')
+            .required(requiredMessage)
+        : yup
+            .string()
+            .min(20, 'Моля въведете поне 20 символа')
+            .required(requiredMessage),
+      electionRegion: yup.string().required(requiredMessage),
+      municipality: yup.string().required(requiredMessage),
+      town: yup.number().required(requiredMessage),
+      cityRegion: yup.string(),
+      section: isVideo ? yup.string().required(requiredMessage) : yup.string(),
+      isAbroad: yup.boolean(),
+      country: yup.string().when('isAbroad', {
+        is: true,
+        then: (x) => x.required(requiredMessage),
+      }),
+    })
+    .required()
+
+const getSavedContact = () => {
+  try {
+    return JSON.parse(localStorage.getItem('violationContact')) || {}
+  } catch (e) {
+    return {}
+  }
+}
 
 export const ViolationForm = () => {
   const location = useLocation()
-  const unit = new URLSearchParams(location.search).get('unit')
+  const params = new URLSearchParams(location.search)
+  const unit = params.get('unit')
+  const type = params.get('type') || 'standard'
+  const isVideo = type === 'video'
+  const savedContact = getSavedContact()
   const { executeRecaptcha } = process.env.GOOGLE_RECAPTCHA_KEY
     ? useGoogleReCaptcha()
     : { executeRecaptcha: null }
-  const methods = useForm({ resolver: yupResolver(schema) })
+  const methods = useForm({
+    resolver: yupResolver(createSchema(isVideo)),
+    defaultValues: {
+      name: savedContact.name || '',
+      email: savedContact.email || '',
+      phoneNumber: savedContact.phone || '',
+    },
+  })
   const {
     formState: { errors },
     register,
@@ -141,6 +166,7 @@ export const ViolationForm = () => {
         name: data.name,
         email: data.email,
         phone: data.phoneNumber,
+        type,
       }
       if (data.section) {
         body['section'] = data.section
@@ -155,6 +181,16 @@ export const ViolationForm = () => {
             : {},
         })
       )
+      try {
+        localStorage.setItem(
+          'violationContact',
+          JSON.stringify({
+            name: data.name,
+            email: data.email,
+            phone: data.phoneNumber,
+          })
+        )
+      } catch (e) {}
       reset()
       submitDisabled.current = false
       setError(null)
@@ -175,7 +211,7 @@ export const ViolationForm = () => {
           <Link to={ROUTES.submit}>
             <small>⟵ обратно</small>
           </Link>
-          <h1>Подай сигнал</h1>
+          <h1>{isVideo ? 'Подай видео сигнал' : 'Подай сигнал'}</h1>
           <SectionSelector
             key={key}
             errors={errors}
@@ -215,20 +251,26 @@ export const ViolationForm = () => {
           <Textarea
             name="description"
             required={true}
-            minLength={20}
-            pattern=".{20,}"
+            minLength={isVideo ? 5 : 20}
+            pattern={isVideo ? '.{5,}' : '.{20,}'}
             label="Описание на нарушението"
-            title="Моля въведете поне 20 символа за описание на нарушението"
+            title={
+              isVideo
+                ? 'Моля въведете поне 5 символа за описание на нарушението'
+                : 'Моля въведете поне 20 символа за описание на нарушението'
+            }
             register={register}
             errors={errors}
           />
-          <UploadPhotos
-            name="photoUpload"
-            files={files}
-            callbackFilesUpdated={filesUpdatedCallback}
-            callbackFilesReady={filesReadyCallback}
-            isRequired={false}
-          ></UploadPhotos>
+          {!isVideo && (
+            <UploadPhotos
+              name="photoUpload"
+              files={files}
+              callbackFilesUpdated={filesUpdatedCallback}
+              callbackFilesReady={filesReadyCallback}
+              isRequired={false}
+            ></UploadPhotos>
+          )}
           <Button type="submit" disabled={submitDisabled.current}>
             Изпрати
           </Button>
