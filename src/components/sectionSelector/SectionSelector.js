@@ -258,7 +258,7 @@ export const SectionSelector = ({
 
   return (
     <>
-      {/*<Radios
+      <Radios
         name="isAbroad"
         label="Сигнал в:"
         onChange={setAbroad}
@@ -268,7 +268,7 @@ export const SectionSelector = ({
         ]}
         value={isAbroad}
         register={register}
-      />*/}
+      />
       {!isAbroad ? (
         <>
           <DropDown

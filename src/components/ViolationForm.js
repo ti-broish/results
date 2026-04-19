@@ -61,8 +61,14 @@ const createSchema = (isVideo) =>
             .string()
             .min(20, 'Моля въведете поне 20 символа')
             .required(requiredMessage),
-      electionRegion: yup.string().required(requiredMessage),
-      municipality: yup.string().required(requiredMessage),
+      electionRegion: yup.string().when('isAbroad', {
+        is: false,
+        then: (x) => x.required(requiredMessage),
+      }),
+      municipality: yup.string().when('isAbroad', {
+        is: false,
+        then: (x) => x.required(requiredMessage),
+      }),
       town: yup.number().required(requiredMessage),
       cityRegion: yup.string(),
       section: isVideo ? yup.string().required(requiredMessage) : yup.string(),
