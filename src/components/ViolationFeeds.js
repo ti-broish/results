@@ -196,29 +196,24 @@ export default (props) => {
     <>
       {loading ? (
         <LoadingScreen />
-      ) : violationData?.items.length > 0 ? (
+      ) : (
         <>
           <LinkButton to={`/violation/new?unit=${unit}`}>
             Подай сигнал
           </LinkButton>
-          <ViolationFeed>
-            {violationData.items.map(renderViolation)}
-            {!violationData.moreToLoad ? null : (
-              <ShowMoreButton disabled={loading} onClick={getMoreViolations}>
-                {loading ? 'Зареждане...' : 'Покажи още'}
-              </ShowMoreButton>
-            )}
-          </ViolationFeed>
+          {violationData?.items.length > 0 ? (
+            <ViolationFeed>
+              {violationData.items.map(renderViolation)}
+              {!violationData.moreToLoad ? null : (
+                <ShowMoreButton disabled={loading} onClick={getMoreViolations}>
+                  {loading ? 'Зареждане...' : 'Покажи още'}
+                </ShowMoreButton>
+              )}
+            </ViolationFeed>
+          ) : (
+            props.totalViolationsCount > 0 && <h5>Няма публикувани сигнали</h5>
+          )}
         </>
-      ) : (
-        props.totalViolationsCount > 0 && (
-          <>
-            <h5>Няма публикувани сигнали</h5>
-            <LinkButton to={`/violation/new?unit=${unit}`}>
-              Подай сигнал
-            </LinkButton>
-          </>
-        )
       )}
     </>
   )
