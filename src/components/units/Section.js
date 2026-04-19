@@ -18,6 +18,7 @@ import styled from 'styled-components'
 import ViolationFeeds from '../ViolationFeeds'
 import Player from '../embeds/Player'
 import { shouldShowOfficialStreaming } from '../../utils/visibility'
+import { LinkButton } from '../components/Link'
 
 const renderRiskLevelText = (riskLevel) => {
   switch (riskLevel) {
@@ -182,6 +183,11 @@ export default (props) => {
           >
             Видеоизлъчване от СИК
           </a>
+          <div>
+            <LinkButton to={`/violation/new?unit=${data.segment}&type=video`}>
+              Подай видео сигнал
+            </LinkButton>
+          </div>
         </>
       )}
       {/*<Player section={data.segment} />*/}
