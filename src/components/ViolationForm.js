@@ -1,12 +1,14 @@
 import { useForm, FormProvider } from 'react-hook-form'
 import styled from 'styled-components'
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useContext, useEffect, useState, useRef } from 'react'
 import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 import { useLocation } from 'react-router-dom'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 import UploadPhotos, { imagesAreUploaded } from './UploadPhotos'
 import { SectionSelector } from './sectionSelector/SectionSelector'
+import { ElectionContext } from './Election'
+import { shouldShowOfficialStreaming } from '../utils/visibility'
 import api from '../utils/api'
 import { ROUTES } from './routes'
 import { Link, LinkButton } from './components/Link'
@@ -90,16 +92,28 @@ const getSavedContact = () => {
 
 export const ViolationForm = () => {
   const location = useLocation()
+  const { meta } = useContext(ElectionContext)
   const params = new URLSearchParams(location.search)
   const unit = params.get('unit')
-  const type = params.get('type') || 'standard'
+  const urlType = params.get('type')
+  const afterEndTimestamp = shouldShowOfficialStreaming(meta)
+  const [type, setType] = useState(urlType || 'standard')
   const isVideo = type === 'video'
   const savedContact = getSavedContact()
   const { executeRecaptcha } = process.env.GOOGLE_RECAPTCHA_KEY
     ? useGoogleReCaptcha()
     : { executeRecaptcha: null }
+  const typeRef = useRef(type)
+  typeRef.current = type
+  const resolverRef = useRef((values, context, options) =>
+    yupResolver(createSchema(typeRef.current === 'video'))(
+      values,
+      context,
+      options
+    )
+  )
   const methods = useForm({
-    resolver: yupResolver(createSchema(isVideo)),
+    resolver: resolverRef.current,
     defaultValues: {
       name: savedContact.name || '',
       email: savedContact.email || '',
@@ -218,6 +232,30 @@ export const ViolationForm = () => {
             <small>⟵ обратно</small>
           </Link>
           <h1>{isVideo ? 'Подай видео сигнал' : 'Подай сигнал'}</h1>
+          {afterEndTimestamp && (
+            <div>
+              <label>
+                <input
+                  type="radio"
+                  name="violationType"
+                  value="standard"
+                  checked={type === 'standard'}
+                  onChange={() => setType('standard')}
+                />
+                На място
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="violationType"
+                  value="video"
+                  checked={type === 'video'}
+                  onChange={() => setType('video')}
+                />
+                Видео наблюдение
+              </label>
+            </div>
+          )}
           <SectionSelector
             key={key}
             errors={errors}
