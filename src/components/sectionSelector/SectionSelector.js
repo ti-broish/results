@@ -24,6 +24,7 @@ export const SectionSelector = ({
   initialSection,
 }) => {
   const cache = useRef({})
+  const initializing = useRef(initialSection?.length === 9)
   const [isAbroad, setAbroad] = useState(false)
   const [country, setCountry] = useState(isAbroad ? '' : DOMESTIC_COUNTRY_CODE)
   const [countries, setCountries] = useState([])
@@ -46,6 +47,7 @@ export const SectionSelector = ({
     )
   }, [])
   useEffect(async () => {
+    if (initializing.current) return
     let ignore = false
     if (!isAbroad) {
       setCountry(DOMESTIC_COUNTRY_CODE)
@@ -74,6 +76,7 @@ export const SectionSelector = ({
     }
   }, [isAbroad])
   useEffect(async () => {
+    if (initializing.current) return
     const newMunicipalities = electionRegion
       ? electionRegions
           .find((region) => region.code === electionRegion)
@@ -88,6 +91,7 @@ export const SectionSelector = ({
     }
   }, [electionRegion])
   useEffect(async () => {
+    if (initializing.current) return
     let ignore = false
     const newTowns = await fetchData(
       cache,
@@ -116,6 +120,7 @@ export const SectionSelector = ({
     }
   }, [isAbroad, country, electionRegion, municipality])
   useEffect(async () => {
+    if (initializing.current) return
     const newCityRegions =
       !isAbroad && town
         ? towns.find((x) => x.id === town)?.cityRegions?.sort(abcSorter()) || []
@@ -131,6 +136,7 @@ export const SectionSelector = ({
     }
   }, [town])
   useEffect(async () => {
+    if (initializing.current) return
     const townHasCityRegions = !!(
       town && towns.find((x) => x.id === town)?.cityRegions?.length > 0
     )
@@ -168,24 +174,27 @@ export const SectionSelector = ({
     initDone.current = true
 
     const erCode = initialSection.substring(0, 2)
-    const munCode = initialSection.substring(0, 4)
+    const munCode = initialSection.substring(2, 4)
 
     const er = electionRegions.find((r) => r.code === erCode)
-    if (!er) return
+    if (!er) {
+      initializing.current = false
+      return
+    }
 
     const muns = er.municipalities.sort(abcSorter())
-    setElectionRegion(erCode)
-    setValue('electionRegion', erCode)
-    setMunicipalities(muns)
-    setMunicipality(munCode)
-    setValue('municipality', munCode)
 
     const fetchedTowns = await fetchData(
       cache,
       `towns?country=${DOMESTIC_COUNTRY_CODE}&election_region=${erCode}&municipality=${munCode}`,
       (list) => list.sort(abcSorter())
     )
-    setTowns(fetchedTowns)
+
+    let foundTown = null
+    let foundSection = null
+    let foundCityRegion = null
+    let foundCityRegions = null
+    let foundSections = null
 
     for (const t of fetchedTowns) {
       const crs = t.cityRegions || []
@@ -196,14 +205,13 @@ export const SectionSelector = ({
         )
         const found = secs.find((s) => s.id === initialSection)
         if (found) {
-          setTown(t.id)
-          setValue('town', t.id)
-          setSections(secs)
-          setSection(found.id)
-          setValue('section', found.id)
-          return
+          foundTown = t
+          foundSection = found
+          foundSections = secs
+          break
         }
       } else {
+        let matched = false
         for (const cr of crs) {
           const secs = await fetchData(
             cache,
@@ -212,19 +220,40 @@ export const SectionSelector = ({
           )
           const found = secs.find((s) => s.id === initialSection)
           if (found) {
-            setTown(t.id)
-            setValue('town', t.id)
-            setCityRegions(crs.sort(abcSorter()))
-            setCityRegion(cr.code)
-            setValue('cityRegion', cr.code)
-            setSections(secs)
-            setSection(found.id)
-            setValue('section', found.id)
-            return
+            foundTown = t
+            foundSection = found
+            foundCityRegion = cr
+            foundCityRegions = crs
+            foundSections = secs
+            matched = true
+            break
           }
         }
+        if (matched) break
       }
     }
+
+    setElectionRegion(erCode)
+    setValue('electionRegion', erCode)
+    setMunicipalities(muns)
+    setMunicipality(munCode)
+    setValue('municipality', munCode)
+    setTowns(fetchedTowns)
+
+    if (foundTown) {
+      setTown(foundTown.id)
+      setValue('town', foundTown.id)
+      if (foundCityRegions) {
+        setCityRegions(foundCityRegions.sort(abcSorter()))
+        setCityRegion(foundCityRegion.code)
+        setValue('cityRegion', foundCityRegion.code)
+      }
+      setSections(foundSections)
+      setSection(foundSection.id)
+      setValue('section', foundSection.id)
+    }
+
+    initializing.current = false
   }, [electionRegions])
 
   return (
