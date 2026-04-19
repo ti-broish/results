@@ -17,7 +17,12 @@ const fetchData = async (cache, url, callback) => {
   return fetched
 }
 
-export const SectionSelector = ({ register, errors, setValue }) => {
+export const SectionSelector = ({
+  register,
+  errors,
+  setValue,
+  initialSection,
+}) => {
   const cache = useRef({})
   const [isAbroad, setAbroad] = useState(false)
   const [country, setCountry] = useState(isAbroad ? '' : DOMESTIC_COUNTRY_CODE)
@@ -69,22 +74,22 @@ export const SectionSelector = ({ register, errors, setValue }) => {
     }
   }, [isAbroad])
   useEffect(async () => {
-    const municipalities = electionRegion
+    const newMunicipalities = electionRegion
       ? electionRegions
           .find((region) => region.code === electionRegion)
           .municipalities.sort(abcSorter())
       : []
-    setMunicipality('')
-    setMunicipalities(municipalities)
-    municipalities.length === 1 &&
-      (setMunicipality(municipalities[0].code),
-      setValue('municipality', municipalities[0].code))
+    setMunicipalities(newMunicipalities)
+    if (newMunicipalities.length === 1) {
+      setMunicipality(newMunicipalities[0].code)
+      setValue('municipality', newMunicipalities[0].code)
+    } else if (!newMunicipalities.find((m) => m.code === municipality)) {
+      setMunicipality('')
+    }
   }, [electionRegion])
   useEffect(async () => {
-    setTown(0)
-    setTowns([])
     let ignore = false
-    const towns = await fetchData(
+    const newTowns = await fetchData(
       cache,
       isAbroad
         ? country && country !== DOMESTIC_COUNTRY_CODE
@@ -96,34 +101,41 @@ export const SectionSelector = ({ register, errors, setValue }) => {
       (list) => list.sort(abcSorter())
     )
     if (!ignore) {
-      setTowns(towns)
-      towns.length === 0 && setTown(0)
-      towns.length === 1 &&
-        (setTown(towns[0].id), setValue('town', towns[0].id))
+      setTowns(newTowns)
+      if (newTowns.length === 0) {
+        setTown(0)
+      } else if (newTowns.length === 1) {
+        setTown(newTowns[0].id)
+        setValue('town', newTowns[0].id)
+      } else if (!newTowns.find((t) => t.id === town)) {
+        setTown(0)
+      }
     }
     return () => {
       ignore = true
     }
   }, [isAbroad, country, electionRegion, municipality])
   useEffect(async () => {
-    setCityRegion('')
-    const cityRegions =
+    const newCityRegions =
       !isAbroad && town
-        ? towns.find((x) => x.id === town).cityRegions?.sort(abcSorter()) || []
+        ? towns.find((x) => x.id === town)?.cityRegions?.sort(abcSorter()) || []
         : []
-    setCityRegions(cityRegions)
-    cityRegions.length === 0 && setCityRegion('')
-    cityRegions.length === 1 &&
-      (setCityRegion(cityRegions[0].code),
-      setValue('cityRegion', cityRegions[0].code))
+    setCityRegions(newCityRegions)
+    if (newCityRegions.length === 0) {
+      setCityRegion('')
+    } else if (newCityRegions.length === 1) {
+      setCityRegion(newCityRegions[0].code)
+      setValue('cityRegion', newCityRegions[0].code)
+    } else if (!newCityRegions.find((cr) => cr.code === cityRegion)) {
+      setCityRegion('')
+    }
   }, [town])
   useEffect(async () => {
-    setSections([])
     const townHasCityRegions = !!(
       town && towns.find((x) => x.id === town)?.cityRegions?.length > 0
     )
     let ignore = false
-    const sections = await fetchData(
+    const newSections = await fetchData(
       cache,
       town && (!townHasCityRegions || cityRegion)
         ? `sections?town=${town}${
@@ -132,12 +144,88 @@ export const SectionSelector = ({ register, errors, setValue }) => {
         : null,
       (list) => list.sort(abcSorter('code'))
     )
-    !ignore && setSections(sections)
+    if (!ignore) {
+      setSections(newSections)
+      if (!newSections.find((s) => s.id === section)) {
+        setSection('')
+      }
+    }
 
     return () => {
       ignore = true
     }
   }, [cityRegion, town])
+
+  const initDone = useRef(false)
+  useEffect(async () => {
+    if (
+      !initialSection ||
+      initialSection.length !== 9 ||
+      initDone.current ||
+      electionRegions.length === 0
+    )
+      return
+    initDone.current = true
+
+    const erCode = initialSection.substring(0, 2)
+    const munCode = initialSection.substring(0, 4)
+
+    const er = electionRegions.find((r) => r.code === erCode)
+    if (!er) return
+
+    const muns = er.municipalities.sort(abcSorter())
+    setElectionRegion(erCode)
+    setValue('electionRegion', erCode)
+    setMunicipalities(muns)
+    setMunicipality(munCode)
+    setValue('municipality', munCode)
+
+    const fetchedTowns = await fetchData(
+      cache,
+      `towns?country=${DOMESTIC_COUNTRY_CODE}&election_region=${erCode}&municipality=${munCode}`,
+      (list) => list.sort(abcSorter())
+    )
+    setTowns(fetchedTowns)
+
+    for (const t of fetchedTowns) {
+      const crs = t.cityRegions || []
+
+      if (crs.length === 0) {
+        const secs = await fetchData(cache, `sections?town=${t.id}`, (list) =>
+          list.sort(abcSorter('code'))
+        )
+        const found = secs.find((s) => s.id === initialSection)
+        if (found) {
+          setTown(t.id)
+          setValue('town', t.id)
+          setSections(secs)
+          setSection(found.id)
+          setValue('section', found.id)
+          return
+        }
+      } else {
+        for (const cr of crs) {
+          const secs = await fetchData(
+            cache,
+            `sections?town=${t.id}&city_region=${cr.code}`,
+            (list) => list.sort(abcSorter('code'))
+          )
+          const found = secs.find((s) => s.id === initialSection)
+          if (found) {
+            setTown(t.id)
+            setValue('town', t.id)
+            setCityRegions(crs.sort(abcSorter()))
+            setCityRegion(cr.code)
+            setValue('cityRegion', cr.code)
+            setSections(secs)
+            setSection(found.id)
+            setValue('section', found.id)
+            return
+          }
+        }
+      }
+    }
+  }, [electionRegions])
 
   return (
     <>
