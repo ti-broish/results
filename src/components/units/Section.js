@@ -66,6 +66,28 @@ const SectionDetailsTable = styled.table`
       : null}
 `
 
+const VideoPanel = styled.div`
+  border: 2px solid #38decb;
+  border-radius: 12px;
+  padding: 20px 24px;
+  margin: 20px 0;
+
+  h2 {
+    margin: 0 0 12px 0;
+    color: #333;
+  }
+
+  a {
+    color: #38decb;
+    font-weight: bold;
+    text-decoration: none;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+`
+
 const ContentPanel = styled.div`
   background-color: white;
   margin: 30px auto;
@@ -172,7 +194,7 @@ export default (props) => {
         </tbody>
       </SectionDetailsTable>
       {!data.segment.startsWith('32') && shouldShowOfficialStreaming(meta) && (
-        <>
+        <VideoPanel>
           <h2>Видеонаблюдение</h2>
           <a
             href={`https://evideo.bg/pe202604/${data.segment.slice(
@@ -188,7 +210,7 @@ export default (props) => {
               Подай видео сигнал
             </LinkButton>
           </div>
-        </>
+        </VideoPanel>
       )}
       {/*<Player section={data.segment} />*/}
       {data.protocols.length > 0 && <h2>Протоколи:</h2>}
