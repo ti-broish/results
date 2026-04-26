@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import Helmet from 'react-helmet'
 import { useHistory, useParams } from 'react-router-dom'
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 import { mapNodeType } from '../ResultUnit'
 import LoadingScreen from '../layout/LoadingScreen'
 
@@ -18,7 +19,15 @@ import styled from 'styled-components'
 import ViolationFeeds from '../ViolationFeeds'
 import Player from '../embeds/Player'
 import { shouldShowOfficialStreaming } from '../../utils/visibility'
-import { Link as AppLink } from '../components/Link'
+import {
+  getSavedContact,
+  saveContact,
+  formatPhone,
+  isValidPhone,
+  isValidEmail,
+} from '../../utils/contact'
+import { Button } from '../components/Button'
+import api from '../../utils/api'
 
 const renderRiskLevelText = (riskLevel) => {
   switch (riskLevel) {
@@ -87,21 +96,58 @@ const VideoPanel = styled.div`
     &:hover {
       opacity: 0.8;
     }
-
-    svg {
-      margin-right: 8px;
-    }
   }
 
-  .signal-link {
-    display: block;
-    margin-top: 12px;
-    font-size: 14px;
-    color: #666;
-    text-decoration: none;
+  .signal-form {
+    margin-top: 16px;
 
-    &:hover {
-      color: #38decb;
+    textarea {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      resize: vertical;
+      min-height: 60px;
+      box-sizing: border-box;
+      font-family: inherit;
+    }
+
+    .contact-fields {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+
+      input {
+        flex: 1;
+        min-width: 150px;
+        padding: 8px 10px;
+        font-size: 14px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-family: inherit;
+      }
+    }
+
+    .form-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .form-message {
+      margin-top: 8px;
+      font-size: 14px;
+    }
+
+    .success {
+      color: green;
+    }
+
+    .error {
+      color: red;
     }
   }
 `
@@ -128,6 +174,59 @@ export default (props) => {
   const { unit } = useParams()
 
   const [data, setData] = useState(null)
+  const { executeRecaptcha } = process.env.GOOGLE_RECAPTCHA_KEY
+    ? useGoogleReCaptcha()
+    : { executeRecaptcha: null }
+  const savedContact = getSavedContact()
+  const [hasSavedContact, setHasSavedContact] = useState(
+    !!(savedContact.name && savedContact.email && savedContact.phone)
+  )
+  const [videoDescription, setVideoDescription] = useState('')
+  const [videoName, setVideoName] = useState(savedContact.name || '')
+  const [videoEmail, setVideoEmail] = useState(savedContact.email || '')
+  const [videoPhone, setVideoPhone] = useState(savedContact.phone || '')
+  const [videoSubmitState, setVideoSubmitState] = useState(null)
+  const [videoSubmitting, setVideoSubmitting] = useState(false)
+
+  const videoFormValid =
+    videoDescription.length >= 20 &&
+    videoName.length > 0 &&
+    isValidEmail(videoEmail) &&
+    videoPhone.length > 0 &&
+    isValidPhone(videoPhone)
+
+  const submitVideoSignal = async () => {
+    if (videoSubmitting || !videoFormValid) return
+    setVideoSubmitting(true)
+    setVideoSubmitState(null)
+    try {
+      const phone = formatPhone(videoPhone)
+      await api.post(
+        'violations',
+        {
+          description: videoDescription,
+          section: data.segment,
+          town: parseInt(data.town.id, 10),
+          name: videoName,
+          email: videoEmail,
+          phone,
+          type: 'video',
+        },
+        {
+          headers: executeRecaptcha
+            ? { 'x-recaptcha-token': await executeRecaptcha('sendViolation') }
+            : {},
+        }
+      )
+      saveContact({ name: videoName, email: videoEmail, phone: videoPhone })
+      setHasSavedContact(true)
+      setVideoSubmitState('success')
+      setVideoDescription('')
+    } catch (e) {
+      setVideoSubmitState('error')
+    }
+    setVideoSubmitting(false)
+  }
 
   useEffect(() => {
     axios
@@ -221,15 +320,61 @@ export default (props) => {
               2
             )}.html#${data.segment}`}
             target="_blank"
+            rel="noopener noreferrer"
           >
-            &#9654; Видеоизлъчване от СИК
+            &#9654; Видеоизлъчване от секцията
           </a>
-          <AppLink
-            className="signal-link"
-            to={`/violation/new?unit=${data.segment}&type=video`}
-          >
-            Подай видео сигнал &rarr;
-          </AppLink>
+          <div className="signal-form">
+            <textarea
+              placeholder="Опишете нарушението от видеонаблюдението..."
+              value={videoDescription}
+              onChange={(e) => {
+                setVideoDescription(e.target.value)
+                if (videoSubmitState) setVideoSubmitState(null)
+              }}
+            />
+            {!hasSavedContact && (
+              <div className="contact-fields">
+                <input
+                  type="text"
+                  placeholder="Име"
+                  value={videoName}
+                  onChange={(e) => setVideoName(e.target.value)}
+                />
+                <input
+                  type="email"
+                  placeholder="Имейл"
+                  value={videoEmail}
+                  onChange={(e) => setVideoEmail(e.target.value)}
+                />
+                <input
+                  type="tel"
+                  placeholder="Телефон"
+                  value={videoPhone}
+                  onChange={(e) => setVideoPhone(e.target.value)}
+                />
+              </div>
+            )}
+            <div className="form-row">
+              <Button
+                type="button"
+                disabled={videoSubmitting || !videoFormValid}
+                onClick={submitVideoSignal}
+              >
+                Подай видео сигнал
+              </Button>
+            </div>
+            {videoSubmitState === 'success' && (
+              <p className="form-message success">
+                Сигналът беше изпратен успешно!
+              </p>
+            )}
+            {videoSubmitState === 'error' && (
+              <p className="form-message error">
+                Грешка при изпращане. Опитайте с подробния формуляр.
+              </p>
+            )}
+          </div>
         </VideoPanel>
       )}
       {/*<Player section={data.segment} />*/}

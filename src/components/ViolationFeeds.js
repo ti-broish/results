@@ -10,7 +10,7 @@ import { formatDateTime } from './Util'
 import styled from 'styled-components'
 
 import { Fade } from 'react-awesome-reveal'
-import { Link, LinkButton } from './components/Link'
+import { Link } from './components/Link'
 
 const ViolationFeed = styled.div`
   max-width: 600px;
@@ -198,9 +198,7 @@ export default (props) => {
         <LoadingScreen />
       ) : (
         <>
-          <LinkButton to={`/violation/new?unit=${unit}`}>
-            Подай сигнал
-          </LinkButton>
+          <Link to={`/violation/new?unit=${unit}`}>Подай сигнал &rarr;</Link>
           {violationData?.items.length > 0 ? (
             <ViolationFeed>
               {violationData.items.map(renderViolation)}

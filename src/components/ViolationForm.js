@@ -10,6 +10,7 @@ import { SectionSelector } from './sectionSelector/SectionSelector'
 import { ElectionContext } from './Election'
 import { shouldShowOfficialStreaming } from '../utils/visibility'
 import api from '../utils/api'
+import { getSavedContact } from '../utils/contact'
 import { ROUTES } from './routes'
 import { Link, LinkButton } from './components/Link'
 import { Button } from './components/Button'
@@ -54,15 +55,10 @@ const createSchema = (isVideo) =>
             : input
         )
         .required(requiredMessage),
-      description: isVideo
-        ? yup
-            .string()
-            .min(5, 'Моля въведете поне 5 символа')
-            .required(requiredMessage)
-        : yup
-            .string()
-            .min(20, 'Моля въведете поне 20 символа')
-            .required(requiredMessage),
+      description: yup
+        .string()
+        .min(20, 'Моля въведете поне 20 символа')
+        .required(requiredMessage),
       electionRegion: yup.string().when('isAbroad', {
         is: false,
         then: (x) => x.required(requiredMessage),
@@ -81,14 +77,6 @@ const createSchema = (isVideo) =>
       }),
     })
     .required()
-
-const getSavedContact = () => {
-  try {
-    return JSON.parse(localStorage.getItem('violationContact')) || {}
-  } catch (e) {
-    return {}
-  }
-}
 
 export const ViolationForm = () => {
   const location = useLocation()
@@ -295,14 +283,10 @@ export const ViolationForm = () => {
           <Textarea
             name="description"
             required={true}
-            minLength={isVideo ? 5 : 20}
-            pattern={isVideo ? '.{5,}' : '.{20,}'}
+            minLength={20}
+            pattern=".{20,}"
             label="Описание на нарушението"
-            title={
-              isVideo
-                ? 'Моля въведете поне 5 символа за описание на нарушението'
-                : 'Моля въведете поне 20 символа за описание на нарушението'
-            }
+            title="Моля въведете поне 20 символа за описание на нарушението"
             register={register}
             errors={errors}
           />
