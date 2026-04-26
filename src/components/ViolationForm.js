@@ -10,6 +10,7 @@ import { SectionSelector } from './sectionSelector/SectionSelector'
 import { ElectionContext } from './Election'
 import { shouldShowOfficialStreaming } from '../utils/visibility'
 import api from '../utils/api'
+import { getSavedContact } from '../utils/contact'
 import { ROUTES } from './routes'
 import { Link, LinkButton } from './components/Link'
 import { Button } from './components/Button'
@@ -76,14 +77,6 @@ const createSchema = (isVideo) =>
       }),
     })
     .required()
-
-const getSavedContact = () => {
-  try {
-    return JSON.parse(localStorage.getItem('violationContact')) || {}
-  } catch (e) {
-    return {}
-  }
-}
 
 export const ViolationForm = () => {
   const location = useLocation()

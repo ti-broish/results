@@ -1,8 +1,9 @@
-import React, { useContext, useEffect, useState, useRef } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 
 import axios from 'axios'
 import Helmet from 'react-helmet'
 import { useHistory, useParams } from 'react-router-dom'
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3'
 import { mapNodeType } from '../ResultUnit'
 import LoadingScreen from '../layout/LoadingScreen'
 
@@ -18,6 +19,13 @@ import styled from 'styled-components'
 import ViolationFeeds from '../ViolationFeeds'
 import Player from '../embeds/Player'
 import { shouldShowOfficialStreaming } from '../../utils/visibility'
+import {
+  getSavedContact,
+  saveContact,
+  formatPhone,
+  isValidPhone,
+  isValidEmail,
+} from '../../utils/contact'
 import { Button } from '../components/Button'
 import api from '../../utils/api'
 
@@ -109,9 +117,11 @@ const VideoPanel = styled.div`
       display: flex;
       gap: 8px;
       margin-top: 8px;
+      flex-wrap: wrap;
 
       input {
         flex: 1;
+        min-width: 150px;
         padding: 8px 10px;
         font-size: 14px;
         border: 1px solid #ccc;
@@ -142,14 +152,6 @@ const VideoPanel = styled.div`
   }
 `
 
-const getSavedContact = () => {
-  try {
-    return JSON.parse(localStorage.getItem('violationContact')) || {}
-  } catch (e) {
-    return {}
-  }
-}
-
 const ContentPanel = styled.div`
   background-color: white;
   margin: 30px auto;
@@ -172,63 +174,58 @@ export default (props) => {
   const { unit } = useParams()
 
   const [data, setData] = useState(null)
+  const { executeRecaptcha } = process.env.GOOGLE_RECAPTCHA_KEY
+    ? useGoogleReCaptcha()
+    : { executeRecaptcha: null }
   const savedContact = getSavedContact()
-  const hasSavedContact = !!(
-    savedContact.name &&
-    savedContact.email &&
-    savedContact.phone
+  const [hasSavedContact, setHasSavedContact] = useState(
+    !!(savedContact.name && savedContact.email && savedContact.phone)
   )
   const [videoDescription, setVideoDescription] = useState('')
   const [videoName, setVideoName] = useState(savedContact.name || '')
   const [videoEmail, setVideoEmail] = useState(savedContact.email || '')
   const [videoPhone, setVideoPhone] = useState(savedContact.phone || '')
   const [videoSubmitState, setVideoSubmitState] = useState(null)
-  const videoSubmitting = useRef(false)
-
-  const formatPhone = (phone) =>
-    /^0[1-9][0-9]{8}$/.test(phone)
-      ? phone.replace(/^0(.+)/, '+359$1')
-      : /^0{0,2}359[1-9][0-9]{8}$/.test(phone)
-      ? phone.replace(/^0{0,2}359(.+)/, '+359$1')
-      : phone
+  const [videoSubmitting, setVideoSubmitting] = useState(false)
 
   const videoFormValid =
     videoDescription.length >= 20 &&
     videoName.length > 0 &&
-    videoEmail.length > 0 &&
-    videoPhone.length > 0
+    isValidEmail(videoEmail) &&
+    videoPhone.length > 0 &&
+    isValidPhone(videoPhone)
 
   const submitVideoSignal = async () => {
-    if (videoSubmitting.current || !videoFormValid) return
-    videoSubmitting.current = true
+    if (videoSubmitting || !videoFormValid) return
+    setVideoSubmitting(true)
     setVideoSubmitState(null)
     try {
       const phone = formatPhone(videoPhone)
-      await api.post('violations', {
-        description: videoDescription,
-        section: data.segment,
-        town: parseInt(data.town.id, 10),
-        name: videoName,
-        email: videoEmail,
-        phone,
-        type: 'video',
-      })
-      try {
-        localStorage.setItem(
-          'violationContact',
-          JSON.stringify({
-            name: videoName,
-            email: videoEmail,
-            phone: videoPhone,
-          })
-        )
-      } catch (e) {}
+      await api.post(
+        'violations',
+        {
+          description: videoDescription,
+          section: data.segment,
+          town: parseInt(data.town.id, 10),
+          name: videoName,
+          email: videoEmail,
+          phone,
+          type: 'video',
+        },
+        {
+          headers: executeRecaptcha
+            ? { 'x-recaptcha-token': await executeRecaptcha('sendViolation') }
+            : {},
+        }
+      )
+      saveContact({ name: videoName, email: videoEmail, phone: videoPhone })
+      setHasSavedContact(true)
       setVideoSubmitState('success')
       setVideoDescription('')
     } catch (e) {
       setVideoSubmitState('error')
     }
-    videoSubmitting.current = false
+    setVideoSubmitting(false)
   }
 
   useEffect(() => {
@@ -323,6 +320,7 @@ export default (props) => {
               2
             )}.html#${data.segment}`}
             target="_blank"
+            rel="noopener noreferrer"
           >
             &#9654; Видеоизлъчване от секцията
           </a>
@@ -330,7 +328,10 @@ export default (props) => {
             <textarea
               placeholder="Опишете нарушението от видеонаблюдението..."
               value={videoDescription}
-              onChange={(e) => setVideoDescription(e.target.value)}
+              onChange={(e) => {
+                setVideoDescription(e.target.value)
+                if (videoSubmitState) setVideoSubmitState(null)
+              }}
             />
             {!hasSavedContact && (
               <div className="contact-fields">
@@ -357,7 +358,7 @@ export default (props) => {
             <div className="form-row">
               <Button
                 type="button"
-                disabled={videoSubmitting.current || !videoFormValid}
+                disabled={videoSubmitting || !videoFormValid}
                 onClick={submitVideoSignal}
               >
                 Подай видео сигнал
