@@ -315,10 +315,9 @@ export default (props) => {
           <h2>Видеонаблюдение</h2>
           <a
             className="video-link"
-            href={`https://evideo.bg/pvr202610/${data.segment.slice(
-              0,
-              2
-            )}.html#${data.segment}`}
+            href={`https://evideo.bg/pvr2026/${data.segment.slice(0, 2)}.html#${
+              data.segment
+            }`}
             target="_blank"
             rel="noopener noreferrer"
           >
