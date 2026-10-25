@@ -31,7 +31,7 @@ jobs:
           NODE_ENV: production
 
       - name: Minio Deploy
-        uses: hkdobrev/minio-deploy-action@v1
+        uses: hkdobrev/minio-deploy-action@1.1.1
         with:
           endpoint: ${{ secrets.MINIO_STAGING_ENDPOINT }}
           access_key: ${{ secrets.MINIO_STAGING_ACCESS_KEY }}
